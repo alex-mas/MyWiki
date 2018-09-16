@@ -9,9 +9,7 @@ const staticFolder = './dist/src/static';
 if (!fs.existsSync(staticFolder)){
   fs.mkdirSync(staticFolder);
 }
-fs.copyFile('./src/static/index.html', staticFolder,(err)=>{
-  console.log(err);
-});
+fs.copyFileSync('./src/static/index.html', staticFolder);
 
 const rendererConfig = {
   //entry point of application
