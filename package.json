@@ -1,0 +1,58 @@
+{
+  "name": "mywiki",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/src/main.js",
+  "build": {
+    "appId": "com.myWiki.app",
+    "files": [
+      "dist/src/**/*",
+      "package.json",
+      "resources/structures/*",
+      "resources/tiles/*"
+    ],
+    "directories": {
+      "buildResources": "resources"
+    },
+    "publish": null,
+    "win":{
+      "asar": false
+    }
+  },
+  "scripts": {
+    "webpack:dev": "node_modules/.bin/webpack --config webpack/webpack.config.dev.js --debug",
+    "webpack:prod": "node_modules/.bin/webpack --config webpack/webpack.config.dev.js --mode=production",
+    "start": "npm run webpack:dev && electron dist/src/main.js",
+    "build": " npm run webpack:prod && electron-builder",
+    "start-nobuild": "electron dist/src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^16.4.13",
+    "@types/react-dom": "^16.0.7",
+    "css-loader": "^1.0.0",
+    "electron": "^2.0.8",
+    "electron-builder": "^20.28.3",
+    "jest": "^23.5.0",
+    "mocha": "^5.2.0",
+    "node-sass": "^4.9.3",
+    "nodemon": "^1.18.4",
+    "sass-loader": "^7.1.0",
+    "spectron": "^4.0.0",
+    "style-loader": "^0.23.0",
+    "ts-loader": "^5.0.0",
+    "typescript": "^3.0.3",
+    "typings-for-css-modules-loader": "^1.7.0",
+    "webpack": "^4.17.2",
+    "webpack-cli": "^3.1.0"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "showdown": "^1.8.6"
+  }
+}
