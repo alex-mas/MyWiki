@@ -1,10 +1,12 @@
-const path = require("path");
-const url = require("url");
-const fs = require('fs');
-const { app, Menu, BrowserWindow } = require("electron");
+import path from 'path';
+import url from 'url';
+import fs from 'fs';
+import {app, Menu, BrowserWindow} from 'electron';
+
 
 
 const setApplicationMenu = () => {
+
 
 };
 
@@ -23,8 +25,7 @@ app.on("ready", () => {
         height: 600,
         webPreferences: {
             nodeIntegrationInWorker: true,
-            webSecurity: false
-            
+            webSecurity: false,
         }
     });
     mainWindow.setFullScreenable(true);

@@ -15,7 +15,7 @@
       "buildResources": "resources"
     },
     "publish": null,
-    "win":{
+    "win": {
       "asar": false
     }
   },
@@ -33,6 +33,7 @@
   "devDependencies": {
     "@types/react": "^16.4.13",
     "@types/react-dom": "^16.0.7",
+    "@types/react-redux": "^6.0.9",
     "css-loader": "^1.0.0",
     "electron": "^2.0.8",
     "electron-builder": "^20.28.3",
@@ -40,6 +41,7 @@
     "mocha": "^5.2.0",
     "node-sass": "^4.9.3",
     "nodemon": "^1.18.4",
+    "redux-thunk": "^2.3.0",
     "sass-loader": "^7.1.0",
     "spectron": "^4.0.0",
     "style-loader": "^0.23.0",
@@ -53,6 +55,8 @@
     "express": "^4.16.3",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
     "showdown": "^1.8.6"
   }
 }
