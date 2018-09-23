@@ -1,7 +1,7 @@
-import path from 'path';
-import url from 'url';
-import fs from 'fs';
-import {app, Menu, BrowserWindow} from 'electron';
+const path = require('path');
+const url = require('url');
+const fs = require('fs');
+const {app, Menu, BrowserWindow} = require('electron');
 
 
 

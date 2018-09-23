@@ -25,7 +25,10 @@ const rendererConfig = {
   //sort of modifications we can apply to files processed by webpack conditionally
   resolve: {
     // Add `.ts` and `.tsx` as a resolvable extension.
-    extensions: [".ts", ".tsx", ".js"]
+    extensions: [".ts", ".tsx", ".js" , ".jsx"]
+  },
+  node: {
+    __dirname: false
   },
   target: 'electron-renderer',
   module: {
@@ -55,7 +58,7 @@ const rendererConfig = {
 
   },
   //source map options that traduce to diferent levels of hints on when exceptions occur and things like that
-  devtool: 'cheap-module-eval-source-map'
+  devtool: 'inline-source-map',
 };
 
 
@@ -69,6 +72,7 @@ const mainConfig = {
   },
   target: 'electron-main',
   mode: 'development',
+  devtool: 'inline-source-map',
   resolve: {
     // Add `.ts` and `.tsx` as a resolvable extension.
     extensions: [".ts", ".tsx", ".js"]
