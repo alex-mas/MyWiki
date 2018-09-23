@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import configureStore from './store/store';
+import AppRouter from './router/router';
 
 
 console.log('working client !!');
@@ -16,9 +17,7 @@ const store = configureStore();
 
 const App =(
     <Provider store={store}>
-        <div>
-            Hello world!
-        </div>
+        <AppRouter/>
     </Provider>
 );
 
