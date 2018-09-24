@@ -1,4 +1,6 @@
-import { AnyAction } from "redux";
+import { AnyAction, ActionCreator } from "redux";
+
+export type ErrorActionCreator = ActionCreator<ErrorAction>;
 
 export interface ErrorAction {
     type: 'ERROR',
@@ -11,10 +13,10 @@ export const isErrorAction = (obj: AnyAction): obj is ErrorAction=>{
     return obj.type === 'ERROR';
 }
 
-export const error: (message: string)=>ErrorAction= (message)=>{
+export const error: ErrorActionCreator = (message: string, code: number)=>{
     return {
         type: 'ERROR',
-        code: 0,
+        code,
         message
     }
 }
