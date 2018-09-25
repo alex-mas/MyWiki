@@ -4,9 +4,9 @@ import { AppState } from '../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetaData } from '../store/reducers/wikis';
 import Wiki from '../components/wikiItem';
-import {addWiki} from '../actions/wikis';
+import { BrowserRouteProps, BrowserLink } from '../../../../../libraries/alex components/dist/navigation/browserRouter';
 
-export interface HomePageProps extends RouteProps {
+export interface HomePageProps extends BrowserRouteProps{
     wikis: WikiMetaData[]
 }
 
@@ -23,7 +23,7 @@ export class HomePage extends React.Component<HomePageProps, any>{
                         return<li><Wiki wiki={wiki}/></li>
                     })}
                 </ul>
-                <button>Create new wiki</button>
+                <BrowserLink to='/createWiki' text='Create new wiki'/>
                 <button>Import existing wiki</button>
             </div>
         )
@@ -37,11 +37,9 @@ const mapStateToProps: MapStateToProps<Pick<AppState, 'wikis'>, HomePageProps, A
     };
 }
 
-const mapDispatchToProps: MapDispatchToProps<{}, HomePageProps> = (dispatch, props)=>{
-    return {
-
-    };
-}
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+
+export default connect(mapStateToProps, {
+    
+})(HomePage);

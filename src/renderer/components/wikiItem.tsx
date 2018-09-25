@@ -24,10 +24,5 @@ class Wiki extends React.Component<WikiProps>{
     }
 }
 
-const mapDispatchToProps: MapDispatchToProps<{}, WikiProps> = (dispatch, props)=>{
-    return{
 
-    };
-}
-
-export default connect(undefined,mapDispatchToProps)(Wiki);
+export default connect(undefined,{})(Wiki);
