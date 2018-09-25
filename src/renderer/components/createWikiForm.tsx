@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { WikisMetadataReducer, WikiMetaData } from '../store/reducers/wikis';
-import {remote, Dialog, OpenDialogOptions} from 'electron';
+import { remote, Dialog, OpenDialogOptions } from 'electron';
 import * as fs from 'fs';
 import * as util from 'util';
+import * as path from 'path';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
-import { createWiki, CreateWikiActionCreator} from '../actions/wikis';
+import { createWiki, CreateWikiActionCreator } from '../actions/wikis';
 import { BrowserHistory } from '../../../../../libraries/alex components/dist/navigation/browserRouter';
 
 const accessFile = util.promisify(fs.access);
@@ -43,37 +44,40 @@ export class CreateWikiForm extends React.Component<CreateWikiFormOwnProps & Cre
             path
         }));
     }
-    chooseWikiPath = (event: React.MouseEvent<HTMLButtonElement>) =>{
+    chooseWikiPath = (event: React.MouseEvent<HTMLButtonElement>) => {
         dialog.showOpenDialog({
             title: 'Choose the wiki folder',
             defaultPath: './',
             buttonLabel: 'Confirm',
-            properties: ['openDirectory','createDirectory','promptToCreate']
-        },this.handleChosenWikiPath);
+            properties: ['openDirectory', 'promptToCreate']
+        }, this.handleChosenWikiPath);
     }
-    handleChosenWikiPath = async (filePaths: string[], bookmarks?: string[]) =>{
-        const newFilePath = filePaths[0];
-        accessFile(newFilePath, fs.constants.F_OK)
-        .then(()=>{
-            accessFile(newFilePath, fs.constants.W_OK)
-            .then(()=>{
-                this.onPathChange(newFilePath);
-            })
-            .catch((error)=>{
-                this.props.fsError(error);
-            });
-        })
-        //folder doesnt exist, create it
-        .catch((e)=>{
-            accessFile(newFilePath, fs.constants.W_OK)
-            .then(()=>{
-                fs.mkdirSync(newFilePath);
-                this.onPathChange(newFilePath);
-            })
-            .catch((error)=>{
-                this.props.fsError(error);
-            });
-        });
+    handleChosenWikiPath = async (filePaths?: string[], bookmarks?: string[]) => {
+        if (filePaths) {
+            const newFilePath = filePaths[0];
+            accessFile(newFilePath, fs.constants.F_OK)
+                .then(() => {
+                    accessFile(newFilePath, fs.constants.W_OK)
+                        .then(() => {
+                            this.onPathChange(newFilePath);
+                        })
+                        .catch((error) => {
+                            this.props.fsError(error);
+                        });
+                })
+                //folder doesnt exist, create it
+                .catch((e) => {
+                    accessFile(newFilePath, fs.constants.W_OK)
+                        .then(() => {
+                            console.log(newFilePath);
+                            fs.mkdirSync(newFilePath);
+                            this.onPathChange(newFilePath);
+                        })
+                        .catch((error) => {
+                            this.props.fsError(error);
+                        });
+                });
+        }
     }
     onSubmitForm = (event: React.FormEvent) => {
         event.preventDefault();
@@ -84,7 +88,10 @@ export class CreateWikiForm extends React.Component<CreateWikiFormOwnProps & Cre
         return (
             <form onSubmit={this.onSubmitForm}>
                 <input type="text" value={this.state.name} onChange={this.onNameChange} />
-                <button type='button' onClick={this.chooseWikiPath}>Choose a folder</button>
+                <div>
+                    <span>{this.state.path}</span>
+                    <button type='button' onClick={this.chooseWikiPath}>Choose a folder</button>
+                </div>
                 <button type='submit'>Submit</button>
             </form>
         )

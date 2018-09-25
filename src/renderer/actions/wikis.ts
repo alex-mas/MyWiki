@@ -6,7 +6,7 @@ import * as path from 'path';
 import defaultWikiConfig from '../../shared/data/defaultWikiConfig.json';
 import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
-import { fsError, ErrorAction } from "./errors";
+import { error, fsError, ErrorAction, ErrorActionCodes } from "./errors";
 
 
 type _CreateWikiAction = Action & { wiki: WikiMetaData };
@@ -15,8 +15,10 @@ export type CreateWikiActionCreator = (name:string, wikiPath:string) =>ThunkActi
 
 export const createWiki: CreateWikiActionCreator = (name: string, wikiPath: string) => {
     return (dispatch, getState) => {
+        console.log(path.join(wikiPath,'myWikiConfig.json'));
         fs.writeFile(path.join(wikiPath,'myWikiConfig.json'), JSON.stringify(defaultWikiConfig), 'utf8', (error) => {
             if(error){
+                console.log(error);
                 dispatch(fsError(`Error creating the configuration file for ${name} wiki`));
             }else{
                 dispatch({
@@ -27,6 +29,9 @@ export const createWiki: CreateWikiActionCreator = (name: string, wikiPath: stri
                         id: uuid()
                     }
                 });
+                fs.writeFileSync(path.join(wikiPath, 'home.md'), fs.readFileSync(path.join('./', 'src/static/wikiHome.md')),'utf8');
+                fs.mkdirSync(path.join(wikiPath, 'articles'));
+                fs.writeFileSync(path.join(wikiPath, 'articles', 'test.md'), fs.readFileSync(path.join('./','src/static/testArticle.md')),'utf8');
             }
         });
     }
@@ -42,6 +47,24 @@ export const removeWiki: ActionCreator<{ id: string } & Action> = (id: string) =
 }
 
 
+export type SelectWikiAction = Action & {wiki: WikiMetaData};
+export type SelectWikiActionCreator = ActionCreator<ThunkAction<any, AppState, void, SelectWikiAction | ErrorAction>>;
+
+export const selectWiki:SelectWikiActionCreator = (id:string)=>{
+    return (dispatch, getState)=>{
+        const state = getState();
+        const wiki = state.wikis.find((wiki)=>wiki.id === id);
+        if(wiki){
+            dispatch({
+                type: 'SELECT_WIKI',
+                wiki
+            });
+        }else{
+            dispatch(error(`Wiki id (${id}) provided doesn't mach with any of the wikis tracked by the app`,ErrorActionCodes.WRONG_PARAMS));
+        }
+    }
+
+}
 
 
 

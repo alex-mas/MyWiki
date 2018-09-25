@@ -1,6 +1,6 @@
 import { AnyAction, ActionCreator } from "redux";
 
-export type ErrorActionCreator = ActionCreator<ErrorAction>;
+export type ErrorActionCreator = (message: string, code: number)=>ErrorAction;
 
 export interface ErrorAction {
     type: 'ERROR',
@@ -11,7 +11,8 @@ export interface ErrorAction {
 export enum ErrorActionCodes{
     UNSPECIFIEED = 0,
     FS = 1,
-    NETWORK = 2
+    NETWORK = 2,
+    WRONG_PARAMS = 3
 }
 
 export const isErrorAction = (obj: AnyAction): obj is ErrorAction=>{
