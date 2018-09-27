@@ -32,9 +32,9 @@
   "license": "ISC",
   "devDependencies": {
     "@types/react": "^16.4.14",
-    "@types/uuid": "^3.4.4",
     "@types/react-dom": "^16.0.7",
     "@types/react-redux": "^6.0.9",
+    "@types/uuid": "^3.4.4",
     "css-loader": "^1.0.0",
     "electron": "^2.0.8",
     "electron-builder": "^20.28.3",
@@ -53,9 +53,11 @@
     "webpack-cli": "^3.1.0"
   },
   "dependencies": {
+    "@types/showdown": "^1.7.5",
     "express": "^4.16.3",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-markdown": "^3.6.0",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "showdown": "^1.8.6",
