@@ -7,7 +7,7 @@ import * as util from 'util';
 import * as path from 'path';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
 import { createWiki, CreateWikiActionCreator } from '../actions/wikis';
-import { BrowserHistory } from '../../../../../libraries/alex components/dist/navigation/browserRouter';
+import { MemoryHistory } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
 
 const accessFile = util.promisify(fs.access);
 
@@ -15,7 +15,7 @@ const dialog: Dialog = remote.dialog;
 
 
 export interface CreateWikiFormOwnProps {
-    history: BrowserHistory;
+    history: MemoryHistory;
 }
 
 export interface CreateWikiFormDispatchProps {

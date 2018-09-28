@@ -47,7 +47,8 @@ const rendererConfig = {
             loader: 'typings-for-css-modules-loader',
             options: {
               modules: true,
-              namedExport: true
+              namedExport: true,
+              camelCase: true
             }
           },
           'sass-loader',

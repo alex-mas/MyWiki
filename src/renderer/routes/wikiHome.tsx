@@ -4,15 +4,15 @@ import * as path from 'path';
 import { RouteProps } from '../router/router';
 import { AppState } from '../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
-import { BrowserRouteProps, BrowserLink } from '../../../../../libraries/alex components/dist/navigation/browserRouter';
+import { MemoryRouteProps, MemoryLink } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
 import * as ReactMarkdown from 'react-markdown';
 
-export interface WikiHomePageOwnProps extends BrowserRouteProps {
+export interface WikiHomePageOwnProps extends MemoryRouteProps {
 }
 
 export type WikiHomePageReduxProps = Pick<AppState, 'selectedWiki'>
 
-export interface WikiHomePageProps extends BrowserRouteProps, WikiHomePageReduxProps {
+export interface WikiHomePageProps extends MemoryRouteProps, WikiHomePageReduxProps {
 }
 
 export class WikiHomePage extends React.Component<WikiHomePageProps, any>{

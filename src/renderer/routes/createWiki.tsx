@@ -5,9 +5,9 @@ import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetaData } from '../store/reducers/wikis';
 import Wiki from '../components/wikiItem';
 import CreateWikiForm  from '../components/createWikiForm';
-import { BrowserRouteProps } from '../../../../../libraries/alex components/dist/navigation/browserRouter';
+import { MemoryRouteProps } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
 
-export interface CreateWikiPageProps extends BrowserRouteProps {
+export interface CreateWikiPageProps extends MemoryRouteProps {
     wikis: WikiMetaData[]
 }
 

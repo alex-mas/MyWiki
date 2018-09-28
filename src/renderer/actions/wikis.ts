@@ -67,8 +67,17 @@ export const selectWiki:SelectWikiActionCreator = (id:string)=>{
 }
 
 
+export const loadWikis: ActionCreator<{wikis: WikiMetaData[]} & Action> = (wikis: WikiMetaData[])=>{
+    return{
+        type:'LOAD_WIKIS',
+        wikis
+    }
+}
+
+
 
 export default {
     createWiki,
-    removeWiki
+    removeWiki,
+    loadWikis
 }

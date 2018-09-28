@@ -4,9 +4,10 @@ import { AppState } from '../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetaData } from '../store/reducers/wikis';
 import Wiki from '../components/wikiItem';
-import { BrowserRouteProps, BrowserLink } from '../../../../../libraries/alex components/dist/navigation/browserRouter';
+import { MemoryRouteProps, MemoryLink } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
+import MyEditor from '../components/wikiEditor';
 
-export interface HomePageProps extends BrowserRouteProps{
+export interface HomePageProps extends MemoryRouteProps{
     wikis: WikiMetaData[]
 }
 
@@ -23,8 +24,9 @@ export class HomePage extends React.Component<HomePageProps, any>{
                         return<li><Wiki wiki={wiki}/></li>
                     })}
                 </ul>
-                <BrowserLink to='/createWiki' text='Create new wiki'/>
+                <MemoryLink to='/createWiki' text='Create new wiki'/>
                 <button>Import existing wiki</button>
+                <MyEditor/>
             </div>
         )
     }

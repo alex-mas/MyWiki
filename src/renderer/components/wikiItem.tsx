@@ -3,12 +3,12 @@ import { RouteProps } from '../router/router';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetaData } from '../store/reducers/wikis';
 import { selectWiki, SelectWikiActionCreator } from '../actions/wikis';
-import { BrowserHistory, withHistoryContext } from '../../../../../libraries/alex components/dist/navigation/browserRouter';
+import { MemoryHistory, withHistoryContext } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
 
 
 export interface WikiItemOwnProps{
     wiki: WikiMetaData,
-    history: BrowserHistory
+    history: MemoryHistory
 }
 
 export interface WikiItemDispatchProps {

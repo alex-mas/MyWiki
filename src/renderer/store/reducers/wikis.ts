@@ -18,6 +18,8 @@ export const WikisMetadataReducer: Reducer<WikisMetadataState> = (state: WikisMe
             return state.filter((wikiMetaData)=>wikiMetaData.id !== action.id);
         case 'RESET_WIKIS':
             return defaultState;
+        case 'LOAD_WIKIS':
+            return action.wikis;
         default:
             return state;
     }
