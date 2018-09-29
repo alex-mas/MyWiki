@@ -13,8 +13,14 @@ type _CreateWikiAction = Action & { wiki: WikiMetaData };
 
 export type CreateWikiActionCreator = (name:string, wikiPath:string) =>ThunkAction<any, AppState, void, _CreateWikiAction | ErrorAction>;
 
-export const createWiki: CreateWikiActionCreator = (name: string, wikiPath: string) => {
+export const createWiki: CreateWikiActionCreator = (name: string) => {
     return (dispatch, getState) => {
+        const wikiId = uuid();
+        const wikiPath = `./wikis/${name}(${wikiId})`;
+        if(!fs.existsSync('./wikis')){
+            fs.mkdirSync('./wikis');
+        }
+        fs.mkdirSync(wikiPath);
         console.log(path.join(wikiPath,'myWikiConfig.json'));
         fs.writeFile(path.join(wikiPath,'myWikiConfig.json'), JSON.stringify(defaultWikiConfig), 'utf8', (error) => {
             if(error){
@@ -26,7 +32,7 @@ export const createWiki: CreateWikiActionCreator = (name: string, wikiPath: stri
                     wiki: {
                         path: wikiPath,
                         name,
-                        id: uuid()
+                        id: wikiId
                     }
                 });
                 fs.writeFileSync(path.join(wikiPath, 'home.md'), fs.readFileSync(path.join('./', 'src/static/wikiHome.md')),'utf8');

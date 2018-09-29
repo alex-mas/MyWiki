@@ -5,7 +5,7 @@ import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetaData } from '../store/reducers/wikis';
 import Wiki from '../components/wikiItem';
 import { MemoryRouteProps, MemoryLink } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
-import MyEditor from '../components/wikiEditor';
+import MyEditor from '../components/wikiEditor/wikiEditor';
 
 export interface HomePageProps extends MemoryRouteProps{
     wikis: WikiMetaData[]
