@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { Editor, EditorState, ContentBlock, BlockMap, BlockMapBuilder, DraftBlockType, RichUtils, DraftInlineStyleType, convertToRaw, convertFromRaw } from 'draft-js';
 import * as Immutable from 'immutable';
+import * as fs from 'fs';
 import StyleButton from './styleButton';
+import { withHistoryContext } from '../../../../../../libraries/alex components/dist/navigation/memoryRouter';
+import { connect, MapStateToProps } from 'react-redux';
+import { WikiMetaData } from '../../store/reducers/wikis';
+import { AppState } from '../../store/store';
+import { fsError, FsErrorActionCreator } from '../../actions/errors';
+
 
 type CustomBlockType = DraftBlockType | 'card' | 'link';
 
@@ -28,7 +35,23 @@ const BLOCK_TYPES: { label: string, style: CustomBlockType }[] = [
 
 
 
-export class MyEditor extends React.Component<any, {editorState: EditorState, articleName: string}> {
+export type WikiEditorReduxProps = Pick<AppState, 'selectedWiki'>
+
+export interface WikiEditorOwnProps {
+    content: any,
+    readOnly: boolean
+}
+
+
+export interface WikiEditorDispatchProps {
+    fsError: FsErrorActionCreator
+}
+
+
+export type WikiEditorProps = WikiEditorOwnProps & WikiEditorReduxProps & WikiEditorDispatchProps;
+
+
+export class WikiEditor extends React.Component<WikiEditorProps, { editorState: EditorState, articleName: string }> {
     constructor(props: any) {
         super(props);
         let editorState: EditorState;
@@ -44,15 +67,27 @@ export class MyEditor extends React.Component<any, {editorState: EditorState, ar
     }
 
     onSaveArticle = (event: React.MouseEvent<HTMLButtonElement>) => {
+        const articlePath = `${this.props.selectedWiki.path}/articles/${this.state.articleName}.json`;
+        fs.access(articlePath, fs.constants.F_OK, (err) => {
+            let shouldOverwrite;
+            if (!err) {
+                const shouldOverwrite = confirm(`The article with name ${this.state.articleName} already exists, do you wish to save it anyways?`);
+            }
+            if (err || shouldOverwrite) {
+                fs.writeFileSync(articlePath, convertToRaw(this.state.editorState.getCurrentContent()), 'utf8');
+            } else {
+                this.props.fsError(`Article ${this.state.articleName} couldn\'t be saved, maybe there is a problem with program permisions or user have choosen to not overwrite`);
+            }
+        });
 
     }
-    
-    onChangeArticleName = (event: React.ChangeEvent<HTMLInputElement>) =>{
+
+    onChangeArticleName = (event: React.ChangeEvent<HTMLInputElement>) => {
         const articleName = event.target.value;
-        this.setState((prevState)=>({
+        this.setState((prevState) => ({
             articleName
         }));
-        
+
     }
 
     onChange = (editorState: EditorState) => this.setState({ editorState });
@@ -133,23 +168,29 @@ export class MyEditor extends React.Component<any, {editorState: EditorState, ar
     render() {
         return (
             <div className='wiki-editor'>
-                <input
-                    type="text"
-                    value={this.state.articleName}
-                    placeholder={'article name'}
-                    onChange={this.onChangeArticleName}
-                />
-                <button onClick={this.onSaveArticle}>Save changes</button>
-                <div className='wiki-editor__controls'>
-                    <this.BlockStyleButtons
-                        editorState={this.state.editorState}
-                        onToggle={this.toggleBlockType}
-                    />
-                    <this.InlineStyleButtons
-                        editorState={this.state.editorState}
-                        onToggle={this.toggleInlineStyle}
-                    />
-                </div>
+                {!this.props.readOnly ?
+                    <React.Fragment>
+                        <input
+                            type="text"
+                            value={this.state.articleName}
+                            placeholder={'article name'}
+                            onChange={this.onChangeArticleName}
+                        />
+                        <button onClick={this.onSaveArticle}>Save changes</button>
+                        <div className='wiki-editor__controls'>
+                            <this.BlockStyleButtons
+                                editorState={this.state.editorState}
+                                onToggle={this.toggleBlockType}
+                            />
+                            <this.InlineStyleButtons
+                                editorState={this.state.editorState}
+                                onToggle={this.toggleInlineStyle}
+                            />
+                        </div>
+                    </React.Fragment>
+                    :
+                    null
+                }
                 <div className='wiki-editor__editor'>
                     <Editor
                         readOnly={this.props.readOnly}
@@ -165,4 +206,11 @@ export class MyEditor extends React.Component<any, {editorState: EditorState, ar
 }
 
 
-export default MyEditor;
+
+const mapStateToProps: MapStateToProps<WikiEditorReduxProps, WikiEditorOwnProps, AppState> = (state, props) => {
+    return {
+        selectedWiki: state.selectedWiki
+    };
+}
+
+export default withHistoryContext(connect(mapStateToProps, { fsError })(WikiEditor));

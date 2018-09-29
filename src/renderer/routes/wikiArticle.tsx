@@ -21,23 +21,35 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
     constructor(props: WikiArticlePageProps) {
         super(props);
     }
-    getArticleContent = () =>{
+    getArticleContent = () => {
         let content;
-        try{
-           content = fs.readFileSync(path.join(this.props.selectedWiki.path, 'home.json'), 'utf8');
-        }catch(e){
-            console.warn(e);
+        if (this.props.routeParams && this.props.routeParams.article) {
+            try {
+                content = fs.readFileSync(path.join(this.props.selectedWiki.path, `${this.props.routeParams.article}.json`), 'utf8');
+            } catch (e) {
+                console.warn(e);
+            }
+        } else {
+            try {
+                content = fs.readFileSync(path.join(this.props.selectedWiki.path, 'home.json'), 'utf8');
+            } catch (e) {
+                console.warn(e);
+            }
         }
         return content;
-
     }
     render() {
+        const article = this.props.routeParams.article;
         return (
             <div>
-                <h1>{this.props.selectedWiki.name}</h1>
+                <div>
+                    <button>Create new article</button>
+                    <button>Delete article</button>
+                    <button>Edit article</button>
+                </div>
+                <h1>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
                 <div
                 >
-                    <button>Create new article</button>
                     <WikiEditor
                         content={this.getArticleContent()}
                         readOnly={true}

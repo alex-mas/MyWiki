@@ -21,6 +21,7 @@ export const createWiki: CreateWikiActionCreator = (name: string) => {
             fs.mkdirSync('./wikis');
         }
         fs.mkdirSync(wikiPath);
+        fs.mkdirSync(path.join(wikiPath, 'articles'));
         console.log(path.join(wikiPath,'myWikiConfig.json'));
         fs.writeFile(path.join(wikiPath,'myWikiConfig.json'), JSON.stringify(defaultWikiConfig), 'utf8', (error) => {
             if(error){
@@ -35,9 +36,8 @@ export const createWiki: CreateWikiActionCreator = (name: string) => {
                         id: wikiId
                     }
                 });
-                fs.writeFileSync(path.join(wikiPath, 'home.md'), fs.readFileSync(path.join('./', 'src/static/wikiHome.md')),'utf8');
-                fs.mkdirSync(path.join(wikiPath, 'articles'));
-                fs.writeFileSync(path.join(wikiPath, 'articles', 'test.md'), fs.readFileSync(path.join('./','src/static/testArticle.md')),'utf8');
+                //fs.writeFileSync(path.join(wikiPath, 'home.md'), fs.readFileSync(path.join('./', 'src/static/wikiHome.md')),'utf8');
+                //fs.writeFileSync(path.join(wikiPath, 'articles', 'test.md'), fs.readFileSync(path.join('./','src/static/testArticle.md')),'utf8');
             }
         });
     }
