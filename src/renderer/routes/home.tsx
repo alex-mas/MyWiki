@@ -26,7 +26,6 @@ export class HomePage extends React.Component<HomePageProps, any>{
                 </ul>
                 <MemoryLink to='/createWiki' text='Create new wiki'/>
                 <button>Import existing wiki</button>
-                <MyEditor/>
             </div>
         )
     }

@@ -28,13 +28,33 @@ const BLOCK_TYPES: { label: string, style: CustomBlockType }[] = [
 
 
 
-export class MyEditor extends React.Component<any, any> {
+export class MyEditor extends React.Component<any, {editorState: EditorState, articleName: string}> {
     constructor(props: any) {
         super(props);
+        let editorState: EditorState;
+        if (this.props.content) {
+            editorState = EditorState.createWithContent(convertFromRaw(this.props.content));
+        } else {
+            editorState = EditorState.createEmpty();
+        }
         this.state = {
-            editorState: EditorState.createEmpty(),
+            editorState,
+            articleName: undefined
         };
     }
+
+    onSaveArticle = (event: React.MouseEvent<HTMLButtonElement>) => {
+
+    }
+    
+    onChangeArticleName = (event: React.ChangeEvent<HTMLInputElement>) =>{
+        const articleName = event.target.value;
+        this.setState((prevState)=>({
+            articleName
+        }));
+        
+    }
+
     onChange = (editorState: EditorState) => this.setState({ editorState });
 
     //Here we define what to do when contentBlock is of custom type
@@ -49,7 +69,7 @@ export class MyEditor extends React.Component<any, any> {
     }
 
 
-    toggleBlockType = (blockType: any) =>{
+    toggleBlockType = (blockType: any) => {
         this.onChange(
             RichUtils.toggleBlockType(
                 this.state.editorState,
@@ -58,7 +78,7 @@ export class MyEditor extends React.Component<any, any> {
         );
     }
 
-    toggleInlineStyle = (inlineStyle: any) =>{
+    toggleInlineStyle = (inlineStyle: any) => {
         this.onChange(
             RichUtils.toggleInlineStyle(
                 this.state.editorState,
@@ -113,6 +133,13 @@ export class MyEditor extends React.Component<any, any> {
     render() {
         return (
             <div className='wiki-editor'>
+                <input
+                    type="text"
+                    value={this.state.articleName}
+                    placeholder={'article name'}
+                    onChange={this.onChangeArticleName}
+                />
+                <button onClick={this.onSaveArticle}>Save changes</button>
                 <div className='wiki-editor__controls'>
                     <this.BlockStyleButtons
                         editorState={this.state.editorState}
@@ -125,6 +152,7 @@ export class MyEditor extends React.Component<any, any> {
                 </div>
                 <div className='wiki-editor__editor'>
                     <Editor
+                        readOnly={this.props.readOnly}
                         blockRendererFn={this.blockRenderer}
                         editorState={this.state.editorState}
                         onChange={this.onChange}
