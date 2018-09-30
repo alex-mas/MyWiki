@@ -55,6 +55,8 @@
   "dependencies": {
     "@types/draft-js": "^0.10.25",
     "@types/showdown": "^1.7.5",
+    "@types/slate": "^0.40.0",
+    "@types/slate-react": "^0.18.0",
     "draft-js": "^0.10.5",
     "express": "^4.16.3",
     "immutable": "^3.8.2",
@@ -64,6 +66,8 @@
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "showdown": "^1.8.6",
+    "slate": "^0.41.2",
+    "slate-react": "^0.18.10",
     "uuid": "^3.3.2"
   }
 }
