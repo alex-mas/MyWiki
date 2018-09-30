@@ -6,6 +6,7 @@ import { AppState } from '../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { MemoryRouteProps, MemoryLink } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
 import WikiEditor from '../components/wikiEditor/wikiEditor';
+import SlateEditor from '../components/wikiEditor/slateEditor';
 import * as ReactMarkdown from 'react-markdown';
 
 export interface WikiArticlePageOwnProps extends MemoryRouteProps {
@@ -54,6 +55,10 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
                         content={this.getArticleContent()}
                         readOnly={true}
                     />
+
+                </div>
+                <div style={{padding:'5rem'}}>
+                    <SlateEditor />
                 </div>
             </div>
         )
