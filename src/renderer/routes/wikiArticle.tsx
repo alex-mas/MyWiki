@@ -41,6 +41,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
     }
     render() {
         const article = this.props.routeParams.article;
+        console.log(article);
         return (
             <div>
                 <div>
