@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Editor, RenderNodeProps } from 'slate-react'
 import { Value, Change } from 'slate'
 import WikiLink from './wikiLink';
+import Modal from '../../../../../../libraries/alex components/dist/layout/modal';
 
 const initialValue = Value.fromJSON({
     document: {
@@ -26,10 +27,11 @@ const initialValue = Value.fromJSON({
 
 
 
-function wrapLink(change: Change, to: string) {
+function wrapLink(change: Change, href: string) {
+    console.log('Href: ', href);
     change.wrapInline({
         type: 'link',
-        data: { to },
+        data: { href }
     });
     change.moveToEnd()
 }
@@ -41,26 +43,46 @@ function unwrapLink(change: Change) {
 }
 
 
+export interface WikiEditorState {
+    value: Value,
+    isModalOpen: boolean,
+    promptForText: boolean,
+    linkText: string,
+    linkDest: string
 
-class WikiEditor extends React.Component<any, any> {
-    state = {
+}
+
+class WikiEditor extends React.Component<any, WikiEditorState> {
+    state: Readonly<WikiEditorState> = {
         value: initialValue,
+        isModalOpen: false,
+        promptForText: false,
+        linkText: undefined,
+        linkDest: undefined
     }
     onChange = (change: Change) => {
         const value = change.value;
         this.setState(() => ({ value }));
     }
     renderNode = (props: RenderNodeProps) => {
+        const { attributes, children, node } = props;
+        debugger;
         //@ts-ignore
         switch (props.node.type) {
             case 'link':
-                //@ts-ignore
-                return <WikiLink {...props} />
-
+                {
+                    //@ts-ignore
+                    const href = node.data.get('href');
+                    return (
+                        <WikiLink {...props} to={href}>
+                            {children}
+                        </WikiLink>
+                    );
+                }
         }
     }
     hasLinks = () => {
-        const { value } = this.state
+        const { value } = this.state;
         return value.inlines.some(inline => inline.type == 'link')
     }
     addLink = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -69,38 +91,73 @@ class WikiEditor extends React.Component<any, any> {
         const hasLinks = this.hasLinks()
         const change = value.change()
 
+
         if (hasLinks) {
             //@ts-ignore
             change.call(unwrapLink)
         } else if (value.selection.isExpanded) {
-            const href = window.prompt('Enter the URL of the link:')
+            if (this.state.isModalOpen) {
+                this.closeModal();
+                const dest = this.state.linkDest;
 
-            if (href === null) {
-                return
+                if (dest === null) {
+                    return
+                }
+
+                //@ts-ignore
+                change.call(wrapLink, dest);
+
+            } else {
+                this.setState(() => ({
+                    isModalOpen: true,
+                    promptForText: false
+                }));
             }
-            //@ts-ignore
-            change.call(wrapLink, href)
+
         } else {
-            const href = window.prompt('Enter the URL of the link:')
+            if (this.state.isModalOpen) {
+                debugger;
+                this.closeModal();
 
-            if (href === null) {
-                return
+                const dest = this.state.linkDest;
+                const text = this.state.linkText;
+
+                if (dest === null || text === null) {
+                    return;
+                }
+                //@ts-ignore
+                change
+                    .insertText(text)
+                    .moveFocusBackward(text.length)
+                    .call(wrapLink, dest)
+
+            } else {
+                this.setState(() => ({
+                    isModalOpen: true,
+                    promptForText: true
+                }));
             }
-
-            const text = window.prompt('Enter the text for the link:')
-
-            if (text === null) {
-                return
-            }
-            //@ts-ignore
-            change
-                .insertText(text)
-                .moveFocusBackward(text.length)
-                .call(wrapLink, href)
         }
-
-        this.onChange(change)
+        this.onChange(change);
     }
+    closeModal = () => {
+        this.setState(() => ({
+            isModalOpen: false
+        }));
+    }
+    onChangeLinkDest = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const linkDest = e.target.value;
+        this.setState(() => ({
+            linkDest
+        }));
+    }
+    onChangeLinkText = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const linkText = e.target.value;
+        this.setState(() => ({
+            linkText
+        }));
+    }
+
     render() {
         return (
             <div>
@@ -110,6 +167,20 @@ class WikiEditor extends React.Component<any, any> {
                     onChange={this.onChange}
                     renderNode={this.renderNode}
                 />
+                <Modal
+                    isOpen={this.state.isModalOpen}
+                    onClose={this.closeModal}
+                >
+                    <div>
+                        <input type="text" value={this.state.linkDest} onChange={this.onChangeLinkDest} />
+                        {this.state.promptForText ?
+                            <input type="text" value={this.state.linkText} onChange={this.onChangeLinkText} />
+                            :
+                            null
+                        }
+                        <button onClick={this.addLink}>Accept</button>
+                    </div>
+                </Modal>
             </div>
 
         );
