@@ -4,7 +4,6 @@ import { MemoryLink } from '../../../../../../libraries/alex components/dist/nav
 export class WikiLink extends React.Component<any, any>{
     constructor(props: any) {
         super(props);
-        debugger;
     }
     render() {
         return (

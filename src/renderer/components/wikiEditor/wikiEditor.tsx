@@ -77,7 +77,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
     }
     renderNode = (props: RenderNodeProps) => {
         const { attributes, children, node } = props;
-        debugger;
         //@ts-ignore
         switch (props.node.type) {
             case 'link':

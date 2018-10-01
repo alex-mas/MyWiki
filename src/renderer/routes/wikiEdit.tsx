@@ -61,11 +61,20 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, any>{
         this.setState(() => ({ editorContent }));
     }
     saveChanges = () => {
-        try {
-            fs.writeFileSync(path.join(this.props.selectedWiki.path, 'article',`${this.props.routeParams.article}.json`), JSON.stringify(this.state.editorContent.toJSON()), 'utf8');
-        } catch (e) {
-            this.props.fsError(`Error trying to edit article ${this.props.routeParams.article}, please try running the app as administrator. If that doesn't work contact the developer`);
-        }
+        fs.writeFile(
+            path.join(this.props.selectedWiki.path, 'articles',`${this.props.routeParams.article}.json`),
+            JSON.stringify(this.state.editorContent.toJSON()),
+            'utf8',
+            (err)=>{
+                if(err){
+                    console.warn(err);
+                    this.props.fsError(`Error trying to edit article ${this.props.routeParams.article}, please try running the app as administrator. If that doesn't work contact the developer`);
+                }else{
+                    this.props.history.pushState(`/wiki/article/${this.props.routeParams.article}`);
+                }
+            }
+
+        );
     }
     discardChanges = () => {
         this.props.history.pushState('/wiki/article/home');

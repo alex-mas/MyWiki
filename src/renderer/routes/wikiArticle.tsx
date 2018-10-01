@@ -11,6 +11,31 @@ import { Change, Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
 
 
+const getArticleContent = (props: any) => {
+    let content;
+    let filePath;
+    try {
+        if (props.routeParams && props.routeParams.article) {
+            filePath = path.join(props.selectedWiki.path, 'articles', `${props.routeParams.article}.json`);
+            content = fs.readFileSync(filePath, 'utf8');
+        } else {
+            filePath = path.join(props.selectedWiki.path, 'articles', 'home.json');
+            content = fs.readFileSync(filePath, 'utf8');
+        }
+    } catch (e) {
+        fs.access(filePath, (error) => {
+            if (error) {
+                props.fsError(`Error trying to fetch article ${props.routeParams.article}, please try running the app as administrator. If that doesn't work contact the developer`);
+                console.warn(e);
+            }
+        });
+    }
+    if (content) {
+        return JSON.parse(content);
+    }
+}
+
+
 export interface DispatchProps {
     fsError: FsErrorActionCreator
 }
@@ -23,46 +48,62 @@ export type WikiArticlePageReduxProps = Pick<AppState, 'selectedWiki'>
 export interface WikiArticlePageProps extends MemoryRouteProps, WikiArticlePageReduxProps, DispatchProps {
 }
 
-//  <ReactMarkdown source={fs.readFileSync(path.join(this.props.selectedWiki.path, 'home.md'), 'utf8')}/>
+//  <ReactMarkdown source={fs.readFileSync(path.join(props.selectedWiki.path, 'home.md'), 'utf8')}/>
 export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
     constructor(props: WikiArticlePageProps) {
         super(props);
-        debugger;
         const fetchedContent = this.getArticleContent();
         this.state = {
             content: fetchedContent ? Value.fromJSON(fetchedContent) : defaultEditorContents,
             fileExists: fetchedContent ? true : false
         }
     }
-    static getDerivedStateFromProps = (props: WikiArticlePageProps,state:any)=>{
-        const fetchedContent = this.getArticleContent();
-        return{
-
+    componentDidUpdate(prevProps: WikiArticlePageProps, prevState: any) {
+        console.log('Previous:', prevProps, prevState);
+        console.log('Actual: ', this.props, this.state);
+        if (this.props.routeParams.article !== prevProps.routeParams.article) {
+            const fetchedContent = this.getArticleContent();
+            this.setState(() => ({
+                content: fetchedContent ? Value.fromJSON(fetchedContent) : defaultEditorContents,
+                fileExists: fetchedContent ? true : false
+            }));
         }
     }
+
     getArticleContent = () => {
         let content;
         let filePath;
         try {
-            console.log('Before fetching file: ', this.props);
             if (this.props.routeParams && this.props.routeParams.article) {
-                filePath = path.join(this.props.selectedWiki.path,'articles', `${this.props.routeParams.article}.json`);
+                filePath = path.join(this.props.selectedWiki.path, 'articles', `${this.props.routeParams.article}.json`);
                 content = fs.readFileSync(filePath, 'utf8');
             } else {
-                filePath = path.join(this.props.selectedWiki.path,'articles', 'home.json');
+                filePath = path.join(this.props.selectedWiki.path, 'articles', 'home.json');
                 content = fs.readFileSync(filePath, 'utf8');
             }
         } catch (e) {
             fs.access(filePath, (error) => {
                 if (error) {
                     this.props.fsError(`Error trying to fetch article ${this.props.routeParams.article}, please try running the app as administrator. If that doesn't work contact the developer`);
-                    console.warn(e);
+                    console.warn(e, error);
                 }
             });
         }
         if (content) {
             return JSON.parse(content);
         }
+    }
+    deleteArticle = () => {
+        let filePath = path.join(this.props.selectedWiki.path, 'articles', `${this.props.routeParams.article}.json`);
+        fs.unlink(filePath, (error) => {
+            if (error) {
+                this.props.fsError(`Error trying to delete article ${this.props.routeParams.article}, please try running the app as administrator. If that doesn't work contact the developer`);
+                console.warn(error);
+            }else{
+                this.props.history.pushState('/wiki/article/home');
+            }
+
+        });
     }
     onChange = (change: Change) => {
         const content = change.value;
@@ -77,15 +118,15 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
             </div>
         )
     }
+
     render() {
         const article = this.props.routeParams.article;
-        console.log(this.state);
         if (this.state.fileExists) {
             return (
                 <div>
                     <div>
                         <MemoryLink to={`/wiki/create`}> Create Article</MemoryLink>
-                        <button>Delete article</button>
+                        {article !== 'home' ? <button onClick={this.deleteArticle}>Delete article</button> : null}
                         <MemoryLink to={`/wiki/edit/${article}`}> Edit Article</MemoryLink>
                     </div>
                     <h1>{article === 'home' ? this.props.selectedWiki.name : article}</h1>

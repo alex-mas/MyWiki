@@ -55,11 +55,18 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
             if (!err) {
                 this.props.fsError(`Wiki article named ${this.state.name} already exists, please rename or delete the existing article or change the name of this article`);
             } else {
-                try {
-                    fs.writeFileSync(path.join(this.props.selectedWiki.path,'articles', `${this.state.name}.json`), JSON.stringify(this.state.editorContent), 'utf8');
-                } catch (e) {
-                    this.props.fsError(`Error trying to edit article ${this.props.routeParams.article}, please try running the app as administrator. If that doesn't work contact the developer`);
-                }
+                fs.writeFile(
+                    path.join(this.props.selectedWiki.path,'articles', `${this.state.name}.json`), 
+                    JSON.stringify(this.state.editorContent), 
+                    'utf8',
+                    (error)=>{
+                        if(error){
+                            this.props.fsError(`Error trying to create article ${this.state.name}, please try running the app as administrator. If that doesn't work contact the developer`);
+                        }else{
+                            this.props.history.pushState(`/wiki/article/${this.state.name}`);
+                        }
+                    }
+                );
             }
         })
     }
