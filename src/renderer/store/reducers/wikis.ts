@@ -1,5 +1,6 @@
 import { Reducer, AnyAction } from "redux";
 
+
 export interface WikiMetaData{
     path: string,
     name: string,
@@ -15,7 +16,7 @@ export const WikisMetadataReducer: Reducer<WikisMetadataState> = (state: WikisMe
         case 'CREATE_WIKI':
             return [...state, action.wiki];
         case 'REMOVE_WIKI':
-            return state.filter((wikiMetaData)=>wikiMetaData.id !== action.id);
+            return state.filter((wikiMetaData)=>wikiMetaData.id !== action.wiki.id);
         case 'RESET_WIKIS':
             return defaultState;
         case 'LOAD_WIKIS':

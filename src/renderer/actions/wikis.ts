@@ -7,27 +7,30 @@ import defaultWikiConfig from '../../shared/data/defaultWikiConfig.json';
 import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
 import { error, fsError, ErrorAction, ErrorActionCodes } from "./errors";
+import { deleteFolderRecursively } from '../utilities/fsutils';
 
 
-type _CreateWikiAction = Action & { wiki: WikiMetaData };
+type WikiAction = Action & { wiki: WikiMetaData };
 
-export type CreateWikiActionCreator = (name:string, wikiPath:string) =>ThunkAction<any, AppState, void, _CreateWikiAction | ErrorAction>;
+export type CreateWikiAction = WikiAction;
+
+export type CreateWikiActionCreator = (name: string, wikiPath: string) => ThunkAction<any, AppState, void, CreateWikiAction | ErrorAction>;
 
 export const createWiki: CreateWikiActionCreator = (name: string) => {
     return (dispatch, getState) => {
         const wikiId = uuid();
         const wikiPath = `./wikis/${name}(${wikiId})`;
-        if(!fs.existsSync('./wikis')){
+        if (!fs.existsSync('./wikis')) {
             fs.mkdirSync('./wikis');
         }
         fs.mkdirSync(wikiPath);
         fs.mkdirSync(path.join(wikiPath, 'articles'));
-        console.log(path.join(wikiPath,'myWikiConfig.json'));
-        fs.writeFile(path.join(wikiPath,'myWikiConfig.json'), JSON.stringify(defaultWikiConfig), 'utf8', (error) => {
-            if(error){
+        console.log(path.join(wikiPath, 'myWikiConfig.json'));
+        fs.writeFile(path.join(wikiPath, 'myWikiConfig.json'), JSON.stringify(defaultWikiConfig), 'utf8', (error) => {
+            if (error) {
                 console.log(error);
                 dispatch(fsError(`Error creating the configuration file for ${name} wiki`));
-            }else{
+            } else {
                 dispatch({
                     type: 'CREATE_WIKI',
                     wiki: {
@@ -44,38 +47,53 @@ export const createWiki: CreateWikiActionCreator = (name: string) => {
 
 }
 
+export type RemoveWikiAction = WikiAction;
+export type RemoveWikiActionCreator = ActionCreator<ThunkAction<any, AppState, void, RemoveWikiAction | ErrorAction>>;
 
-export const removeWiki: ActionCreator<{ id: string } & Action> = (id: string) => {
-    return {
-        type: 'REMOVE_WIKI',
-        id
+export const removeWiki: RemoveWikiActionCreator = (wiki: WikiMetaData) => {
+    return (dispatch, getState) => {
+        try {
+            fs.readdir('./wikis', (err, wikis) => {
+                wikis.forEach((wikiFolder) => {
+                    if (wikiFolder === `${wiki.name}(${wiki.id})`) {
+                        deleteFolderRecursively(path.join('./wikis', `${wiki.name}(${wiki.id})`));
+                    }
+                });
+            });
+        } catch (e) {
+            return dispatch(fsError('error removing wiki folder'));
+        }
+        return dispatch({
+            type: 'REMOVE_WIKI',
+            wiki
+        });
     }
 }
 
 
-export type SelectWikiAction = Action & {wiki: WikiMetaData};
+export type SelectWikiAction = WikiAction;
 export type SelectWikiActionCreator = ActionCreator<ThunkAction<any, AppState, void, SelectWikiAction | ErrorAction>>;
 
-export const selectWiki:SelectWikiActionCreator = (id:string)=>{
-    return (dispatch, getState)=>{
+export const selectWiki: SelectWikiActionCreator = (id: string) => {
+    return (dispatch, getState) => {
         const state = getState();
-        const wiki = state.wikis.find((wiki)=>wiki.id === id);
-        if(wiki){
+        const wiki = state.wikis.find((wiki) => wiki.id === id);
+        if (wiki) {
             dispatch({
                 type: 'SELECT_WIKI',
                 wiki
             });
-        }else{
-            dispatch(error(`Wiki id (${id}) provided doesn't mach with any of the wikis tracked by the app`,ErrorActionCodes.WRONG_PARAMS));
+        } else {
+            dispatch(error(`Wiki id (${id}) provided doesn't mach with any of the wikis tracked by the app`, ErrorActionCodes.WRONG_PARAMS));
         }
     }
 
 }
 
 
-export const loadWikis: ActionCreator<{wikis: WikiMetaData[]} & Action> = (wikis: WikiMetaData[])=>{
-    return{
-        type:'LOAD_WIKIS',
+export const loadWikis: ActionCreator<{ wikis: WikiMetaData[] } & Action> = (wikis: WikiMetaData[]) => {
+    return {
+        type: 'LOAD_WIKIS',
         wikis
     }
 }

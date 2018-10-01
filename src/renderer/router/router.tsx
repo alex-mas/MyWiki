@@ -4,6 +4,7 @@ import Router, { MemoryRoute, withHistoryContext, MemoryRouteProps } from '../..
 import HomePage from '../routes/home';
 import CreateWikiPage from '../routes/createWiki';
 import WikiArticlePage from '../routes/wikiArticle';
+import WikiEditPage from '../routes/wikiEdit';
 import NotFoundPage from '../routes/notFound';
 
 export type RouteProps = Exclude<MemoryRouteProps, 'history'>;
@@ -16,6 +17,7 @@ const AppRouter = () => {
             <MemoryRoute path='/' exact component={HomePage} />
             <MemoryRoute path='/createWiki' exact component={CreateWikiPage} />
             <MemoryRoute path='/wiki/:article' exact component={WikiArticlePage} />
+            <MemoryRoute path='/wikiEdit/:article' exact component={WikiEditPage} />
             <MemoryRoute path='' component={NotFoundPage} />
         </Router>
     );

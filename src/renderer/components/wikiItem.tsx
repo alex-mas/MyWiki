@@ -2,8 +2,9 @@ import * as React from 'react';
 import { RouteProps } from '../router/router';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetaData } from '../store/reducers/wikis';
-import { selectWiki, SelectWikiActionCreator } from '../actions/wikis';
+import { selectWiki, SelectWikiActionCreator, removeWiki } from '../actions/wikis';
 import { MemoryHistory, withHistoryContext } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
+import { ActionCreator } from 'redux';
 
 
 export interface WikiItemOwnProps{
@@ -12,7 +13,8 @@ export interface WikiItemOwnProps{
 }
 
 export interface WikiItemDispatchProps {
-    selectWiki: SelectWikiActionCreator;
+    selectWiki: SelectWikiActionCreator,
+    removeWiki: ActionCreator<any>
 }
 
 
@@ -27,12 +29,15 @@ class WikiItem extends React.Component<WikiItemProps, any>{
         this.props.selectWiki(this.props.wiki.id);
         this.props.history.pushState('/wiki/home');
     }
+    removeWiki =() =>{
+        this.props.removeWiki(this.props.wiki);
+    }
     render(){
         return(
             <div>
                 {this.props.wiki.name} 
                 <button onClick={this.onOpen}>Open</button>
-                <button>Untrack</button>
+                <button onClick={this.removeWiki}>Remove</button>
             </div>
         );
     }
@@ -41,5 +46,6 @@ class WikiItem extends React.Component<WikiItemProps, any>{
 
 
 export default withHistoryContext(connect<{}, WikiItemDispatchProps,WikiItemOwnProps, any>(undefined,{
-    selectWiki
+    selectWiki,
+    removeWiki
 })(WikiItem));

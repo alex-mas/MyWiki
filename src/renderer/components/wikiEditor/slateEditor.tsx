@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Editor, RenderNodeProps } from 'slate-react'
-import { Value, Change } from 'slate'
+import { Editor, RenderNodeProps } from 'slate-react';
+import { Value, Change } from 'slate';
+import * as fs from 'fs';
 import WikiLink from './wikiLink';
 import Modal from '../../../../../../libraries/alex components/dist/layout/modal';
 
@@ -49,7 +50,6 @@ export interface WikiEditorState {
     promptForText: boolean,
     linkText: string,
     linkDest: string
-
 }
 
 class WikiEditor extends React.Component<any, WikiEditorState> {
@@ -59,6 +59,18 @@ class WikiEditor extends React.Component<any, WikiEditorState> {
         promptForText: false,
         linkText: undefined,
         linkDest: undefined
+    }
+    constructor(props:any){
+        super(props);
+        if(props.content){
+            this.state = {
+                value: Value.fromJSON(props.content),
+                isModalOpen: false,
+                promptForText: false,
+                linkText: undefined,
+                linkDest: undefined
+            }
+        }
     }
     onChange = (change: Change) => {
         const value = change.value;
@@ -87,10 +99,9 @@ class WikiEditor extends React.Component<any, WikiEditorState> {
     }
     addLink = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        const { value } = this.state
-        const hasLinks = this.hasLinks()
-        const change = value.change()
-
+        const { value } = this.state;
+        const hasLinks = this.hasLinks();
+        const change = value.change();
 
         if (hasLinks) {
             //@ts-ignore
@@ -101,7 +112,7 @@ class WikiEditor extends React.Component<any, WikiEditorState> {
                 const dest = this.state.linkDest;
 
                 if (dest === null) {
-                    return
+                    return;
                 }
 
                 //@ts-ignore
@@ -129,7 +140,7 @@ class WikiEditor extends React.Component<any, WikiEditorState> {
                 change
                     .insertText(text)
                     .moveFocusBackward(text.length)
-                    .call(wrapLink, dest)
+                    .call(wrapLink, dest);
 
             } else {
                 this.setState(() => ({
@@ -158,32 +169,57 @@ class WikiEditor extends React.Component<any, WikiEditorState> {
         }));
     }
 
+    saveChanges = ()=>{
+        this.props.saveChanges(this.state.value.toJSON());
+    }
+    discardChanges = () =>{
+        this.props.discardChanges(this.state.value.toJSON());
+    }
     render() {
-        return (
-            <div>
-                <button onClick={this.addLink}>Add Link</button>
+        if (this.props.readOnly) {
+            return (
                 <Editor
+                    readOnly={this.props.readOnly}
                     value={this.state.value}
                     onChange={this.onChange}
                     renderNode={this.renderNode}
                 />
-                <Modal
-                    isOpen={this.state.isModalOpen}
-                    onClose={this.closeModal}
-                >
+            )
+        }else{
+            return (
+                <div>
                     <div>
-                        <input type="text" value={this.state.linkDest} onChange={this.onChangeLinkDest} />
-                        {this.state.promptForText ?
-                            <input type="text" value={this.state.linkText} onChange={this.onChangeLinkText} />
-                            :
-                            null
-                        }
-                        <button onClick={this.addLink}>Accept</button>
+                        <button onClick={this.saveChanges}>Save changes</button>
+                        <button onClick={this.discardChanges}>Discard changes</button>
                     </div>
-                </Modal>
-            </div>
+                    <div id='editor__actions'>
+                        <button onClick={this.addLink}>Add Link</button>
+                    </div>
+                    <Editor
+                        readOnly={this.props.readOnly}
+                        value={this.state.value}
+                        onChange={this.onChange}
+                        renderNode={this.renderNode}
+                    />
+                    <Modal
+                        isOpen={this.state.isModalOpen}
+                        onClose={this.closeModal}
+                    >
+                        <div>
+                            <input type="text" value={this.state.linkDest} onChange={this.onChangeLinkDest} />
+                            {this.state.promptForText ?
+                                <input type="text" value={this.state.linkText} onChange={this.onChangeLinkText} />
+                                :
+                                null
+                            }
+                            <button onClick={this.addLink}>Accept</button>
+                        </div>
+                    </Modal>
+                </div>
+    
+            );
+        }
 
-        );
     }
 }
 
