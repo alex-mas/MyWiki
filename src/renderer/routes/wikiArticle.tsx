@@ -34,10 +34,17 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
             fileExists: fetchedContent ? true : false
         }
     }
+    static getDerivedStateFromProps = (props: WikiArticlePageProps,state:any)=>{
+        const fetchedContent = this.getArticleContent();
+        return{
+
+        }
+    }
     getArticleContent = () => {
         let content;
         let filePath;
         try {
+            console.log('Before fetching file: ', this.props);
             if (this.props.routeParams && this.props.routeParams.article) {
                 filePath = path.join(this.props.selectedWiki.path,'articles', `${this.props.routeParams.article}.json`);
                 content = fs.readFileSync(filePath, 'utf8');

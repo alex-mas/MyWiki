@@ -37,6 +37,7 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, any>{
         let content;
         let filePath;
         try {
+            console.log('Before fetching file: ', this.props);
             if (this.props.routeParams && this.props.routeParams.article) {
                 filePath = path.join(this.props.selectedWiki.path, 'articles',`${this.props.routeParams.article}.json`);
                 content = fs.readFileSync(filePath, 'utf8');
@@ -67,7 +68,7 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, any>{
         }
     }
     discardChanges = () => {
-        this.props.history.pushState('wiki/article/home');
+        this.props.history.pushState('/wiki/article/home');
     }
     render() {
         const article = this.props.routeParams.article;
