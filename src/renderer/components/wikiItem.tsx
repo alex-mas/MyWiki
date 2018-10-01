@@ -27,7 +27,7 @@ class WikiItem extends React.Component<WikiItemProps, any>{
     }
     onOpen = ()=>{
         this.props.selectWiki(this.props.wiki.id);
-        this.props.history.pushState('/wiki/home');
+        this.props.history.pushState('/wiki/article/home');
     }
     removeWiki =() =>{
         this.props.removeWiki(this.props.wiki);

@@ -9,7 +9,7 @@ export class WikiLink extends React.Component<any, any>{
     render() {
         return (
             <span {...this.props.attributes}>
-                <MemoryLink to={'/wiki/'+this.props.to} text={this.props.text ? this.props.text : undefined}>
+                <MemoryLink to={'/wiki/article/'+this.props.to} text={this.props.text ? this.props.text : undefined}>
                     {this.props.children}
                 </MemoryLink>
             </span>

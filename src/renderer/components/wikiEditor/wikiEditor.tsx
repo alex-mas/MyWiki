@@ -1,216 +1,215 @@
 import * as React from 'react';
-import { Editor, EditorState, ContentBlock, BlockMap, BlockMapBuilder, DraftBlockType, RichUtils, DraftInlineStyleType, convertToRaw, convertFromRaw } from 'draft-js';
-import * as Immutable from 'immutable';
+import { Editor, RenderNodeProps } from 'slate-react';
+import { Value, Change } from 'slate';
 import * as fs from 'fs';
-import StyleButton from './styleButton';
-import { withHistoryContext } from '../../../../../../libraries/alex components/dist/navigation/memoryRouter';
-import { connect, MapStateToProps } from 'react-redux';
-import { WikiMetaData } from '../../store/reducers/wikis';
-import { AppState } from '../../store/store';
-import { fsError, FsErrorActionCreator } from '../../actions/errors';
+import WikiLink from './wikiLink';
+import Modal from '../../../../../../libraries/alex components/dist/layout/modal';
 
-
-type CustomBlockType = DraftBlockType | 'card' | 'link';
-
-const INLINE_STYLES: { label: string, style: DraftInlineStyleType }[] = [
-    { label: 'Bold', style: 'BOLD' },
-    { label: 'Italic', style: 'ITALIC' },
-    { label: 'Underline', style: 'UNDERLINE' },
-    { label: 'Code', style: 'CODE' },
-    { label: 'strikethrought', style: 'STRIKETHROUGH' }
-];
-
-const BLOCK_TYPES: { label: string, style: CustomBlockType }[] = [
-    { label: 'H1', style: 'header-one' },
-    { label: 'H2', style: 'header-two' },
-    { label: 'H3', style: 'header-three' },
-    { label: 'H4', style: 'header-four' },
-    { label: 'H5', style: 'header-five' },
-    { label: 'H6', style: 'header-six' },
-    { label: 'Blockquote', style: 'blockquote' },
-    { label: 'UL', style: 'unordered-list-item' },
-    { label: 'OL', style: 'ordered-list-item' },
-    { label: 'Code Block', style: 'code-block' },
-];
+export const defaultEditorContents = Value.fromJSON({
+    document: {
+        nodes: [
+            {
+                object: 'block',
+                type: 'paragraph',
+                nodes: [
+                    {
+                        object: 'text',
+                        leaves: [
+                            {
+                                text: 'A line of text in a paragraph.',
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    },
+})
 
 
 
-export type WikiEditorReduxProps = Pick<AppState, 'selectedWiki'>
+function wrapLink(change: Change, href: string) {
+    console.log('Href: ', href);
+    change.wrapInline({
+        type: 'link',
+        data: { href }
+    });
+    change.moveToEnd()
+}
 
-export interface WikiEditorOwnProps {
-    content: any,
+
+
+function unwrapLink(change: Change) {
+    change.unwrapInline('link')
+}
+
+
+export interface WikiEditorState {
+    isModalOpen: boolean,
+    promptForText: boolean,
+    linkText: string,
+    linkDest: string
+}
+
+export interface WikiEditorProps {
+    content: Value, 
+    onChange: (change: Change) => any,
     readOnly: boolean
 }
 
-
-export interface WikiEditorDispatchProps {
-    fsError: FsErrorActionCreator
-}
-
-
-export type WikiEditorProps = WikiEditorOwnProps & WikiEditorReduxProps & WikiEditorDispatchProps;
-
-
-export class WikiEditor extends React.Component<WikiEditorProps, { editorState: EditorState, articleName: string }> {
-    constructor(props: any) {
+class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
+    state: Readonly<WikiEditorState> = {
+        isModalOpen: false,
+        promptForText: false,
+        linkText: undefined,
+        linkDest: undefined
+    }
+    constructor(props:any){
         super(props);
-        let editorState: EditorState;
-        if (this.props.content) {
-            editorState = EditorState.createWithContent(convertFromRaw(this.props.content));
-        } else {
-            editorState = EditorState.createEmpty();
+        if(props.content){
+            this.state = {
+                isModalOpen: false,
+                promptForText: false,
+                linkText: undefined,
+                linkDest: undefined
+            }
         }
-        this.state = {
-            editorState,
-            articleName: undefined
-        };
     }
-
-    onSaveArticle = (event: React.MouseEvent<HTMLButtonElement>) => {
-        const articlePath = `${this.props.selectedWiki.path}/articles/${this.state.articleName}.json`;
-        fs.access(articlePath, fs.constants.F_OK, (err) => {
-            let shouldOverwrite;
-            if (!err) {
-                const shouldOverwrite = confirm(`The article with name ${this.state.articleName} already exists, do you wish to save it anyways?`);
-            }
-            if (err || shouldOverwrite) {
-                fs.writeFileSync(articlePath, convertToRaw(this.state.editorState.getCurrentContent()), 'utf8');
-            } else {
-                this.props.fsError(`Article ${this.state.articleName} couldn\'t be saved, maybe there is a problem with program permisions or user have choosen to not overwrite`);
-            }
-        });
-
-    }
-
-    onChangeArticleName = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const articleName = event.target.value;
-        this.setState((prevState) => ({
-            articleName
-        }));
-
-    }
-
-    onChange = (editorState: EditorState) => this.setState({ editorState });
-
-    //Here we define what to do when contentBlock is of custom type
-    blockRenderer = (contentBlock: ContentBlock) => {
-        const type: string = contentBlock.getType();
-        switch (type) {
+    renderNode = (props: RenderNodeProps) => {
+        const { attributes, children, node } = props;
+        debugger;
+        //@ts-ignore
+        switch (props.node.type) {
             case 'link':
-                break;
-            default:
-                break;
+                {
+                    //@ts-ignore
+                    const href = node.data.get('href');
+                    return (
+                        <WikiLink {...props} to={href}>
+                            {children}
+                        </WikiLink>
+                    );
+                }
         }
     }
-
-
-    toggleBlockType = (blockType: any) => {
-        this.onChange(
-            RichUtils.toggleBlockType(
-                this.state.editorState,
-                blockType
-            )
-        );
+    hasLinks = () => {
+        const value  = this.props.content;
+        return value.inlines.some(inline => inline.type == 'link')
     }
+    addLink = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        const  value = this.props.content;
+        const hasLinks = this.hasLinks();
+        const change = value.change();
 
-    toggleInlineStyle = (inlineStyle: any) => {
-        this.onChange(
-            RichUtils.toggleInlineStyle(
-                this.state.editorState,
-                inlineStyle
-            )
-        );
-        console.log(this.state.editorState);
-        console.log(convertToRaw(this.state.editorState.getCurrentContent()));
-    }
+        if (hasLinks) {
+            //@ts-ignore
+            change.call(unwrapLink)
+        } else if (value.selection.isExpanded) {
+            if (this.state.isModalOpen) {
+                this.closeModal();
+                const dest = this.state.linkDest;
 
-    BlockStyleButtons = (props: any) => {
-        const { editorState } = props;
-        const selection = editorState.getSelection();
-        const blockType = editorState
-            .getCurrentContent()
-            .getBlockForKey(selection.getStartKey())
-            .getType();
-
-        return (
-            <div className="RichEditor-controls">
-                {BLOCK_TYPES.map((type) =>
-                    <StyleButton
-                        key={type.label}
-                        active={type.style === blockType}
-                        label={type.label}
-                        onToggle={props.onToggle}
-                        style={type.style}
-                    />
-                )}
-            </div>
-        );
-    }
-
-    InlineStyleButtons = (props: any) => {
-        const currentStyle = props.editorState.getCurrentInlineStyle();
-        return (
-            <div className="RichEditor-controls">
-                {INLINE_STYLES.map((type) =>
-                    <StyleButton
-                        key={type.label}
-                        active={currentStyle.has(type.style)}
-                        label={type.label}
-                        onToggle={props.onToggle}
-                        style={type.style}
-                    />
-                )}
-            </div>
-        );
-    }
-    //in wiki-editor contrls we set up the buttons that trigger actions such as converting selected blocks to other types, add new elements such as cards,etc, 
-    //via RichUtils api from draftjs or via custom functions mutating the state via its methods.
-    render() {
-        return (
-            <div className='wiki-editor'>
-                {!this.props.readOnly ?
-                    <React.Fragment>
-                        <input
-                            type="text"
-                            value={this.state.articleName}
-                            placeholder={'article name'}
-                            onChange={this.onChangeArticleName}
-                        />
-                        <button onClick={this.onSaveArticle}>Save changes</button>
-                        <div className='wiki-editor__controls'>
-                            <this.BlockStyleButtons
-                                editorState={this.state.editorState}
-                                onToggle={this.toggleBlockType}
-                            />
-                            <this.InlineStyleButtons
-                                editorState={this.state.editorState}
-                                onToggle={this.toggleInlineStyle}
-                            />
-                        </div>
-                    </React.Fragment>
-                    :
-                    null
+                if (dest === null) {
+                    return;
                 }
-                <div className='wiki-editor__editor'>
+
+                //@ts-ignore
+                change.call(wrapLink, dest);
+
+            } else {
+                this.setState(() => ({
+                    isModalOpen: true,
+                    promptForText: false
+                }));
+            }
+
+        } else {
+            if (this.state.isModalOpen) {
+                this.closeModal();
+
+                const dest = this.state.linkDest;
+                const text = this.state.linkText;
+
+                if (dest === null || text === null) {
+                    return;
+                }
+                //@ts-ignore
+                change
+                    .insertText(text)
+                    .moveFocusBackward(text.length)
+                    .call(wrapLink, dest);
+
+            } else {
+                this.setState(() => ({
+                    isModalOpen: true,
+                    promptForText: true
+                }));
+            }
+        }
+        this.props.onChange(change);
+    }
+    closeModal = () => {
+        this.setState(() => ({
+            isModalOpen: false
+        }));
+    }
+    onChangeLinkDest = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const linkDest = e.target.value;
+        this.setState(() => ({
+            linkDest
+        }));
+    }
+    onChangeLinkText = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const linkText = e.target.value;
+        this.setState(() => ({
+            linkText
+        }));
+    }
+    render() {
+        console.log(this.props);
+        if (this.props.readOnly) {
+            return (
+                <Editor
+                    readOnly={this.props.readOnly}
+                    value={this.props.content}
+                    onChange={this.props.onChange}
+                    renderNode={this.renderNode}
+                />
+            )
+        }else{
+            return (
+                <div>
+                    <div id='editor__actions'>
+                        <button onClick={this.addLink}>Add Link</button>
+                    </div>
                     <Editor
                         readOnly={this.props.readOnly}
-                        blockRendererFn={this.blockRenderer}
-                        editorState={this.state.editorState}
-                        onChange={this.onChange}
+                        value={this.props.content}
+                        onChange={this.props.onChange}
+                        renderNode={this.renderNode}
                     />
+                    <Modal
+                        isOpen={this.state.isModalOpen}
+                        onClose={this.closeModal}
+                    >
+                        <div>
+                            <input type="text" value={this.state.linkDest} onChange={this.onChangeLinkDest} />
+                            {this.state.promptForText ?
+                                <input type="text" value={this.state.linkText} onChange={this.onChangeLinkText} />
+                                :
+                                null
+                            }
+                            <button onClick={this.addLink}>Accept</button>
+                        </div>
+                    </Modal>
                 </div>
-            </div>
+    
+            );
+        }
 
-        );
     }
 }
 
 
-
-const mapStateToProps: MapStateToProps<WikiEditorReduxProps, WikiEditorOwnProps, AppState> = (state, props) => {
-    return {
-        selectedWiki: state.selectedWiki
-    };
-}
-
-export default withHistoryContext(connect(mapStateToProps, { fsError })(WikiEditor));
+export default WikiEditor;
