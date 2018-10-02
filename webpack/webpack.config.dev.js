@@ -48,11 +48,11 @@ const rendererConfig = {
             options: {
               modules: true,
               namedExport: true,
-              camelCase: true
+              camelCase: true,
+  
             }
           },
           'sass-loader',
-
         ]
       }],
 

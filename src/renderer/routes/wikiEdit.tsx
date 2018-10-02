@@ -5,7 +5,7 @@ import { RouteProps } from '../router/router';
 import { AppState } from '../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { MemoryRouteProps, MemoryLink } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
-import WikiEditor, {defaultEditorContents} from '../components/wikiEditor/wikiEditor';
+import WikiEditor, { defaultEditorContents } from '../components/wikiEditor/wikiEditor';
 import * as ReactMarkdown from 'react-markdown';
 import { ValueJSON, Change, Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
@@ -39,15 +39,15 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, any>{
         try {
             console.log('Before fetching file: ', this.props);
             if (this.props.routeParams && this.props.routeParams.article) {
-                filePath = path.join(this.props.selectedWiki.path, 'articles',`${this.props.routeParams.article}.json`);
+                filePath = path.join(this.props.selectedWiki.path, 'articles', `${this.props.routeParams.article}.json`);
                 content = fs.readFileSync(filePath, 'utf8');
             } else {
-                filePath = path.join(this.props.selectedWiki.path,'articles', 'home.json');
+                filePath = path.join(this.props.selectedWiki.path, 'articles', 'home.json');
                 content = fs.readFileSync(filePath, 'utf8');
             }
         } catch (e) {
-            fs.access(filePath, (error)=>{
-                if(error){
+            fs.access(filePath, (error) => {
+                if (error) {
                     this.props.fsError(`Error trying to fetch article ${this.props.routeParams.article}, please try running the app as administrator. If that doesn't work contact the developer`);
                     console.warn(e);
                 }
@@ -62,14 +62,14 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, any>{
     }
     saveChanges = () => {
         fs.writeFile(
-            path.join(this.props.selectedWiki.path, 'articles',`${this.props.routeParams.article}.json`),
+            path.join(this.props.selectedWiki.path, 'articles', `${this.props.routeParams.article}.json`),
             JSON.stringify(this.state.editorContent.toJSON()),
             'utf8',
-            (err)=>{
-                if(err){
+            (err) => {
+                if (err) {
                     console.warn(err);
                     this.props.fsError(`Error trying to edit article ${this.props.routeParams.article}, please try running the app as administrator. If that doesn't work contact the developer`);
-                }else{
+                } else {
                     this.props.history.pushState(`/wiki/article/${this.props.routeParams.article}`);
                 }
             }
@@ -83,11 +83,11 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, any>{
         const article = this.props.routeParams.article;
         return (
             <div>
-                <h1>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
                 <div>
                     <button onClick={this.saveChanges}>Save changes</button>
                     <button onClick={this.discardChanges}>Discard changes</button>
                 </div>
+                <h1>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
                 <div style={{ padding: '5rem' }}>
                     <WikiEditor
                         onChange={this.onChange}

@@ -5,7 +5,7 @@ import { RouteProps } from '../router/router';
 import { AppState } from '../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetaData } from '../store/reducers/wikis';
-import WikiEditor, {defaultEditorContents} from '../components/wikiEditor/wikiEditor';
+import WikiEditor, { defaultEditorContents } from '../components/wikiEditor/wikiEditor';
 import { MemoryRouteProps } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
 import { Change, Value } from 'slate';
 import { CreateArticleActionCreator, createArticle } from '../actions/article';
@@ -51,18 +51,18 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
         }));
     }
     createArticle = () => {
-        fs.access(path.join(this.props.selectedWiki.path, 'wikis','articles', this.state.name), fs.constants.F_OK, (err) => {
+        fs.access(path.join(this.props.selectedWiki.path, 'wikis', 'articles', this.state.name), fs.constants.F_OK, (err) => {
             if (!err) {
                 this.props.fsError(`Wiki article named ${this.state.name} already exists, please rename or delete the existing article or change the name of this article`);
             } else {
                 fs.writeFile(
-                    path.join(this.props.selectedWiki.path,'articles', `${this.state.name}.json`), 
-                    JSON.stringify(this.state.editorContent), 
+                    path.join(this.props.selectedWiki.path, 'articles', `${this.state.name}.json`),
+                    JSON.stringify(this.state.editorContent),
                     'utf8',
-                    (error)=>{
-                        if(error){
+                    (error) => {
+                        if (error) {
                             this.props.fsError(`Error trying to create article ${this.state.name}, please try running the app as administrator. If that doesn't work contact the developer`);
-                        }else{
+                        } else {
                             this.props.history.pushState(`/wiki/article/${this.state.name}`);
                         }
                     }
@@ -73,8 +73,8 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
     render() {
         return (
             <div>
-                <h1>{this.state.name ? this.state.name : 'New Article'}</h1>
                 <input type="text" value={this.state.name} onChange={this.onNameChange} />
+                <h1>{this.state.name ? this.state.name : 'New Article'}</h1>
                 <WikiEditor
                     content={this.state.editorContent}
                     onChange={this.onChange}

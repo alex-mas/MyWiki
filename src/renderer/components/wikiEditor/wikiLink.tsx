@@ -6,14 +6,27 @@ export class WikiLink extends React.Component<any, any>{
         super(props);
     }
     render() {
-        return (
-            <span {...this.props.attributes}>
-                <MemoryLink to={'/wiki/article/'+this.props.to} text={this.props.text ? this.props.text : undefined}>
-                    {this.props.children}
-                </MemoryLink>
-            </span>
+        if (this.props.active) {
+            return (
+                <span {...this.props.attributes}>
+                    <MemoryLink to={'/wiki/article/' + this.props.to} text={this.props.text ? this.props.text : undefined}>
+                        {this.props.children}
+                    </MemoryLink>
+                </span>
 
-        )
+            )
+        } else {
+            return (
+                <span {...this.props.attributes}>
+                    <a href=''>
+                        {this.props.text}
+                        {this.props.children}
+                    </a>
+                </span>
+            );
+
+        }
+
     }
 }
 

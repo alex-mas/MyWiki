@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 require('./styles/index.scss');
-require('draft-js/dist/Draft.css');
 import {Provider} from 'react-redux';
 import configureStore from './store/store';
 import AppRouter from './router/router';
