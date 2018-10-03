@@ -53,6 +53,18 @@ export const BUTTON_NODE_TYPES = [
         icon: 'looks_two'
     },
     {
+        type: 'heading-three',
+        icon: 'looks_3'
+    },
+    {
+        type: 'heading-four',
+        icon: 'looks_4'
+    },
+    {
+        type: 'heading-five',
+        icon: 'looks_5'
+    },
+    {
         type: 'numbered-list',
         icon: 'format_list_numbered'
     }
@@ -77,6 +89,35 @@ export const BUTTON_MARK_TYPES = [
         icon: 'format_underlined'
     }
 ]
+
+
+export const BUTTON_INLINE_TYPES = [
+    {
+        type: 'align-left',
+        icon: 'format_align_left'
+    },
+    {
+        type: 'align-right',
+        icon: 'format_align_right'
+    },
+    {
+        type: 'centered',
+        icon: 'format_align_center'
+    }
+]
+
+
+const wrapInline = (change: Change, type: string, data?: any) => {
+    change.wrapInline({
+        type,
+        data: data ? data : {}
+    }).moveToEnd();
+};
+
+
+const unwrapInline = (change: Change, type: string) => {
+    change.unwrapInline(type);
+}
 
 
 
@@ -141,6 +182,13 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                         </WikiLink>
                     );
                 }
+            case 'align-left':
+                return <span style={{ alignSelf: 'flex-start' }} {...attributes}>{children}</span>
+            case 'align-right':
+                console.log('rendering align right item');
+                return <span style={{ alignSelf: 'flex-end' }} {...attributes}>{children}</span>
+            case 'centered':
+                return <span style={{ alignSelf: 'center' }} {...attributes}>{children}</span>
             case 'block-quote':
                 return <blockquote {...attributes}>{children}</blockquote>
             case 'bulleted-list':
@@ -149,6 +197,12 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 return <h1 {...attributes}>{children}</h1>
             case 'heading-two':
                 return <h2 {...attributes}>{children}</h2>
+            case 'heading-three':
+                return <h3 {...attributes}>{children}</h3>
+            case 'heading-four':
+                return <h4 {...attributes}>{children}</h4>
+            case 'heading-five':
+                return <h5 {...attributes}>{children}</h5>
             case 'list-item':
                 return <li {...attributes}>{children}</li>
             case 'numbered-list':
@@ -182,6 +236,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
 
     onClickMark = (event: React.MouseEvent<HTMLElement>, type: string) => {
         event.preventDefault();
+
         const change = this.props.content.change().toggleMark(type);
         this.props.onChange(change);
     }
@@ -233,6 +288,20 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         this.props.onChange(change);
     }
 
+    onClickInline = (event: React.MouseEvent<HTMLSpanElement>, type: string) => {
+        event.preventDefault();
+        const value = this.props.content;
+        const isActive = this.hasInlineType(type);
+        const change = value.change();
+        if (isActive) {
+            //@ts-ignore
+            change.call(unwrapInline, type);
+        } else if (value.selection.isExpanded) {
+            //@ts-ignore
+            change.call(wrapInline, type);
+        }
+        this.props.onChange(change);
+    }
     addLink = (event: React.MouseEvent<HTMLSpanElement>) => {
         event.preventDefault();
         const value = this.props.content;
@@ -331,6 +400,18 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 onClick={this.onClickBlock}
                 type={type}
                 icon={icon}
+
+            />
+        )
+    }
+    inlineButton = (type: string, icon: string) => {
+        let isActive = this.hasInlineType(type);
+        return (
+            <EditorButton
+                active={isActive}
+                onClick={this.onClickInline}
+                type={type}
+                icon={icon}
             />
         )
     }
@@ -344,6 +425,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     value={this.props.content}
                     onChange={this.props.onChange}
                     renderNode={this.renderNode}
+                    className='myWiki__editor'
                 />
             )
         } else {
@@ -362,7 +444,9 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                         {BUTTON_NODE_TYPES.map((node) => {
                             return this.nodeButton(node.type, node.icon);
                         })}
-
+                        {BUTTON_INLINE_TYPES.map((inline) => {
+                            return this.inlineButton(inline.type, inline.icon);
+                        })}
                     </div>
                     <Editor
                         renderMark={this.renderMark}
@@ -370,6 +454,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                         value={this.props.content}
                         onChange={this.props.onChange}
                         renderNode={this.renderNode}
+                        className='myWiki__editor'
                     />
                     <Modal
                         isOpen={this.state.isModalOpen}
