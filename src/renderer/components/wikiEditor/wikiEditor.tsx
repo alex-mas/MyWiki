@@ -87,11 +87,7 @@ export const BUTTON_MARK_TYPES = [
     {
         type: 'underlined',
         icon: 'format_underlined'
-    }
-]
-
-
-export const BUTTON_INLINE_TYPES = [
+    },
     {
         type: 'align-left',
         icon: 'format_align_left'
@@ -107,6 +103,24 @@ export const BUTTON_INLINE_TYPES = [
 ]
 
 
+export const BUTTON_INLINE_TYPES: any[] = [
+
+];
+
+
+const schema = {
+    nodes: {
+        paragraph: function (props: RenderNodeProps) {
+            const { node, attributes, children } = props
+            //@ts-ignore
+            const textAlign = node.data.get('align') || 'left'
+            const style = { textAlign }
+            return <p style={style} {...attributes}>{children}</p>
+        }
+    }
+}
+
+
 const wrapInline = (change: Change, type: string, data?: any) => {
     change.wrapInline({
         type,
@@ -118,6 +132,8 @@ const wrapInline = (change: Change, type: string, data?: any) => {
 const unwrapInline = (change: Change, type: string) => {
     change.unwrapInline(type);
 }
+
+
 
 
 
@@ -182,13 +198,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                         </WikiLink>
                     );
                 }
-            case 'align-left':
-                return <span style={{ alignSelf: 'flex-start' }} {...attributes}>{children}</span>
-            case 'align-right':
-                console.log('rendering align right item');
-                return <span style={{ alignSelf: 'flex-end' }} {...attributes}>{children}</span>
-            case 'centered':
-                return <span style={{ alignSelf: 'center' }} {...attributes}>{children}</span>
             case 'block-quote':
                 return <blockquote {...attributes}>{children}</blockquote>
             case 'bulleted-list':
@@ -212,6 +221,13 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
     renderMark = (props: RenderMarkProps) => {
         const { children, mark, attributes } = props;
         switch (mark.type) {
+            case 'align-left':
+                return <span style={{ textAlign: 'left' }} {...attributes}>{children}</span>
+            case 'align-right':
+                console.log('rendering align right item');
+                return <span style={{ textAlign: 'right' }} {...attributes}>{children}</span>
+            case 'centered':
+                return <span style={{ textAlign: 'center' }} {...attributes}>{children}</span>
             case 'bold':
                 return <strong {...attributes}>{children}</strong>
             case 'code':
