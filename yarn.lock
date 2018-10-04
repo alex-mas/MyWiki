@@ -20,6 +20,31 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
+"@slate-editor/alignment-plugin@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@slate-editor/alignment-plugin/-/alignment-plugin-5.0.0.tgz#76d86eaa21582c099909c98eceb8f025faf6aab9"
+  dependencies:
+    "@slate-editor/components" "^5.0.0"
+    classnames "^2.2.5"
+    exenv "^1.2.1"
+    react "^16.2.0"
+    react-fontawesome "^1.6.1"
+
+"@slate-editor/components@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@slate-editor/components/-/components-5.0.0.tgz#d21bb59f2e0b7ffefbee66965ccc44edcfbae5c4"
+  dependencies:
+    "@slate-editor/utils" "^5.0.0"
+    classnames "^2.2.5"
+    exenv "^1.2.1"
+    react "^16.2.0"
+
+"@slate-editor/utils@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@slate-editor/utils/-/utils-5.0.0.tgz#e1e08f966bc09278d0944d008e976c1ffb31b087"
+  dependencies:
+    react "^16.2.0"
+
 "@types/draft-js@^0.10.25":
   version "0.10.25"
   resolved "https://registry.yarnpkg.com/@types/draft-js/-/draft-js-0.10.25.tgz#4f741ea8b7f008c3c0a06ff6b2c4427f380dc331"
@@ -1196,6 +1221,10 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
+classnames@^2.2.5:
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
+
 cli-boxes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/cli-boxes/-/cli-boxes-1.0.0.tgz#4fa917c3e59c94a004cd61f8ee509da651687143"
@@ -2158,6 +2187,10 @@ execa@^0.7.0:
     p-finally "^1.0.0"
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
+
+exenv@^1.2.1:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/exenv/-/exenv-1.2.2.tgz#2ae78e85d9894158670b03d47bec1f03bd91bb9d"
 
 exit@^0.1.2:
   version "0.1.2"
@@ -5515,7 +5548,7 @@ promzard@^0.3.0:
   dependencies:
     read "1"
 
-prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2:
+prop-types@^15.5.6, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
   dependencies:
@@ -5694,6 +5727,12 @@ react-dom@^16.4.2:
     prop-types "^15.6.2"
     schedule "^0.5.0"
 
+react-fontawesome@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/react-fontawesome/-/react-fontawesome-1.6.1.tgz#eddce17e7dc731aa09fd4a186688a61793a16c5c"
+  dependencies:
+    prop-types "^15.5.6"
+
 react-immutable-proptypes@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/react-immutable-proptypes/-/react-immutable-proptypes-2.1.0.tgz#023d6f39bb15c97c071e9e60d00d136eac5fa0b4"
@@ -5720,7 +5759,7 @@ react-redux@^5.0.7:
     loose-envify "^1.1.0"
     prop-types "^15.6.0"
 
-react@^16.4.2:
+react@^16.2.0, react@^16.4.2:
   version "16.5.2"
   resolved "https://registry.yarnpkg.com/react/-/react-16.5.2.tgz#19f6b444ed139baa45609eee6dc3d318b3895d42"
   dependencies:

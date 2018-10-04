@@ -53,6 +53,7 @@
     "webpack-cli": "^3.1.0"
   },
   "dependencies": {
+    "@slate-editor/alignment-plugin": "^5.0.0",
     "@types/draft-js": "^0.10.25",
     "@types/showdown": "^1.7.5",
     "@types/slate": "^0.40.0",

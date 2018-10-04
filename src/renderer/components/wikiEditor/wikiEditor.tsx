@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Editor, RenderNodeProps, RenderMarkProps } from 'slate-react';
-import { Value, Change, Data } from 'slate';
+import { Value, Change, Data, Schema } from 'slate';
 import * as fs from 'fs';
 import WikiLink from './wikiLink';
 import Modal from '../../../../../../libraries/alex components/dist/layout/modal';
@@ -26,6 +26,8 @@ export const defaultEditorContents = Value.fromJSON({
         ],
     },
 });
+
+
 
 
 export const DEFAULT_NODE = 'paragraph';
@@ -125,7 +127,8 @@ export const BUTTON_INLINE_TYPES: any[] = [
 ];
 
 
-const schema = {
+const schema: Schema = {
+    //@ts-ignore
     nodes: {
         paragraph: function (props: RenderNodeProps) {
             const { node, attributes, children } = props
@@ -264,7 +267,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
     }
 
     hasBlockType = (type: string) => {
-        console.log(type, this.props.content.anchorBlock.type, this.props.content.focusBlock.type);
         return this.props.content.blocks.some(block => block.type === type)
     }
 
@@ -282,10 +284,16 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         const change = value.change();
         const { document } = value;
 
+
+        const isType = value.blocks.some(block => {
+            //@ts-ignore
+            return !!document.getClosest(block.key, parent => parent.type == type)
+        });
+        const isList = this.hasBlockType('list-item');
+
         // Handle everything but list buttons.
         if (type != 'bulleted-list' && type != 'numbered-list') {
             const isActive = this.hasBlockType(type)
-            const isList = this.hasBlockType('list-item')
 
             if (isList) {
                 change
@@ -293,31 +301,47 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     .unwrapBlock('bulleted-list')
                     .unwrapBlock('numbered-list')
             } else {
-                debugger;
+
                 if (type === 'align') {
-                    if (isActive) {
-                        change.unwrapBlock({
-                            type,
-                            data
-                        });
+
+
+                    const isSameAlignment = value.blocks.some(block => {
+                        //@ts-ignore
+                        return !!document.getClosest(block.key, parent => parent.type == type && parent.data.align === data.align)
+                    });
+                    if (isType) {
+                        if (isSameAlignment) {
+                            change.unwrapBlock({
+                                type,
+                                data
+                            });
+                        } else {
+                            change
+                                .unwrapBlock({
+                                    type
+                                })
+                                .wrapBlock({
+                                    type,
+                                    data
+                                })
+                                .moveToEnd();
+                        }
+
                     } else {
                         change.wrapBlock({
                             type,
                             data
-                        });
+                        }).moveToEnd();
                     }
                 } else {
-                    change.setBlocks(isActive ? DEFAULT_NODE : type);
+                    change.setBlocks(isActive ? DEFAULT_NODE : {
+                        type,
+                        data
+                    });
                 }
             }
         } else {
             // Handle the extra wrapping required for list buttons.
-            const isList = this.hasBlockType('list-item')
-            const isType = value.blocks.some(block => {
-                //@ts-ignore
-                return !!document.getClosest(block.key, parent => parent.type == type)
-            })
-
             if (isList && isType) {
                 change
                     .setBlocks(DEFAULT_NODE)
@@ -435,7 +459,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
     }
     nodeButton = (type: string, icon: string, data: any) => {
         let isActive = this.hasBlockType(type);
-        console.log(type, isActive)
 
         //@ts-ignore
         if (['numbered-list', 'bulleted-list'].includes(type)) {
@@ -508,6 +531,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                         onChange={this.props.onChange}
                         renderNode={this.renderNode}
                         className='myWiki__editor'
+                        schema={schema}
                     />
                     <Modal
                         isOpen={this.state.isModalOpen}
