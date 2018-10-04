@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Editor, RenderNodeProps, RenderMarkProps } from 'slate-react';
-import { Value, Change } from 'slate';
+import { Value, Change, Data } from 'slate';
 import * as fs from 'fs';
 import WikiLink from './wikiLink';
 import Modal from '../../../../../../libraries/alex components/dist/layout/modal';
@@ -31,74 +31,91 @@ export const defaultEditorContents = Value.fromJSON({
 export const DEFAULT_NODE = 'paragraph';
 
 
-export const BUTTON_NODE_TYPES = [
-    {
-        type: 'link',
-        icon: ''
-    },
+export const BUTTON_NODE_TYPES: { type: string, icon: string, data: any }[] = [
     {
         type: 'block-quote',
-        icon: 'format_quote'
+        icon: 'format_quote',
+        data: undefined
     },
     {
         type: 'bulleted-list',
-        icon: 'format_list_bulleted'
+        icon: 'format_list_bulleted',
+        data: undefined
     },
     {
         type: 'heading-one',
-        icon: 'looks_one'
+        icon: 'looks_one',
+        data: undefined
     },
     {
         type: 'heading-two',
-        icon: 'looks_two'
+        icon: 'looks_two',
+        data: undefined
     },
     {
         type: 'heading-three',
-        icon: 'looks_3'
+        icon: 'looks_3',
+        data: undefined
     },
     {
         type: 'heading-four',
-        icon: 'looks_4'
+        icon: 'looks_4',
+        data: undefined
     },
     {
         type: 'heading-five',
-        icon: 'looks_5'
+        icon: 'looks_5',
+        data: undefined
     },
     {
         type: 'numbered-list',
-        icon: 'format_list_numbered'
+        icon: 'format_list_numbered',
+        data: undefined
+    },
+    {
+        type: 'align',
+        icon: 'format_align_left',
+        data: {
+            align: 'left'
+        }
+    },
+    {
+        type: 'align',
+        icon: 'format_align_right',
+        data: {
+            align: 'right'
+        }
+    },
+    {
+        type: 'align',
+        icon: 'format_align_center',
+        data: {
+            align: 'center'
+        }
     }
 ]
 
 
-export const BUTTON_MARK_TYPES = [
+export const BUTTON_MARK_TYPES: { type: string, icon: string, data: any }[] = [
     {
         type: 'bold',
-        icon: 'format_bold'
+        icon: 'format_bold',
+        data: undefined
     },
     {
         type: 'code',
-        icon: 'code'
+        icon: 'code',
+        data: undefined
     },
     {
         type: 'italic',
-        icon: 'format_italic'
+        icon: 'format_italic',
+        data: undefined
     },
     {
         type: 'underlined',
-        icon: 'format_underlined'
-    },
-    {
-        type: 'align-left',
-        icon: 'format_align_left'
-    },
-    {
-        type: 'align-right',
-        icon: 'format_align_right'
-    },
-    {
-        type: 'centered',
-        icon: 'format_align_center'
+        icon: 'format_underlined',
+        data: undefined
     }
 ]
 
@@ -216,18 +233,18 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 return <li {...attributes}>{children}</li>
             case 'numbered-list':
                 return <ol {...attributes}>{children}</ol>
+            case 'align':
+                return (
+                    //@ts-ignore
+                    <div {...attributes} style={{ textAlign: node.data.get('align') }}>
+                        {children}
+                    </div>
+                );
         }
     }
     renderMark = (props: RenderMarkProps) => {
         const { children, mark, attributes } = props;
         switch (mark.type) {
-            case 'align-left':
-                return <span style={{ textAlign: 'left' }} {...attributes}>{children}</span>
-            case 'align-right':
-                console.log('rendering align right item');
-                return <span style={{ textAlign: 'right' }} {...attributes}>{children}</span>
-            case 'centered':
-                return <span style={{ textAlign: 'center' }} {...attributes}>{children}</span>
             case 'bold':
                 return <strong {...attributes}>{children}</strong>
             case 'code':
@@ -247,6 +264,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
     }
 
     hasBlockType = (type: string) => {
+        console.log(type, this.props.content.anchorBlock.type, this.props.content.focusBlock.type);
         return this.props.content.blocks.some(block => block.type === type)
     }
 
@@ -258,7 +276,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
     }
 
 
-    onClickBlock = (event: React.MouseEvent<HTMLSpanElement>, type: string) => {
+    onClickBlock = (event: React.MouseEvent<HTMLSpanElement>, type: string, data: any) => {
         event.preventDefault()
         const value = this.props.content;
         const change = value.change();
@@ -275,7 +293,22 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     .unwrapBlock('bulleted-list')
                     .unwrapBlock('numbered-list')
             } else {
-                change.setBlocks(isActive ? DEFAULT_NODE : type)
+                debugger;
+                if (type === 'align') {
+                    if (isActive) {
+                        change.unwrapBlock({
+                            type,
+                            data
+                        });
+                    } else {
+                        change.wrapBlock({
+                            type,
+                            data
+                        });
+                    }
+                } else {
+                    change.setBlocks(isActive ? DEFAULT_NODE : type);
+                }
             }
         } else {
             // Handle the extra wrapping required for list buttons.
@@ -304,17 +337,17 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         this.props.onChange(change);
     }
 
-    onClickInline = (event: React.MouseEvent<HTMLSpanElement>, type: string) => {
+    onClickInline = (event: React.MouseEvent<HTMLSpanElement>, type: string, data: any) => {
         event.preventDefault();
         const value = this.props.content;
         const isActive = this.hasInlineType(type);
         const change = value.change();
         if (isActive) {
             //@ts-ignore
-            change.call(unwrapInline, type);
+            change.call(unwrapInline, type, data);
         } else if (value.selection.isExpanded) {
             //@ts-ignore
-            change.call(wrapInline, type);
+            change.call(wrapInline, type, data);
         }
         this.props.onChange(change);
     }
@@ -388,7 +421,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             linkText
         }));
     }
-    markButton = (type: string, icon: string) => {
+    markButton = (type: string, icon: string, data: any) => {
         const isActive = this.hasMarkType(type);
         return (
             <EditorButton
@@ -396,11 +429,13 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 active={isActive}
                 icon={icon}
                 type={type}
+                data={data}
             />
         )
     }
-    nodeButton = (type: string, icon: string) => {
+    nodeButton = (type: string, icon: string, data: any) => {
         let isActive = this.hasBlockType(type);
+        console.log(type, isActive)
 
         //@ts-ignore
         if (['numbered-list', 'bulleted-list'].includes(type)) {
@@ -416,11 +451,11 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 onClick={this.onClickBlock}
                 type={type}
                 icon={icon}
-
+                data={data}
             />
         )
     }
-    inlineButton = (type: string, icon: string) => {
+    inlineButton = (type: string, icon: string, data: any) => {
         let isActive = this.hasInlineType(type);
         return (
             <EditorButton
@@ -428,6 +463,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 onClick={this.onClickInline}
                 type={type}
                 icon={icon}
+                data={data}
             />
         )
     }
@@ -453,15 +489,16 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                             active={this.hasInlineType('link')}
                             type='link'
                             icon='link'
+                            data={undefined}
                         />
                         {BUTTON_MARK_TYPES.map((mark) => {
-                            return this.markButton(mark.type, mark.icon);
+                            return this.markButton(mark.type, mark.icon, mark.data);
                         })}
                         {BUTTON_NODE_TYPES.map((node) => {
-                            return this.nodeButton(node.type, node.icon);
+                            return this.nodeButton(node.type, node.icon, node.data);
                         })}
                         {BUTTON_INLINE_TYPES.map((inline) => {
-                            return this.inlineButton(inline.type, inline.icon);
+                            return this.inlineButton(inline.type, inline.icon, inline.data);
                         })}
                     </div>
                     <Editor
