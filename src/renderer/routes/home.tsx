@@ -15,6 +15,10 @@ export class HomePage extends React.Component<HomePageProps, any>{
     constructor(props: HomePageProps) {
         super(props);
     }
+    componentDidMount(){
+        const appTitle = document.getElementById('pageTitle');
+        appTitle.innerText = `MyWiki - Home`;
+    }
     render() {
         return (
             <div className='wiki-route'>

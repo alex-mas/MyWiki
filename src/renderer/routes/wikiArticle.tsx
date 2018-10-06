@@ -53,9 +53,16 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
     constructor(props: WikiArticlePageProps) {
         super(props);
         const fetchedContent = this.getArticleContent();
+
         this.state = {
             content: fetchedContent ? Value.fromJSON(fetchedContent) : defaultEditorContents,
             fileExists: fetchedContent ? true : false
+        }
+    }
+    componentDidMount(){
+        const appTitle = document.getElementById('pageTitle');
+        if(appTitle.innerText !== this.props.selectedWiki.name){
+            appTitle.innerText = `${this.props.selectedWiki.name}@${this.props.routeParams.article}`;
         }
     }
     componentDidUpdate(prevProps: WikiArticlePageProps, prevState: any) {
@@ -125,7 +132,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
             return (
                 <div className='wiki-route'>
                     <div className='wiki-article__actions'>
-                        <MemoryLink to={`/wiki/create`}> Create Article</MemoryLink>
+                        <MemoryLink to={`/wiki/create/`}> Create Article</MemoryLink>
                         {article !== 'home' ? <button onClick={this.deleteArticle}>Delete article</button> : null}
                         <MemoryLink to={`/wiki/edit/${article}`}> Edit Article</MemoryLink>
                     </div>

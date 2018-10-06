@@ -33,6 +33,12 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, any>{
             editorContent: fetchedContent ? Value.fromJSON(fetchedContent) : defaultEditorContents
         }
     }
+    componentDidMount(){
+        const appTitle = document.getElementById('pageTitle');
+        if(appTitle.innerText !== this.props.selectedWiki.name){
+            appTitle.innerText = `${this.props.selectedWiki.name} - editing@${this.props.routeParams.article}`;
+        }
+    }
     getArticleContent = () => {
         let content;
         let filePath;

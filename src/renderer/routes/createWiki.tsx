@@ -15,6 +15,10 @@ export class CreateWikiPage extends React.Component<CreateWikiPageProps, any>{
     constructor(props: CreateWikiPageProps) {
         super(props);
     }
+    componentDidMount(){
+        const appTitle = document.getElementById('pageTitle');
+        appTitle.innerText = `MyWiki - Create wiki`;
+    }
     render() {
         return (
             <div className='wiki-route'>

@@ -11,6 +11,10 @@ export class NotFoundPage extends React.Component<NotFoundPageProps, any>{
     constructor(props: NotFoundPageProps) {
         super(props);
     }
+    componentDidMount(){
+        const appTitle = document.getElementById('pageTitle');
+        appTitle.innerText = `MyWiki - Page not found`;
+    }
     render() {
         return (
             <div className='wiki-route'>

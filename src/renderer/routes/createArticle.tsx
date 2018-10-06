@@ -40,6 +40,10 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
             name: this.props.routeParams.article
         }
     }
+    componentDidMount(){
+        const appTitle = document.getElementById('pageTitle');
+        appTitle.innerText = `${this.props.selectedWiki.name} - Create article ${this.state.name ? '('+this.state.name+')' : ''}`;
+    }
     onChange = (change: Change) => {
         const editorContent = change.value;
         this.setState(() => ({ editorContent }));
