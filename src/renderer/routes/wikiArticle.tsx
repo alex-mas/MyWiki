@@ -124,13 +124,15 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         if (this.state.fileExists) {
             return (
                 <div className='wiki-route'>
-                    <div>
+                    <div className='wiki-article__actions'>
                         <MemoryLink to={`/wiki/create`}> Create Article</MemoryLink>
                         {article !== 'home' ? <button onClick={this.deleteArticle}>Delete article</button> : null}
                         <MemoryLink to={`/wiki/edit/${article}`}> Edit Article</MemoryLink>
                     </div>
-                    <h1>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
-                    <div style={{ padding: '5rem' }}>
+                    <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
+                    <div 
+                        className='wiki-article__body'
+                    >
                         <WikiEditor
                             content={this.state.content}
                             onChange={this.onChange}

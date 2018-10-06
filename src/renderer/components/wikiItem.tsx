@@ -36,8 +36,8 @@ class WikiItem extends React.Component<WikiItemProps, any>{
         return(
             <div className='wiki-item'>
                 {this.props.wiki.name} 
-                <button onClick={this.onOpen}>Open</button>
-                <button onClick={this.removeWiki}>Remove</button>
+                <button className='page__action--secondary' onClick={this.onOpen}>Open</button>
+                <button className='page__action--flat' onClick={this.removeWiki}>Remove</button>
             </div>
         );
     }

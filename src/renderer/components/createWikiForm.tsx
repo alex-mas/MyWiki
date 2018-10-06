@@ -46,9 +46,9 @@ export class CreateWikiForm extends React.Component<CreateWikiFormOwnProps & Cre
     }
     render() {
         return (
-            <form onSubmit={this.onSubmitForm}>
-                <input type="text" value={this.state.name} onChange={this.onNameChange} />
-                <button type='submit'>Submit</button>
+            <form className='form' onSubmit={this.onSubmitForm}>
+                <input className='form input' type="text" value={this.state.name} onChange={this.onNameChange} />
+                <button className='form action'type='submit'>Submit</button>
             </form>
         )
     }

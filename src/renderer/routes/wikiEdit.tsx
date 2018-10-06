@@ -83,12 +83,14 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, any>{
         const article = this.props.routeParams.article;
         return (
             <div className='wiki-route'>
-                <div>
+                <div className='wiki-article__actions'>
                     <button onClick={this.saveChanges}>Save changes</button>
                     <button onClick={this.discardChanges}>Discard changes</button>
                 </div>
-                <h1>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
-                <div style={{ padding: '5rem' }}>
+                <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
+                <div 
+                    className='wiki-article__editor'
+                >
                     <WikiEditor
                         onChange={this.onChange}
                         content={this.state.editorContent}

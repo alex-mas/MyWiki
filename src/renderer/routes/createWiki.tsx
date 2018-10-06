@@ -18,7 +18,7 @@ export class CreateWikiPage extends React.Component<CreateWikiPageProps, any>{
     render() {
         return (
             <div className='wiki-route'>
-                <h1>Create a wiki</h1>
+                <h1 className='page__title'>Create a wiki</h1>
                 <CreateWikiForm history={this.props.history}/>
             </div>
         )

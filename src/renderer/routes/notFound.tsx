@@ -14,9 +14,9 @@ export class NotFoundPage extends React.Component<NotFoundPageProps, any>{
     render() {
         return (
             <div className='wiki-route'>
-                <h1>Not found</h1>
-                <h2>The page you requested couldn't be located</h2>
-                <MemoryLink to='/' text='Home'/>
+                <h1 className='page__title'>Not found</h1>
+                <h2 className='page__subtitle'>The page you requested couldn't be located</h2>
+                <MemoryLink className='page__action' to='/' text='Home'/>
             </div>
         )
     }
