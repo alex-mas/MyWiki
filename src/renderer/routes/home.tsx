@@ -17,11 +17,12 @@ export class HomePage extends React.Component<HomePageProps, any>{
     }
     render() {
         return (
-            <div>
-                <h1>Wikis</h1>
-                <ul>
+            <div className='wiki-route'>
+                <h1>My Wiki</h1>
+                <h2>Current wikis</h2>
+                <ul className='wiki-list'>
                     {this.props.wikis.map((wiki) => {
-                        return<li><Wiki wiki={wiki}/></li>
+                        return<li className='wiki-list__item'><Wiki wiki={wiki}/></li>
                     })}
                 </ul>
                 <MemoryLink to='/createWiki' text='Create new wiki'/>

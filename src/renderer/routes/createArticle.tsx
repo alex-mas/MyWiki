@@ -37,7 +37,7 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
         super(props);
         this.state = {
             editorContent: defaultEditorContents,
-            name: undefined
+            name: this.props.routeParams.article
         }
     }
     onChange = (change: Change) => {
@@ -72,7 +72,7 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
     }
     render() {
         return (
-            <div>
+            <div className='wiki-route'>
                 <input type="text" value={this.state.name} onChange={this.onNameChange} />
                 <h1>{this.state.name ? this.state.name : 'New Article'}</h1>
                 <WikiEditor

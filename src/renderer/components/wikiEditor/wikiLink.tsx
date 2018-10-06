@@ -1,7 +1,18 @@
 import * as React from 'react';
 import { MemoryLink } from '../../../../../../libraries/alex components/dist/navigation/memoryRouter';
+import { RenderAttributes } from 'slate-react';
 
-export class WikiLink extends React.Component<any, any>{
+
+export interface WikiLinkProps {
+    active: boolean,
+    text?: string,
+    to: string
+    className?: string,
+    attributes: RenderAttributes,
+    children: React.ReactNode
+}
+
+export class WikiLink extends React.Component<WikiLinkProps, any>{
     constructor(props: any) {
         super(props);
     }
@@ -9,7 +20,11 @@ export class WikiLink extends React.Component<any, any>{
         if (this.props.active) {
             return (
                 <span {...this.props.attributes}>
-                    <MemoryLink to={'/wiki/article/' + this.props.to} text={this.props.text ? this.props.text : undefined}>
+                    <MemoryLink
+                        to={'/wiki/article/' + this.props.to}
+                        text={this.props.text ? this.props.text : undefined}
+                        className={this.props.className}
+                    >
                         {this.props.children}
                     </MemoryLink>
                 </span>

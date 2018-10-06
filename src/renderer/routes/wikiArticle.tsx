@@ -111,9 +111,9 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
     }
     renderArticleNotFound = () => {
         return (
-            <div>
+            <div className='wiki-route'>
                 <h1>Article not found</h1>
-                <MemoryLink to={`/wiki/create`}> Create Article</MemoryLink>
+                <MemoryLink to={`/wiki/create/${this.props.routeParams.article}`}> Create Article</MemoryLink>
                 <MemoryLink to={`/wiki/article/home`}> Go home</MemoryLink>
             </div>
         )
@@ -123,7 +123,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         const article = this.props.routeParams.article;
         if (this.state.fileExists) {
             return (
-                <div>
+                <div className='wiki-route'>
                     <div>
                         <MemoryLink to={`/wiki/create`}> Create Article</MemoryLink>
                         {article !== 'home' ? <button onClick={this.deleteArticle}>Delete article</button> : null}

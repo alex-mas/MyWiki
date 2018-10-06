@@ -19,7 +19,7 @@ export class EditorButton extends React.Component<EditorButtonProps, EditorButto
     render() {
         return (
             <i
-                className={`material-icons ${this.props.icon} ${this.props.active ? 'active-editor-icon' : 'inactive-editor-icon'}`}
+                className={`material-icons ${this.props.icon} ${this.props.active ? 'editor-btn' : 'editor-btn--inactive'}`}
                 onClick={this.onClick}
             >
                 {this.props.icon}

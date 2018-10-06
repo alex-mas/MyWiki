@@ -213,29 +213,40 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     //@ts-ignore
                     const href = node.data.get('href');
                     return (
-                        <WikiLink {...props} to={href} active={this.props.readOnly}>
+                        <WikiLink
+                            {...props}
+                            to={href}
+                            active={this.props.readOnly}
+                            className='wiki-link'
+                        >
                             {children}
                         </WikiLink>
                     );
                 }
             case 'block-quote':
-                return <blockquote {...attributes}>{children}</blockquote>
+                return <blockquote {...attributes} className='wiki-block-quote'>
+                    {children}
+                </blockquote>
             case 'bulleted-list':
-                return <ul {...attributes}>{children}</ul>
+                return <ul {...attributes} className='wiki-bulleted-list'>
+                {children}
+                </ul>
             case 'heading-one':
-                return <h1 {...attributes}>{children}</h1>
+                return <h1 {...attributes}className='wiki-heading'>
+                    {children}
+                </h1>
             case 'heading-two':
-                return <h2 {...attributes}>{children}</h2>
+                return <h2 {...attributes} className='wiki-heading'>{children}</h2>
             case 'heading-three':
-                return <h3 {...attributes}>{children}</h3>
+                return <h3 {...attributes} className='wiki-heading'>{children}</h3>
             case 'heading-four':
-                return <h4 {...attributes}>{children}</h4>
+                return <h4 {...attributes} className='wiki-heading'>{children}</h4>
             case 'heading-five':
-                return <h5 {...attributes}>{children}</h5>
+                return <h5 {...attributes} className='wiki-heading'>{children}</h5>
             case 'list-item':
-                return <li {...attributes}>{children}</li>
+                return <li {...attributes} className='wiki-list-item'>{children}</li>
             case 'numbered-list':
-                return <ol {...attributes}>{children}</ol>
+                return <ol {...attributes} className='wiki-numbered-list'>{children}</ol>
             case 'align':
                 return (
                     //@ts-ignore
@@ -249,13 +260,13 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         const { children, mark, attributes } = props;
         switch (mark.type) {
             case 'bold':
-                return <strong {...attributes}>{children}</strong>
+                return <strong className='wiki-bold-text'{...attributes}>{children}</strong>
             case 'code':
-                return <code {...attributes}>{children}</code>
+                return <code className='wiki-code-block' {...attributes}>{children}</code>
             case 'italic':
-                return <em {...attributes}>{children}</em>
+                return <em className='wiki-italic-text'{...attributes}>{children}</em>
             case 'underlined':
-                return <u {...attributes}>{children}</u>
+                return <u className='wiki-underlined-text'{...attributes}>{children}</u>
         }
     }
 
@@ -500,7 +511,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     value={this.props.content}
                     onChange={this.props.onChange}
                     renderNode={this.renderNode}
-                    className='myWiki__editor'
+                    className='wiki-editor'
                 />
             )
         } else {
@@ -530,21 +541,21 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                         value={this.props.content}
                         onChange={this.props.onChange}
                         renderNode={this.renderNode}
-                        className='myWiki__editor'
+                        className='wiki-editor'
                         schema={schema}
                     />
                     <Modal
                         isOpen={this.state.isModalOpen}
                         onClose={this.closeModal}
                     >
-                        <div>
-                            <input type="text" value={this.state.linkDest} onChange={this.onChangeLinkDest} />
+                        <div className='wiki-link__form'>
+                            <input className='wiki-link__input' type="text" value={this.state.linkDest} onChange={this.onChangeLinkDest} />
                             {this.state.promptForText ?
-                                <input type="text" value={this.state.linkText} onChange={this.onChangeLinkText} />
+                                <input className='wiki-link__text__input'type="text" value={this.state.linkText} onChange={this.onChangeLinkText} />
                                 :
                                 null
                             }
-                            <button onClick={this.addLink}>Accept</button>
+                            <button className='wiki-link__form__action' onClick={this.addLink}>Accept</button>
                         </div>
                     </Modal>
                 </div>

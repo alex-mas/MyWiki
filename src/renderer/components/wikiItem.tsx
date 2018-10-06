@@ -34,7 +34,7 @@ class WikiItem extends React.Component<WikiItemProps, any>{
     }
     render(){
         return(
-            <div>
+            <div className='wiki-item'>
                 {this.props.wiki.name} 
                 <button onClick={this.onOpen}>Open</button>
                 <button onClick={this.removeWiki}>Remove</button>

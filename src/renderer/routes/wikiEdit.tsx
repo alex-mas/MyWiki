@@ -82,7 +82,7 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, any>{
     render() {
         const article = this.props.routeParams.article;
         return (
-            <div>
+            <div className='wiki-route'>
                 <div>
                     <button onClick={this.saveChanges}>Save changes</button>
                     <button onClick={this.discardChanges}>Discard changes</button>
