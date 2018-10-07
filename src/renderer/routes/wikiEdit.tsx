@@ -9,6 +9,7 @@ import WikiEditor, { defaultEditorContents } from '../components/wikiEditor/wiki
 import * as ReactMarkdown from 'react-markdown';
 import { ValueJSON, Change, Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
+import Header from '../components/header';
 
 
 
@@ -33,9 +34,9 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, any>{
             editorContent: fetchedContent ? Value.fromJSON(fetchedContent) : defaultEditorContents
         }
     }
-    componentDidMount(){
+    componentDidMount() {
         const appTitle = document.getElementById('pageTitle');
-        if(appTitle.innerText !== this.props.selectedWiki.name){
+        if (appTitle.innerText !== this.props.selectedWiki.name) {
             appTitle.innerText = `${this.props.selectedWiki.name} - editing@${this.props.routeParams.article}`;
         }
     }
@@ -89,19 +90,23 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, any>{
         const article = this.props.routeParams.article;
         return (
             <div className='wiki-route'>
-                <div className='wiki-article__actions'>
-                    <button onClick={this.saveChanges}>Save changes</button>
-                    <button onClick={this.discardChanges}>Discard changes</button>
-                </div>
-                <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
-                <div 
-                    className='wiki-article__editor'
-                >
-                    <WikiEditor
-                        onChange={this.onChange}
-                        content={this.state.editorContent}
-                        readOnly={false}
-                    />
+                <Header>
+                    <div className='wiki-article__actions'>
+                        <button onClick={this.saveChanges}>Save changes</button>
+                        <button onClick={this.discardChanges}>Discard changes</button>
+                    </div>
+                </Header>
+                <div className='body--article'>
+                    <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
+                    <div
+                        className='wiki-article__body--editor'
+                    >
+                        <WikiEditor
+                            onChange={this.onChange}
+                            content={this.state.editorContent}
+                            readOnly={false}
+                        />
+                    </div>
                 </div>
             </div>
         )

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+//@ts-ignore
 require('./styles/index.scss');
-import '../../../../libraries/alex components/dist/styles/axc-styles.css';
 import {Provider} from 'react-redux';
 import configureStore from './store/store';
 import AppRouter from './router/router';

@@ -1,0 +1,11 @@
+
+
+.body{
+    height: 93vh;
+    margin: 0 15vw;
+}
+
+.body--article{
+    @extend .body;
+    margin: 0 5vw;
+}

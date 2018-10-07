@@ -70,6 +70,11 @@ export const BUTTON_NODE_TYPES: { type: string, icon: string, data: any }[] = [
         data: undefined
     },
     {
+        type: 'heading-six',
+        icon: 'looks_6',
+        data: undefined
+    },
+    {
         type: 'numbered-list',
         icon: 'format_list_numbered',
         data: undefined
@@ -243,6 +248,8 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 return <h4 {...attributes} className='wiki-heading'>{children}</h4>
             case 'heading-five':
                 return <h5 {...attributes} className='wiki-heading'>{children}</h5>
+            case 'heading-six':
+                return <h6 {...attributes} className='wiki-heading'>{children}</h6>
             case 'list-item':
                 return <li {...attributes} className='wiki-list-item'>{children}</li>
             case 'numbered-list':

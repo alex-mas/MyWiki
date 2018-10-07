@@ -9,6 +9,7 @@ import WikiEditor, { defaultEditorContents } from '../components/wikiEditor/wiki
 import * as ReactMarkdown from 'react-markdown';
 import { Change, Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
+import Header from '../components/header';
 
 
 const getArticleContent = (props: any) => {
@@ -59,9 +60,9 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
             fileExists: fetchedContent ? true : false
         }
     }
-    componentDidMount(){
+    componentDidMount() {
         const appTitle = document.getElementById('pageTitle');
-        if(appTitle.innerText !== this.props.selectedWiki.name){
+        if (appTitle.innerText !== this.props.selectedWiki.name) {
             appTitle.innerText = `${this.props.selectedWiki.name}@${this.props.routeParams.article}`;
         }
     }
@@ -106,7 +107,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
             if (error) {
                 this.props.fsError(`Error trying to delete article ${this.props.routeParams.article}, please try running the app as administrator. If that doesn't work contact the developer`);
                 console.warn(error);
-            }else{
+            } else {
                 this.props.history.pushState('/wiki/article/home');
             }
 
@@ -119,9 +120,12 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
     renderArticleNotFound = () => {
         return (
             <div className='wiki-route'>
+                <Header>
+                    <i className='wiki-header__icon'>placeholder</i>
+                    <MemoryLink to={`/wiki/create/${this.props.routeParams.article}`}> Create Article</MemoryLink>
+                </Header>
                 <h1>Article not found</h1>
-                <MemoryLink to={`/wiki/create/${this.props.routeParams.article}`}> Create Article</MemoryLink>
-                <MemoryLink to={`/wiki/article/home`}> Go home</MemoryLink>
+
             </div>
         )
     }
@@ -131,20 +135,26 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         if (this.state.fileExists) {
             return (
                 <div className='wiki-route'>
-                    <div className='wiki-article__actions'>
-                        <MemoryLink to={`/wiki/create/`}> Create Article</MemoryLink>
-                        {article !== 'home' ? <button onClick={this.deleteArticle}>Delete article</button> : null}
-                        <MemoryLink to={`/wiki/edit/${article}`}> Edit Article</MemoryLink>
-                    </div>
-                    <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
-                    <div 
-                        className='wiki-article__body'
-                    >
-                        <WikiEditor
-                            content={this.state.content}
-                            onChange={this.onChange}
-                            readOnly={true}
-                        />
+                    <Header>
+                        <i className='wiki-header__icon'>placeholder</i>
+                        <input type="text" placeholder='search' />
+                        <div className='wiki-article__actions'>
+                            <MemoryLink to={`/wiki/create/`}> Create Article</MemoryLink>
+                            {article !== 'home' ? <button onClick={this.deleteArticle}>Delete article</button> : null}
+                            <MemoryLink to={`/wiki/edit/${article}`}> Edit Article</MemoryLink>
+                        </div>
+                    </Header>
+                    <div className='body--article'>
+                        <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
+                        <div
+                            className='wiki-article__body'
+                        >
+                            <WikiEditor
+                                content={this.state.content}
+                                onChange={this.onChange}
+                                readOnly={true}
+                            />
+                        </div>
                     </div>
                 </div>
             )

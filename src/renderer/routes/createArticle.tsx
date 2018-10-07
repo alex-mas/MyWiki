@@ -10,6 +10,7 @@ import { MemoryRouteProps } from '../../../../../libraries/alex components/dist/
 import { Change, Value } from 'slate';
 import { CreateArticleActionCreator, createArticle } from '../actions/article';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
+import Header from '../components/header';
 
 export interface CreateArticlePageDispatchProps {
     createArticle: CreateArticleActionCreator,
@@ -40,9 +41,9 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
             name: this.props.routeParams.article
         }
     }
-    componentDidMount(){
+    componentDidMount() {
         const appTitle = document.getElementById('pageTitle');
-        appTitle.innerText = `${this.props.selectedWiki.name} - Create article ${this.state.name ? '('+this.state.name+')' : ''}`;
+        appTitle.innerText = `${this.props.selectedWiki.name} - Create article ${this.state.name ? '(' + this.state.name + ')' : ''}`;
     }
     onChange = (change: Change) => {
         const editorContent = change.value;
@@ -77,16 +78,24 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
     render() {
         return (
             <div className='wiki-route'>
-                <input type="text" value={this.state.name} onChange={this.onNameChange} />
-                <h1>{this.state.name ? this.state.name : 'New Article'}</h1>
-                <WikiEditor
-                    content={this.state.editorContent}
-                    onChange={this.onChange}
-                    readOnly={false}
-                />
-                <button onClick={this.createArticle}>
-                    Create article
-                </button>
+                <Header>
+                    <input type="text" value={this.state.name} onChange={this.onNameChange} />
+                    <button onClick={this.createArticle}>
+                        Create article
+                    </button>
+                </Header>
+                <div className='body--article'>
+                    <h1 className='wiki-article__title'>{this.state.name ? this.state.name : 'New Article'}</h1>
+                    <div className='wiki-article__body--editor'>
+                        <WikiEditor
+
+                            content={this.state.editorContent}
+                            onChange={this.onChange}
+                            readOnly={false}
+                        />
+                    </div>
+
+                </div>
             </div>
         )
     }

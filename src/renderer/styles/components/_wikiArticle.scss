@@ -1,0 +1,16 @@
+
+
+.wiki-article__title{
+    border-bottom: 2px solid black;
+    margin-right: 10%;
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.wiki-article__body{
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.wiki-article__body--editor{
+    @extend .wiki-article__body;
+}
