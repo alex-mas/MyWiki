@@ -6,6 +6,10 @@
 }
 
 .body--article{
-    @extend .body;
-    margin: 0 5vw;
+    height:91vh; 
+    margin: 5vh 10vw 0vh;
+}
+
+.body__title{
+    text-align: center;
 }
