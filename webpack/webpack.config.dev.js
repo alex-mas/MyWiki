@@ -43,7 +43,12 @@ const rendererConfig = {
         //When we need to use multiple loaders we can specify use property inside the rule object of rules array
         use: [
           'style-loader',
-          'css-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              url: false
+            }
+          },
           'sass-loader',
           /*{
             loader: 'typings-for-css-modules-loader',
