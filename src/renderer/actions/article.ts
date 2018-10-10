@@ -82,7 +82,7 @@ export interface LoadArticleAction extends Action {
     article: Article
 }
 
-export type LoadArticleActionCreator = (name: string) => ThunkAction<any, AppState, void, CreateArticleAction | ErrorAction>;
+export type LoadArticleActionCreator = (name: string) => ThunkAction<any, AppState, void, LoadArticleAction | ErrorAction>;
 
 
 export const loadArticle: LoadArticleActionCreator = (name: string) => {
@@ -124,17 +124,17 @@ export interface SaveArticleAction extends Action {
     article: ArticleMetaData
 }
 
-export type SaveArticleActionCreator = (name: string, tags: string[], content: string) => ThunkAction<any, AppState, void, CreateArticleAction | ErrorAction>;
+export type SaveArticleActionCreator = (name: string, tags: string[], content: string) => ThunkAction<any, AppState, void, SaveArticleAction | ErrorAction>;
 
-export const saveArticle:  SaveArticleActionCreator = (name, tags, content)=>{
-    return(dispatch,getState)=>{
+export const saveArticle: SaveArticleActionCreator = (name, tags, content) => {
+    return (dispatch, getState) => {
         const selectedWiki = getState().selectedWiki;
         const article = {
             name,
             tags,
             content
         }
-        return new Promise((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
             fs.writeFile(
                 path.join(selectedWiki.path, 'articles', `${name}.json`),
                 JSON.stringify(article),
@@ -152,6 +152,36 @@ export const saveArticle:  SaveArticleActionCreator = (name, tags, content)=>{
                     }
                 }
             );
+        });
+    }
+}
+
+
+
+
+export interface DeleteArticleAction extends Action {
+    name: string
+}
+
+export type DeleteArticleActionCreator = (name: string) => ThunkAction<any, AppState, void, DeleteArticleAction | ErrorAction>;
+
+export const deleteArticle: DeleteArticleActionCreator = (name: string) => {
+    return (dispatch, getState) => {
+        const selectedWiki = getState().selectedWiki;
+        return new Promise((resolve,reject)=>{
+            let filePath = path.join(selectedWiki.path, 'articles', `${name}.json`);
+            fs.unlink(filePath, (error) => {
+                if (error) {
+                    dispatch(fsError(`Error trying to delete article ${name}, please try running the app as administrator. If that doesn't work contact the developer`))
+                    reject(error);
+                } else {
+                    dispatch({
+                        type: 'DELETE_ARTICLE',
+                        name
+                    });
+                    resolve();
+                }
+            });
         });
     }
 }

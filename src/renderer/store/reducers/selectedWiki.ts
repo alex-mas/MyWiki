@@ -27,6 +27,16 @@ export const SelectedWikiReducer: Reducer<SelectedWiki> = (state: SelectedWiki =
                 ...action.wiki,
                 articles: action.articles
             }
+        case 'CREATE_ARTICLE':
+            return {
+                ...state,
+                articles: [...state.articles, action.article]
+            }
+        case 'DELETE_ARTICLE':
+            return {
+                ...state,
+                articles: state.articles.filter((article)=>article.name !== action.name)
+            }
         default:
             return state;
     }

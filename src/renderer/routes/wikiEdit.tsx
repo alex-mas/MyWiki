@@ -29,7 +29,7 @@ export interface WikiEditPageProps extends WikiEditPageOwnProps, WikiEditPageRed
 }
 
 
-export class WikiEditPage extends React.Component<WikiEditPageProps, any>{
+export class WikiEditPage extends React.Component<WikiEditPageProps, {editorContent: Value, tags: string[]}>{
     constructor(props: WikiEditPageProps) {
         super(props);
         this.state = {
@@ -89,6 +89,9 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, any>{
     discardChanges = () => {
         this.props.history.pushState('/wiki/article/home');
     }
+    changeTag = ()=>{
+        
+    }
     render() {
         const article = this.props.routeParams.article;
         return (
@@ -97,6 +100,7 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, any>{
                     <div className='wiki-article__actions'>
                         <button onClick={this.saveChanges}>Save changes</button>
                         <button onClick={this.discardChanges}>Discard changes</button>
+                        <button >Manage tags</button>
                     </div>
                 </Header>
                 <div className='body--article'>

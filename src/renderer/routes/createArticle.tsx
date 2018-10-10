@@ -72,6 +72,7 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
                     <button onClick={this.createArticle}>
                         Create article
                     </button>
+                    <button>Manage tags</button>
                 </Header>
                 <div className='body--article'>
                     <h1 className='wiki-article__title'>{this.state.name ? this.state.name : 'New Article'}</h1>

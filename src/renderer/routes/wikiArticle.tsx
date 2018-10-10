@@ -10,7 +10,7 @@ import * as ReactMarkdown from 'react-markdown';
 import { Change, Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
 import Header from '../components/header';
-import { loadArticle, LoadArticleActionCreator, Article } from '../actions/article';
+import { loadArticle, LoadArticleActionCreator, Article, DeleteArticleActionCreator, deleteArticle } from '../actions/article';
 
 
 const getArticleContent = (props: any) => {
@@ -38,9 +38,12 @@ const getArticleContent = (props: any) => {
 }
 
 
+
+
 export interface DispatchProps {
     fsError: FsErrorActionCreator,
-    loadArticle: LoadArticleActionCreator
+    loadArticle: LoadArticleActionCreator,
+    deleteArticle: DeleteArticleActionCreator
 }
 
 export interface WikiArticlePageOwnProps extends MemoryRouteProps {
@@ -121,15 +124,9 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         }
     }
     deleteArticle = () => {
-        let filePath = path.join(this.props.selectedWiki.path, 'articles', `${this.props.routeParams.article}.json`);
-        fs.unlink(filePath, (error) => {
-            if (error) {
-                this.props.fsError(`Error trying to delete article ${this.props.routeParams.article}, please try running the app as administrator. If that doesn't work contact the developer`);
-                console.warn(error);
-            } else {
-                this.props.history.pushState('/wiki/article/home');
-            }
-
+        //@ts-ignore
+        this.props.deleteArticle(this.props.routeParams.article).then(()=>{
+            this.props.history.pushState('/wiki/article/home');
         });
     }
     onChange = (change: Change) => {
@@ -194,5 +191,6 @@ const mapStateToProps: MapStateToProps<WikiArticlePageReduxProps, WikiArticlePag
 
 export default connect(mapStateToProps, {
     fsError,
-    loadArticle
+    loadArticle,
+    deleteArticle
 })(WikiArticlePage);
