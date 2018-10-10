@@ -11,6 +11,7 @@ import { Change, Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
 import Header from '../components/header';
 import { loadArticle, LoadArticleActionCreator, Article, DeleteArticleActionCreator, deleteArticle } from '../actions/article';
+import  WikiSearchBar from '../components/wikiSearchBar';
 
 
 const getArticleContent = (props: any) => {
@@ -153,7 +154,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
                 <div className='wiki-route'>
                     <Header>
                         <i className='wiki-header__icon'>placeholder</i>
-                        <input type="text" placeholder='search' />
+                        <WikiSearchBar placeholder='search wiki'/>
                         <div className='wiki-article__actions'>
                             <MemoryLink to={`/wiki/create/`}> Create Article</MemoryLink>
                             {article !== 'home' ? <button onClick={this.deleteArticle}>Delete article</button> : null}

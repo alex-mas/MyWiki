@@ -20,6 +20,7 @@ const AppRouter = () => {
             <MemoryRoute path='/wiki/article/:article' exact component={WikiArticlePage} />
             <MemoryRoute path='/wiki/edit/:article' exact component={WikiEditPage} />
             <MemoryRoute path='/wiki/create/:article' exact component={CreateArticlePage}/>
+            <MemoryRoute path='/wiki/articleSearch/:articleName' exact component={()=><div>Keep looking</div>}/>
             <MemoryRoute path='' component={NotFoundPage} />
         </Router>
     );

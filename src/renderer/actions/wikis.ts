@@ -129,6 +129,11 @@ export const loadWiki: LoadWikiActionCreator = (id: string) => {
 
                 }
             });
+            console.log('load wiki payload: ',{
+                type: 'LOAD_WIKI',
+                wiki,
+                articles
+            });
             dispatch({
                 type: 'LOAD_WIKI',
                 wiki,
