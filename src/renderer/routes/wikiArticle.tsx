@@ -154,7 +154,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
                 <div className='wiki-route'>
                     <Header>
                         <i className='wiki-header__icon'>placeholder</i>
-                        <WikiSearchBar placeholder='search wiki'/>
+                        <WikiSearchBar/>
                         <div className='wiki-article__actions'>
                             <MemoryLink to={`/wiki/create/`}> Create Article</MemoryLink>
                             {article !== 'home' ? <button onClick={this.deleteArticle}>Delete article</button> : null}

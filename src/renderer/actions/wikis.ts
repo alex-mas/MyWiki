@@ -121,6 +121,17 @@ export const loadWiki: LoadWikiActionCreator = (id: string) => {
                                 name: articleData.name,
                                 tags: articleData.tags
                             });
+                            console.log('load wiki payload: ',{
+                                type: 'LOAD_WIKI',
+                                wiki,
+                                articles
+                            });
+                            dispatch({
+                                type: 'LOAD_WIKI',
+                                wiki,
+                                articles
+                            });
+                            resolve('success loading wiki');
                         } catch (e) {
                             dispatch(fsError('error while reading aeticles'));
                             reject(e);
@@ -129,17 +140,7 @@ export const loadWiki: LoadWikiActionCreator = (id: string) => {
 
                 }
             });
-            console.log('load wiki payload: ',{
-                type: 'LOAD_WIKI',
-                wiki,
-                articles
-            });
-            dispatch({
-                type: 'LOAD_WIKI',
-                wiki,
-                articles
-            });
-            resolve('success loading wiki');
+
         });
     }
 }

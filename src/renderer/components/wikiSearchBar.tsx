@@ -6,8 +6,7 @@ import AutoComplete from '../../../../../libraries/alex components/dist/interact
 import { withHistoryContext, MemoryHistory } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
 
 export interface WSBOwnProps {
-    history: MemoryHistory,
-    placeholder: string
+    history: MemoryHistory
 }
 export interface WSBDispatchProps {
 
@@ -42,14 +41,18 @@ export class WikiSearchBar extends React.Component<WSBProps, WSBState>{
             value
         }));
     }
-    visitArticle = () => {
-        const matchingArticles = this.props.articleNames.filter((article) => article.includes(this.state.value));
-        if (matchingArticles.length === 1) {
-            console.log(`/wiki/article/${this.state.value}`)
-            this.props.history.pushState(`/wiki/article/${this.state.value}`);
+    validateInput(val:string): string{
+        return val.trim();
+    }
+    visitArticle = (val: string) => {
+        const value = this.validateInput(val);
+        const matchingArticles = this.props.articleNames.filter((article) => article.includes(value));
+        if (matchingArticles.length === 1 && matchingArticles[0] === value) {
+            console.log(`/wiki/article/${value}`)
+            this.props.history.pushState(`/wiki/article/${value}`);
         } else {
-            console.log(`/wiki/articleSearch/${this.state.value}`)
-            this.props.history.pushState(`/wiki/articleSearch/${this.state.value}`);
+            console.log(`/wiki/articleSearch/${value}`)
+            this.props.history.pushState(`/wiki/articleSearch/${value}`);
         }
     }
     render() {
@@ -57,11 +60,11 @@ export class WikiSearchBar extends React.Component<WSBProps, WSBState>{
             <div>
                 <AutoComplete
                     value={this.state.value}
-                    placeholder={this.props.placeholder}
+                    placeholder='search article'
                     getSuggestions={this.getSuggestions}
                     onChange={this.onChange}
+                    onSubmit={this.visitArticle}
                 />
-                <button onClick={this.visitArticle}>Go</button>
             </div>
         )
     }
