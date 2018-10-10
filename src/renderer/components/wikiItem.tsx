@@ -2,19 +2,20 @@ import * as React from 'react';
 import { RouteProps } from '../router/router';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetaData } from '../store/reducers/wikis';
-import { selectWiki, SelectWikiActionCreator, removeWiki } from '../actions/wikis';
+import { selectWiki, SelectWikiActionCreator, removeWiki, loadWiki, LoadWikiActionCreator } from '../actions/wikis';
 import { MemoryHistory, withHistoryContext } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
 import { ActionCreator } from 'redux';
 
 
-export interface WikiItemOwnProps{
+export interface WikiItemOwnProps {
     wiki: WikiMetaData,
     history: MemoryHistory
 }
 
 export interface WikiItemDispatchProps {
     selectWiki: SelectWikiActionCreator,
-    removeWiki: ActionCreator<any>
+    removeWiki: ActionCreator<any>,
+    loadWiki: LoadWikiActionCreator
 }
 
 
@@ -22,20 +23,23 @@ export type WikiItemProps = WikiItemOwnProps & WikiItemDispatchProps;
 
 
 class WikiItem extends React.Component<WikiItemProps, any>{
-    constructor(props: WikiItemProps){
+    constructor(props: WikiItemProps) {
         super(props);
     }
-    onOpen = ()=>{
-        this.props.selectWiki(this.props.wiki.id);
-        this.props.history.pushState('/wiki/article/home');
+    onOpen = () => {
+        //@ts-ignore
+        this.props.loadWiki(this.props.wiki.id).then(()=>{
+            this.props.history.pushState('/wiki/article/home');
+        });
+
     }
-    removeWiki =() =>{
+    removeWiki = () => {
         this.props.removeWiki(this.props.wiki);
     }
-    render(){
-        return(
+    render() {
+        return (
             <div className='wiki-item'>
-                {this.props.wiki.name} 
+                {this.props.wiki.name}
                 <button className='page__action--secondary' onClick={this.onOpen}>Open</button>
                 <button className='page__action--flat' onClick={this.removeWiki}>Remove</button>
             </div>
@@ -45,7 +49,8 @@ class WikiItem extends React.Component<WikiItemProps, any>{
 
 
 
-export default withHistoryContext(connect<{}, WikiItemDispatchProps,WikiItemOwnProps, any>(undefined,{
+export default withHistoryContext(connect<{}, WikiItemDispatchProps, WikiItemOwnProps, any>(undefined, {
     selectWiki,
-    removeWiki
+    removeWiki,
+    loadWiki
 })(WikiItem));

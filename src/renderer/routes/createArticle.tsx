@@ -30,7 +30,8 @@ export type CreateArticlePageProps = CreateArticlePageOwnProps & CreateArticlePa
 
 export interface CreateArticlePageState {
     editorContent: Value,
-    name: string
+    name: string,
+    tags: string[]
 }
 
 export class CreateArticlePage extends React.Component<CreateArticlePageProps, CreateArticlePageState>{
@@ -38,7 +39,8 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
         super(props);
         this.state = {
             editorContent: defaultEditorContents,
-            name: this.props.routeParams.article
+            name: this.props.routeParams.article,
+            tags: []
         }
     }
     componentDidMount() {
@@ -56,24 +58,11 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
         }));
     }
     createArticle = () => {
-        fs.access(path.join(this.props.selectedWiki.path, 'wikis', 'articles', this.state.name), fs.constants.F_OK, (err) => {
-            if (!err) {
-                this.props.fsError(`Wiki article named ${this.state.name} already exists, please rename or delete the existing article or change the name of this article`);
-            } else {
-                fs.writeFile(
-                    path.join(this.props.selectedWiki.path, 'articles', `${this.state.name}.json`),
-                    JSON.stringify(this.state.editorContent),
-                    'utf8',
-                    (error) => {
-                        if (error) {
-                            this.props.fsError(`Error trying to create article ${this.state.name}, please try running the app as administrator. If that doesn't work contact the developer`);
-                        } else {
-                            this.props.history.pushState(`/wiki/article/${this.state.name}`);
-                        }
-                    }
-                );
-            }
-        })
+        this.props.createArticle(this.state.name, JSON.stringify(this.state.editorContent), this.state.tags)
+        //@ts-ignore
+       .then(()=>{
+           this.props.history.pushState(`/wiki/article/${this.state.name}`);
+       });
     }
     render() {
         return (

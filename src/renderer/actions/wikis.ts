@@ -8,6 +8,7 @@ import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
 import { error, fsError, ErrorAction, ErrorActionCodes } from "./errors";
 import { deleteFolderRecursively } from '../utilities/fsutils';
+import { Article, ArticleMetaData } from "./article";
 
 
 type WikiAction = Action & { wiki: WikiMetaData };
@@ -18,30 +19,34 @@ export type CreateWikiActionCreator = (name: string, wikiPath: string) => ThunkA
 
 export const createWiki: CreateWikiActionCreator = (name: string) => {
     return (dispatch, getState) => {
-        const wikiId = uuid();
-        const wikiPath = `./wikis/${name}(${wikiId})`;
-        if (!fs.existsSync('./wikis')) {
-            fs.mkdirSync('./wikis');
-        }
-        fs.mkdirSync(wikiPath);
-        fs.mkdirSync(path.join(wikiPath, 'articles'));
-        console.log(path.join(wikiPath, 'myWikiConfig.json'));
-        fs.writeFile(path.join(wikiPath, 'myWikiConfig.json'), JSON.stringify(defaultWikiConfig), 'utf8', (error) => {
-            if (error) {
-                console.log(error);
-                dispatch(fsError(`Error creating the configuration file for ${name} wiki`));
-            } else {
-                dispatch({
-                    type: 'CREATE_WIKI',
-                    wiki: {
-                        path: wikiPath,
-                        name,
-                        id: wikiId
-                    }
-                });
-                //fs.writeFileSync(path.join(wikiPath, 'home.md'), fs.readFileSync(path.join('./', 'src/static/wikiHome.md')),'utf8');
-                //fs.writeFileSync(path.join(wikiPath, 'articles', 'test.md'), fs.readFileSync(path.join('./','src/static/testArticle.md')),'utf8');
+        return new Promise((resolve, reject) => {
+            const wikiId = uuid();
+            const wikiPath = `./wikis/${name}(${wikiId})`;
+            if (!fs.existsSync('./wikis')) {
+                fs.mkdirSync('./wikis');
             }
+            fs.mkdirSync(wikiPath);
+            fs.mkdirSync(path.join(wikiPath, 'articles'));
+            console.log(path.join(wikiPath, 'myWikiConfig.json'));
+            fs.writeFile(path.join(wikiPath, 'myWikiConfig.json'), JSON.stringify(defaultWikiConfig), 'utf8', (error) => {
+                if (error) {
+                    console.log(error);
+                    const errMsg = fsError(`Error creating the configuration file for ${name} wiki`);
+                    dispatch(errMsg);
+                    reject(errMsg);
+                } else {
+                    dispatch({
+                        type: 'CREATE_WIKI',
+                        wiki: {
+                            path: wikiPath,
+                            name,
+                            id: wikiId
+                        }
+                    });
+                    //fs.writeFileSync(path.join(wikiPath, 'home.md'), fs.readFileSync(path.join('./', 'src/static/wikiHome.md')),'utf8');
+                    //fs.writeFileSync(path.join(wikiPath, 'articles', 'test.md'), fs.readFileSync(path.join('./','src/static/testArticle.md')),'utf8');
+                }
+            });
         });
     }
 
@@ -87,11 +92,58 @@ export const selectWiki: SelectWikiActionCreator = (id: string) => {
             dispatch(error(`Wiki id (${id}) provided doesn't mach with any of the wikis tracked by the app`, ErrorActionCodes.WRONG_PARAMS));
         }
     }
-
 }
 
 
-export const loadWikis: ActionCreator<{ wikis: WikiMetaData[] } & Action> = (wikis: WikiMetaData[]) => {
+export interface LoadWikiAction extends Action {
+    wiki: WikiMetaData,
+    articles: ArticleMetaData[]
+}
+export type LoadWikiActionCreator = (id:string)=>ThunkAction<Promise<string>, AppState, void, LoadWikiAction | ErrorAction>;
+
+export const loadWiki: LoadWikiActionCreator = (id: string) => {
+    return (dispatch, getState) => {
+        return new Promise((resolve, reject) => {
+            const state = getState();
+            const wiki = state.wikis.find((wiki) => wiki.id === id);
+            const articles: ArticleMetaData[] = [];
+            fs.readdir(`./wikis/${wiki.name}(${wiki.id})/articles`, (err, articleFiles: string[]) => {
+                if (err) {
+                    dispatch(fsError('error while reading articles folder'));
+                    reject(err);
+                } else {
+                    articleFiles.forEach((article) => {
+                        try {
+                            const articleData: Article = JSON.parse(
+                                fs.readFileSync(`./wikis/${wiki.name}(${wiki.id})/articles/${article}`, 'utf8')
+                            );
+                            articles.push({
+                                name: articleData.name,
+                                tags: articleData.tags
+                            });
+                        } catch (e) {
+                            dispatch(fsError('error while reading aeticles'));
+                            reject(e);
+                        }
+                    });
+
+                }
+            });
+            dispatch({
+                type: 'LOAD_WIKI',
+                wiki,
+                articles
+            });
+            resolve('success loading wiki');
+        });
+    }
+}
+
+
+export type LoadWikisAction = { wikis: WikiMetaData[] } & Action;
+export type LoadWikisActionCreator = ActionCreator<LoadWikisAction>
+
+export const loadWikis: LoadWikisActionCreator = (wikis: WikiMetaData[]) => {
     return {
         type: 'LOAD_WIKIS',
         wikis

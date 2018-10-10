@@ -10,6 +10,7 @@ import * as ReactMarkdown from 'react-markdown';
 import { Change, Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
 import Header from '../components/header';
+import { loadArticle, LoadArticleActionCreator, Article } from '../actions/article';
 
 
 const getArticleContent = (props: any) => {
@@ -38,7 +39,8 @@ const getArticleContent = (props: any) => {
 
 
 export interface DispatchProps {
-    fsError: FsErrorActionCreator
+    fsError: FsErrorActionCreator,
+    loadArticle: LoadArticleActionCreator
 }
 
 export interface WikiArticlePageOwnProps extends MemoryRouteProps {
@@ -53,11 +55,8 @@ export interface WikiArticlePageProps extends MemoryRouteProps, WikiArticlePageR
 export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
     constructor(props: WikiArticlePageProps) {
         super(props);
-        const fetchedContent = this.getArticleContent();
-
         this.state = {
-            content: fetchedContent ? Value.fromJSON(fetchedContent) : defaultEditorContents,
-            fileExists: fetchedContent ? true : false
+            content: Value.fromJSON(JSON.parse('{}'))
         }
     }
     componentDidMount() {
@@ -65,16 +64,36 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         if (appTitle.innerText !== this.props.selectedWiki.name) {
             appTitle.innerText = `${this.props.selectedWiki.name}@${this.props.routeParams.article}`;
         }
+        //@ts-ignore
+        this.props.loadArticle(this.props.routeParams.article).then((article: Article) => {
+            console.log('Article returned from load article: ',article);
+            this.setState(() => ({
+                content: article.content ? Value.fromJSON(JSON.parse(article.content)) : defaultEditorContents,
+                fileExists: article.content ? true : false
+            }));
+        }).catch((e:string) => {
+            console.log(e);
+            this.setState(() => ({
+                fileExists: false
+            }));
+        })
     }
     componentDidUpdate(prevProps: WikiArticlePageProps, prevState: any) {
         console.log('Previous:', prevProps, prevState);
         console.log('Actual: ', this.props, this.state);
         if (this.props.routeParams.article !== prevProps.routeParams.article) {
-            const fetchedContent = this.getArticleContent();
-            this.setState(() => ({
-                content: fetchedContent ? Value.fromJSON(fetchedContent) : defaultEditorContents,
-                fileExists: fetchedContent ? true : false
-            }));
+            //@ts-ignore
+            this.props.loadArticle(this.props.routeParams.article).then((article: Article) => {
+                this.setState(() => ({
+                    content: article.content ? Value.fromJSON(JSON.parse(article.content)) : defaultEditorContents,
+                    fileExists: article.content ? true : false
+                }));
+            }).catch(() => {
+                this.setState(() => ({
+                    fileExists: false
+                }));
+            })
+
         }
     }
 
@@ -174,5 +193,6 @@ const mapStateToProps: MapStateToProps<WikiArticlePageReduxProps, WikiArticlePag
 
 
 export default connect(mapStateToProps, {
-    fsError
+    fsError,
+    loadArticle
 })(WikiArticlePage);

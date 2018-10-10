@@ -481,9 +481,12 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         //@ts-ignore
         if (['numbered-list', 'bulleted-list'].includes(type)) {
             const value = this.props.content;
-            const parent = value.document.getParent(value.blocks.first().key);
-            //@ts-ignore
-            isActive = this.hasBlockType('list-item') && parent && parent.type === type;
+            const block = value.blocks.first();
+            if(block){
+                const parent = value.document.getParent(block.key);
+                //@ts-ignore
+                isActive = this.hasBlockType('list-item') && parent && parent.type === type;
+            }
         }
 
         return (
