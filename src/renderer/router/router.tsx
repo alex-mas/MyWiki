@@ -7,6 +7,7 @@ import WikiArticlePage from '../routes/wikiArticle';
 import WikiEditPage from '../routes/wikiEdit';
 import NotFoundPage from '../routes/notFound';
 import CreateArticlePage from '../routes/createArticle';
+import ArticleSearchPage from '../routes/articleSearch';
 
 export type RouteProps = Exclude<MemoryRouteProps, 'history'>;
 //Pick<MemoryRouteProps, "path" | "exact" | "children" | "component">;
@@ -20,7 +21,7 @@ const AppRouter = () => {
             <MemoryRoute path='/wiki/article/:article' exact component={WikiArticlePage} />
             <MemoryRoute path='/wiki/edit/:article' exact component={WikiEditPage} />
             <MemoryRoute path='/wiki/create/:article' exact component={CreateArticlePage}/>
-            <MemoryRoute path='/wiki/articleSearch/:articleName' exact component={()=><div>Keep looking</div>}/>
+            <MemoryRoute path='/wiki/articleSearch/:articleName' exact component={ArticleSearchPage}/>
             <MemoryRoute path='' component={NotFoundPage} />
         </Router>
     );

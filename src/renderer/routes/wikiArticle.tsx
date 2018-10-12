@@ -142,7 +142,6 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
                     <MemoryLink to={`/wiki/create/${this.props.routeParams.article}`}> Create Article</MemoryLink>
                 </Header>
                 <h1>Article not found</h1>
-
             </div>
         )
     }

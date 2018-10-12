@@ -98,10 +98,16 @@ export const loadArticle: LoadArticleActionCreator = (name: string) => {
             let filePath;
             try {
                 filePath = path.join(selectedWiki.path, 'articles', `${name}.json`);
-                articleData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+                const fileContents =fs.readFileSync(filePath, 'utf8');
+                articleData = JSON.parse(fileContents);
                 console.log(articleData);
-                article.content = articleData.content;
-                article.tags = articleData.tags;
+                if(articleData.content){
+                    article.content = articleData.content;
+                    article.tags = articleData.tags;
+                }else{
+                    //in first versions of the app there was no tags so this keeps it backwards compatible with those wikis
+                    article.content = fileContents;
+                }
                 dispatch({
                     type: 'LOAD_ARTICLE',
                     article
