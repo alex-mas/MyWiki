@@ -162,11 +162,11 @@ const unwrapInline = (change: Change, type: string) => {
 
 
 
-function wrapLink(change: Change, href: string) {
+function wrapLink(change: Change, href: string, isOutLink: boolean = false) {
     console.log('Href: ', href);
     change.wrapInline({
         type: 'link',
-        data: { href }
+        data: { href, isOutLink }
     });
     change.moveToEnd()
 }
@@ -182,7 +182,8 @@ export interface WikiEditorState {
     isModalOpen: boolean,
     promptForText: boolean,
     linkText: string,
-    linkDest: string
+    linkDest: string,
+    isOutLink: boolean
 }
 
 export interface WikiEditorProps {
@@ -196,7 +197,8 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         isModalOpen: false,
         promptForText: false,
         linkText: undefined,
-        linkDest: undefined
+        linkDest: undefined,
+        isOutLink: undefined
     }
     constructor(props: any) {
         super(props);
@@ -205,7 +207,8 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 isModalOpen: false,
                 promptForText: false,
                 linkText: undefined,
-                linkDest: undefined
+                linkDest: undefined,
+                isOutLink: undefined
             }
         }
     }
@@ -217,12 +220,15 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 {
                     //@ts-ignore
                     const href = node.data.get('href');
+                    //@ts-ignore
+                    const isOutLink = node.data.get('isOutLink');
                     return (
                         <WikiLink
                             {...props}
                             to={href}
                             active={this.props.readOnly}
                             className='wiki-link'
+                            isOutLink={isOutLink}
                         >
                             {children}
                         </WikiLink>
@@ -234,10 +240,10 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 </blockquote>
             case 'bulleted-list':
                 return <ul {...attributes} className='wiki-bulleted-list'>
-                {children}
+                    {children}
                 </ul>
             case 'heading-one':
-                return <h1 {...attributes}className='wiki-heading'>
+                return <h1 {...attributes} className='wiki-heading'>
                     {children}
                 </h1>
             case 'heading-two':
@@ -406,13 +412,14 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             if (this.state.isModalOpen) {
                 this.closeModal();
                 const dest = this.state.linkDest;
+                const isOutLink = this.state.isOutLink;
 
                 if (dest === null) {
                     return;
                 }
 
                 //@ts-ignore
-                change.call(wrapLink, dest);
+                change.call(wrapLink, dest, isOutLink);
 
             } else {
                 this.setState(() => ({
@@ -427,6 +434,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
 
                 const dest = this.state.linkDest;
                 const text = this.state.linkText;
+                const isOutLink = this.state.isOutLink;
 
                 if (dest === null || text === null) {
                     return;
@@ -435,7 +443,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 change
                     .insertText(text)
                     .moveFocusBackward(text.length)
-                    .call(wrapLink, dest);
+                    .call(wrapLink, dest, isOutLink);
 
             } else {
                 this.setState(() => ({
@@ -463,6 +471,15 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             linkText
         }));
     }
+    onChangeLinkType = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const isOutLink = e.target.checked;
+        console.log(isOutLink);
+        this.setState(() => ({
+            isOutLink
+        }));
+    }
+
+
     markButton = (type: string, icon: string, data: any) => {
         const isActive = this.hasMarkType(type);
         return (
@@ -482,7 +499,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         if (['numbered-list', 'bulleted-list'].includes(type)) {
             const value = this.props.content;
             const block = value.blocks.first();
-            if(block){
+            if (block) {
                 const parent = value.document.getParent(block.key);
                 //@ts-ignore
                 isActive = this.hasBlockType('list-item') && parent && parent.type === type;
@@ -560,8 +577,12 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     >
                         <div className='wiki-link__form'>
                             <input className='wiki-link__input' type="text" value={this.state.linkDest} onChange={this.onChangeLinkDest} />
+                            <div>
+                                Is out link? <input type="checkbox" checked={this.state.isOutLink} onChange={this.onChangeLinkType} />
+                            </div>
+
                             {this.state.promptForText ?
-                                <input className='wiki-link__text__input'type="text" value={this.state.linkText} onChange={this.onChangeLinkText} />
+                                <input className='wiki-link__text__input' type="text" value={this.state.linkText} onChange={this.onChangeLinkText} />
                                 :
                                 null
                             }

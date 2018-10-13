@@ -9,7 +9,8 @@ export interface WikiLinkProps {
     to: string
     className?: string,
     attributes: RenderAttributes,
-    children: React.ReactNode
+    children: React.ReactNode,
+    isOutLink: boolean
 }
 
 export class WikiLink extends React.Component<WikiLinkProps, any>{
@@ -18,18 +19,22 @@ export class WikiLink extends React.Component<WikiLinkProps, any>{
     }
     render() {
         if (this.props.active) {
-            return (
-                <span {...this.props.attributes}>
-                    <MemoryLink
-                        to={'/wiki/article/' + this.props.to}
-                        text={this.props.text ? this.props.text : undefined}
-                        className={this.props.className}
-                    >
-                        {this.props.children}
-                    </MemoryLink>
-                </span>
+            if (this.props.isOutLink) {
+                //create a link that on click opens a browser with the url providedd. if its http or opens the relevant article if it refers to another wiki.
+            } else {
+                return (
+                    <span {...this.props.attributes}>
+                        <MemoryLink
+                            to={'/wiki/article/' + this.props.to}
+                            text={this.props.text ? this.props.text : undefined}
+                            className={this.props.className}
+                        >
+                            {this.props.children}
+                        </MemoryLink>
+                    </span>
+                );
+            }
 
-            )
         } else {
             return (
                 <span {...this.props.attributes}>

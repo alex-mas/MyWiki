@@ -11,6 +11,7 @@ import { ValueJSON, Change, Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
 import Header from '../components/header';
 import { loadArticle, LoadArticleAction, LoadArticleActionCreator, Article, saveArticle, SaveArticleActionCreator } from '../actions/article';
+import TagForm from '../components/tagForm';
 
 
 
@@ -28,13 +29,20 @@ export type WikiEditPageReduxProps = Pick<AppState, 'selectedWiki'>
 export interface WikiEditPageProps extends WikiEditPageOwnProps, WikiEditPageReduxProps, WikiEditPageDispatchProps {
 }
 
+export interface WikiEditPageState {
+    editorContent: Value, 
+    tags: string[],
+    areTagsBeingManaged: boolean
+}
 
-export class WikiEditPage extends React.Component<WikiEditPageProps, {editorContent: Value, tags: string[]}>{
+
+export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPageState>{
     constructor(props: WikiEditPageProps) {
         super(props);
         this.state = {
             editorContent: Value.fromJSON(JSON.parse('{}')),
-            tags: []
+            tags: [],
+            areTagsBeingManaged: false
         }
 
     }
@@ -49,7 +57,8 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, {editorCont
             console.log(article);
             console.log(JSON.parse(article.content));
             this.setState(() => ({
-                editorContent: Value.fromJSON(JSON.parse(article.content))
+                editorContent: Value.fromJSON(JSON.parse(article.content)),
+                tags: article.tags
             }));
         });
     }
@@ -89,8 +98,16 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, {editorCont
     discardChanges = () => {
         this.props.history.pushState('/wiki/article/home');
     }
-    changeTag = ()=>{
-        
+    onChangeTags = (newTags: string[]) => {
+        this.setState(()=>({
+            tags: newTags
+        }));
+
+    }
+    toggleTagManagement = (event: React.MouseEvent<HTMLButtonElement>) => {
+        this.setState((prevState) => ({
+            areTagsBeingManaged: !prevState.areTagsBeingManaged
+        }));
     }
     render() {
         const article = this.props.routeParams.article;
@@ -100,9 +117,14 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, {editorCont
                     <div className='wiki-article__actions'>
                         <button onClick={this.saveChanges}>Save changes</button>
                         <button onClick={this.discardChanges}>Discard changes</button>
-                        <button >Manage tags</button>
+                        <button onClick={this.toggleTagManagement}>Manage tags</button>
                     </div>
                 </Header>
+                <TagForm
+                    toggled={this.state.areTagsBeingManaged}
+                    tags={this.state.tags}
+                    onChange={this.onChangeTags}
+                />
                 <div className='body--article'>
                     <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
                     <div

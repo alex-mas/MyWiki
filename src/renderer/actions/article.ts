@@ -30,11 +30,12 @@ export type CreateArticleAction = ArticleAction;
 export type CreateArticleActionCreator = (name: string, contents: string, tags: string[]) => ThunkAction<any, AppState, void, CreateArticleAction | ErrorAction>;
 
 
-const _createArticle: ActionCreator<ArticleAction> = (name: string, tags: string[]) => {
+const _createArticle: ActionCreator<ArticleAction> = (name: string, content: string,tags: string[]) => {
     return {
         type: 'CREATE_ARTICLE',
         article: {
             name,
+            content,
             tags
         }
     }
@@ -66,7 +67,7 @@ export const createArticle: CreateArticleActionCreator = (name: string, content:
                                 dispatch(errMsg);
                                 reject(errMsg);
                             } else {
-                                dispatch(_createArticle(article.name, article.tags))
+                                dispatch(_createArticle(article.name, article.content,article.tags))
                                 resolve('Article succesfully creted');
                             }
                         }

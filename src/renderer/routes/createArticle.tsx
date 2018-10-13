@@ -11,6 +11,7 @@ import { Change, Value } from 'slate';
 import { CreateArticleActionCreator, createArticle } from '../actions/article';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
 import Header from '../components/header';
+import TagForm from '../components/tagForm';
 
 export interface CreateArticlePageDispatchProps {
     createArticle: CreateArticleActionCreator,
@@ -31,7 +32,8 @@ export type CreateArticlePageProps = CreateArticlePageOwnProps & CreateArticlePa
 export interface CreateArticlePageState {
     editorContent: Value,
     name: string,
-    tags: string[]
+    tags: string[],
+    areTagsBeingManaged: boolean
 }
 
 export class CreateArticlePage extends React.Component<CreateArticlePageProps, CreateArticlePageState>{
@@ -40,7 +42,8 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
         this.state = {
             editorContent: defaultEditorContents,
             name: this.props.routeParams.article,
-            tags: []
+            tags: [],
+            areTagsBeingManaged: false
         }
     }
     componentDidMount() {
@@ -57,12 +60,23 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
             name
         }));
     }
+    onChangeTags = (newTags: string[]) => {
+        this.setState(()=>({
+            tags: newTags
+        }));
+
+    }
+    toggleTagManagement = (event: React.MouseEvent<HTMLButtonElement>) => {
+        this.setState((prevState) => ({
+            areTagsBeingManaged: !prevState.areTagsBeingManaged
+        }));
+    }
     createArticle = () => {
         this.props.createArticle(this.state.name, JSON.stringify(this.state.editorContent), this.state.tags)
-        //@ts-ignore
-       .then(()=>{
-           this.props.history.pushState(`/wiki/article/${this.state.name}`);
-       });
+            //@ts-ignore
+            .then(() => {
+                this.props.history.pushState(`/wiki/article/${this.state.name}`);
+            });
     }
     render() {
         return (
@@ -72,8 +86,13 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
                     <button onClick={this.createArticle}>
                         Create article
                     </button>
-                    <button>Manage tags</button>
+                    <button onClick={this.toggleTagManagement}>Manage tags</button>
                 </Header>
+                <TagForm
+                    toggled={this.state.areTagsBeingManaged}
+                    tags={this.state.tags}
+                    onChange={this.onChangeTags}
+                />
                 <div className='body--article'>
                     <h1 className='wiki-article__title'>{this.state.name ? this.state.name : 'New Article'}</h1>
                     <div className='wiki-article__body--editor'>

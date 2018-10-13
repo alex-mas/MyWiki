@@ -41,10 +41,10 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
             <div className='wiki-route'>
                 <Header>
                     <i className='wiki-header__icon'>placeholder</i>
-                    <MemoryLink to={`/wiki/create/${this.props.routeParams.article}`}> Create Article</MemoryLink>
+                    <MemoryLink to={`/wiki/create/${this.props.routeParams.articleName}`}> Create Article</MemoryLink>
                 </Header>
-                <div className='body'>
-                    <h1 className='body__title'></h1>
+                <div className='body--article'>
+                    <h1 className='wiki-article__title'>{this.props.routeParams.articleName}</h1>
                     <div className='search-results'>
                         {this.props.searchResults.map((result) => {
                             return (
