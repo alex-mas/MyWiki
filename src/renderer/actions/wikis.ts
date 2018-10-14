@@ -99,7 +99,7 @@ export const selectWiki: SelectWikiActionCreator = (id: string) => {
 
 export interface LoadWikiAction extends Action {
     wiki: WikiMetaData,
-    articles: ArticleMetaData[]
+    articles: Article[]
 }
 export type LoadWikiActionCreator = (id: string) => ThunkAction<Promise<string>, AppState, void, LoadWikiAction | ErrorAction>;
 
