@@ -4,7 +4,8 @@ import { Reducer, AnyAction } from "redux";
 export interface WikiMetaData{
     path: string,
     name: string,
-    id: string
+    id: string,
+    background: string
 }
 
 export type WikisMetadataState = WikiMetaData[];

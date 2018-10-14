@@ -30,7 +30,8 @@ export class CreateWikiForm extends React.Component<CreateWikiFormOwnProps & Cre
         super(props);
         this.state = {
             name: 'defaultWiki',
-            path: './wiki'
+            path: './wiki',
+            background: '../../../resources/images/radiant.png'
         }
     }
     onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +42,7 @@ export class CreateWikiForm extends React.Component<CreateWikiFormOwnProps & Cre
     }
     onSubmitForm = (event: React.FormEvent) => {
         event.preventDefault();
-        this.props.createWiki(this.state.name, this.state.path);
+        this.props.createWiki(this.state.name, this.state.background);
         this.props.history.pushState('/');
     }
     render() {

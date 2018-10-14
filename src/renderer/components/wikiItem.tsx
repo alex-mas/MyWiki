@@ -27,10 +27,12 @@ class WikiItem extends React.Component<WikiItemProps, any>{
         super(props);
     }
     onOpen = () => {
+        console.log('about to open a wiki')
         //@ts-ignore
         this.props.loadWiki(this.props.wiki.id).then(()=>{
+            console.log('loadWiki finished executing');
             this.props.history.pushState('/wiki/article/home');
-        });
+        }).catch((e: any)=>console.warn('Error while loading wiki: ',e));
 
     }
     removeWiki = () => {

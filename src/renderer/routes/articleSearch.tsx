@@ -11,6 +11,7 @@ import { fsError, FsErrorActionCreator } from '../actions/errors';
 import Header from '../components/header';
 import { MemoryLink } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
 import { getRelevantArticles } from '../selectors/articles';
+import { SelectedWiki } from '../store/reducers/selectedWiki';
 
 
 export interface ArticleSearchPageDispatchProps {
@@ -19,7 +20,8 @@ export interface ArticleSearchPageDispatchProps {
 
 
 export interface ArticleSearchPageStateProps {
-    searchResults: string[]
+    searchResults: string[],
+    selectedWiki: SelectedWiki
 }
 
 export interface ArticleSearchPageOwnProps extends RouteProps {
@@ -36,9 +38,19 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
         super(props);
 
     }
+    renderNotFoundMessage = () =>{
+        return(
+            <div className='search-results'>
+                <h2 className='wiki-article__subtitle'>There are no articles relevant to the search</h2>
+                <MemoryLink to='/wiki/article/home'>Go home</MemoryLink>
+            </div>
+        )
+    }
     render() {
         return (
-            <div className='wiki-route'>
+          
+            <div className='wiki-route' style={this.props.selectedWiki.background ? {backgroundImage: `url(${this.props.selectedWiki.background})`} : {}}>
+              {console.log(this.props.selectedWiki)}
                 <Header>
                     <i className='wiki-header__icon'>placeholder</i>
                     <MemoryLink to={`/wiki/create/${this.props.routeParams.articleName}`}> Create Article</MemoryLink>
@@ -53,6 +65,7 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
                                 </div>
                             );
                         })}
+                        {this.props.searchResults.length === 0 ? this.renderNotFoundMessage() : null}
                     </div>
                 </div>
             </div>
@@ -65,7 +78,8 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
 export default connect<ArticleSearchPageStateProps, ArticleSearchPageDispatchProps, ArticleSearchPageOwnProps, AppState>(
     (state: AppState, props: ArticleSearchPageOwnProps) => {
         return {
-            searchResults: getRelevantArticles(props.routeParams.articleName, state.selectedWiki)
+            searchResults: getRelevantArticles(props.routeParams.articleName, state.selectedWiki),
+            selectedWiki: state.selectedWiki
         }
     },
     {

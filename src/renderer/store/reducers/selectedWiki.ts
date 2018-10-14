@@ -5,7 +5,8 @@ import { ArticleMetaData } from "../../actions/article";
 
 
 export interface SelectedWiki extends WikiMetaData {
-    articles: ArticleMetaData[]
+    articles: ArticleMetaData[],
+    background: string
 }
 
 
@@ -13,7 +14,8 @@ const defaultState: SelectedWiki = {
     path: '',
     name: '',
     id: '',
-    articles: []
+    articles: [],
+    background:  '../../../resources/images/radiant.png'
 };
 
 export const SelectedWikiReducer: Reducer<SelectedWiki> = (state: SelectedWiki = defaultState, action: AnyAction) => {

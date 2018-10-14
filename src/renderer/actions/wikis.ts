@@ -15,9 +15,9 @@ type WikiAction = Action & { wiki: WikiMetaData };
 
 export type CreateWikiAction = WikiAction;
 
-export type CreateWikiActionCreator = (name: string, wikiPath: string) => ThunkAction<any, AppState, void, CreateWikiAction | ErrorAction>;
+export type CreateWikiActionCreator = (name: string, background: string) => ThunkAction<any, AppState, void, CreateWikiAction | ErrorAction>;
 
-export const createWiki: CreateWikiActionCreator = (name: string) => {
+export const createWiki: CreateWikiActionCreator = (name: string, background: string) => {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const wikiId = uuid();
@@ -40,7 +40,8 @@ export const createWiki: CreateWikiActionCreator = (name: string) => {
                         wiki: {
                             path: wikiPath,
                             name,
-                            id: wikiId
+                            id: wikiId,
+                            background
                         }
                     });
                     //fs.writeFileSync(path.join(wikiPath, 'home.md'), fs.readFileSync(path.join('./', 'src/static/wikiHome.md')),'utf8');
