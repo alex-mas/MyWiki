@@ -100,7 +100,7 @@ export interface LoadWikiAction extends Action {
     wiki: WikiMetaData,
     articles: ArticleMetaData[]
 }
-export type LoadWikiActionCreator = (id:string)=>ThunkAction<Promise<string>, AppState, void, LoadWikiAction | ErrorAction>;
+export type LoadWikiActionCreator = (id: string) => ThunkAction<Promise<string>, AppState, void, LoadWikiAction | ErrorAction>;
 
 export const loadWiki: LoadWikiActionCreator = (id: string) => {
     return (dispatch, getState) => {
@@ -113,8 +113,8 @@ export const loadWiki: LoadWikiActionCreator = (id: string) => {
                     dispatch(fsError('error while reading articles folder'));
                     reject(err);
                 } else {
-                    articleFiles.forEach((article) => {
-                        try {
+                    try {
+                        articleFiles.forEach((article) => {
                             const articleData: Article = JSON.parse(
                                 fs.readFileSync(`./wikis/${wiki.name}(${wiki.id})/articles/${article}`, 'utf8')
                             );
@@ -122,23 +122,22 @@ export const loadWiki: LoadWikiActionCreator = (id: string) => {
                                 name: articleData.name,
                                 tags: articleData.tags
                             });
-                            console.log('load wiki payload: ',{
-                                type: 'LOAD_WIKI',
-                                wiki,
-                                articles
-                            });
-                            dispatch({
-                                type: 'LOAD_WIKI',
-                                wiki,
-                                articles
-                            });
-                            resolve('success loading wiki');
-                        } catch (e) {
-                            dispatch(fsError('error while reading aeticles'));
-                            reject(e);
-                        }
-                    });
-
+                        });
+                        console.log('load wiki payload: ', {
+                            type: 'LOAD_WIKI',
+                            wiki,
+                            articles
+                        });
+                        dispatch({
+                            type: 'LOAD_WIKI',
+                            wiki,
+                            articles
+                        });
+                        resolve('success loading wiki');
+                    } catch (e) {
+                        dispatch(fsError('error while reading aeticles'));
+                        reject(e);
+                    }
                 }
             });
 
