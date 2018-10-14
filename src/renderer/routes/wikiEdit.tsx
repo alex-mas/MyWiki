@@ -12,6 +12,8 @@ import { fsError, FsErrorActionCreator } from '../actions/errors';
 import Header from '../components/header';
 import { loadArticle, LoadArticleAction, LoadArticleActionCreator, Article, saveArticle, SaveArticleActionCreator } from '../actions/article';
 import TagForm from '../components/tagForm';
+import { getArticle } from '../selectors/articles';
+import { SelectedWiki } from '../store/reducers/selectedWiki';
 
 
 
@@ -24,7 +26,11 @@ export interface WikiEditPageDispatchProps {
 export interface WikiEditPageOwnProps extends MemoryRouteProps {
 }
 
-export type WikiEditPageReduxProps = Pick<AppState, 'selectedWiki'>
+export interface WikiEditPageReduxProps {
+    selectedWiki: SelectedWiki,
+    article: Article
+}
+
 
 export interface WikiEditPageProps extends WikiEditPageOwnProps, WikiEditPageReduxProps, WikiEditPageDispatchProps {
 }
@@ -32,7 +38,8 @@ export interface WikiEditPageProps extends WikiEditPageOwnProps, WikiEditPageRed
 export interface WikiEditPageState {
     editorContent: Value, 
     tags: string[],
-    areTagsBeingManaged: boolean
+    areTagsBeingManaged: boolean,
+    background: string
 }
 
 
@@ -42,7 +49,8 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
         this.state = {
             editorContent: Value.fromJSON(JSON.parse('{}')),
             tags: [],
-            areTagsBeingManaged: false
+            areTagsBeingManaged: false,
+            background: this.props.article.background
         }
 
     }
@@ -61,28 +69,6 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
                 tags: article.tags
             }));
         });
-    }
-    getArticleContent = () => {
-        let content;
-        let filePath;
-        try {
-            console.log('Before fetching file: ', this.props);
-            if (this.props.routeParams && this.props.routeParams.article) {
-                filePath = path.join(this.props.selectedWiki.path, 'articles', `${this.props.routeParams.article}.json`);
-                content = fs.readFileSync(filePath, 'utf8');
-            } else {
-                filePath = path.join(this.props.selectedWiki.path, 'articles', 'home.json');
-                content = fs.readFileSync(filePath, 'utf8');
-            }
-        } catch (e) {
-            fs.access(filePath, (error) => {
-                if (error) {
-                    this.props.fsError(`Error trying to fetch article ${this.props.routeParams.article}, please try running the app as administrator. If that doesn't work contact the developer`);
-                    console.warn(e);
-                }
-            });
-        }
-        if (content) { return JSON.parse(content); }
     }
 
     onChange = (change: Change) => {
@@ -109,10 +95,23 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
             areTagsBeingManaged: !prevState.areTagsBeingManaged
         }));
     }
+    getBackground = ()=>{
+        let background = this.props.selectedWiki.background;
+        if(!background){
+            const article = this.props.selectedWiki.articles.find((currentArticle)=>currentArticle.name === this.props.routeParams.article);
+            if(article && article.background){
+                background = article.background;
+            }else{
+                //set background to the default here;
+            }
+        }
+        return background;
+    }
     render() {
         const article = this.props.routeParams.article;
         return (
             <div className='wiki-route'>
+            <img className='wiki-route__background-image' src={this.getBackground()} alt=""/>
                 <Header>
                     <div className='wiki-article__actions'>
                         <button onClick={this.saveChanges}>Save changes</button>
@@ -145,7 +144,8 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
 
 const mapStateToProps: MapStateToProps<WikiEditPageReduxProps, WikiEditPageOwnProps, AppState> = (state, props) => {
     return {
-        selectedWiki: state.selectedWiki
+        selectedWiki: state.selectedWiki,
+        article: getArticle(props.routeParams.article, state.selectedWiki)
     };
 }
 

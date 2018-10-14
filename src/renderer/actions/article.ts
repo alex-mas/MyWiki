@@ -13,12 +13,14 @@ import { deleteFolderRecursively } from '../utilities/fsutils';
 
 export interface ArticleMetaData {
     name: string,
-    tags: string[]
+    tags: string[],
+    background: string
 }
 export interface Article {
     name: string,
     tags: string[],
-    content: string
+    content: string,
+    background: string
 }
 
 export interface ArticleAction extends Action {
@@ -27,47 +29,38 @@ export interface ArticleAction extends Action {
 
 export type CreateArticleAction = ArticleAction;
 
-export type CreateArticleActionCreator = (name: string, contents: string, tags: string[]) => ThunkAction<any, AppState, void, CreateArticleAction | ErrorAction>;
+export type CreateArticleActionCreator = (article: Article) => ThunkAction<any, AppState, void, CreateArticleAction | ErrorAction>;
 
 
-const _createArticle: ActionCreator<ArticleAction> = (name: string, content: string,tags: string[]) => {
+const _createArticle: ActionCreator<ArticleAction> = (article: Article) => {
     return {
         type: 'CREATE_ARTICLE',
-        article: {
-            name,
-            content,
-            tags
-        }
+        article
     }
 }
 
-export const createArticle: CreateArticleActionCreator = (name: string, content: string, tags: string[]) => {
+export const createArticle: CreateArticleActionCreator = (article: Article) => {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const state = getState();
             const wiki = state.selectedWiki;
-            const article = {
-                name,
-                content,
-                tags
-            }
-            fs.access(path.join(wiki.path, 'wikis', 'articles', name), fs.constants.F_OK, (err) => {
+            fs.access(path.join(wiki.path, 'wikis', 'articles', article.name), fs.constants.F_OK, (err) => {
                 if (!err) {
-                    const errMsg = fsError(`Wiki article named ${name} already exists, please rename or delete the existing article or change the name of this article`);
+                    const errMsg = fsError(`Wiki article named ${article.name} already exists, please rename or delete the existing article or change the name of this article`);
                     dispatch(errMsg);
                     reject(errMsg);
                 } else {
                     fs.writeFile(
-                        path.join(wiki.path, 'articles', `${name}.json`),
+                        path.join(wiki.path, 'articles', `${article.name}.json`),
                         JSON.stringify(article),
                         'utf8',
                         (error) => {
                             if (error) {
-                                const errMsg = fsError(`Error trying to create article ${name}, please try running the app as administrator. If that doesn't work contact the developer`);
+                                const errMsg = fsError(`Error trying to create article ${article.name}, please try running the app as administrator. If that doesn't work contact the developer`);
                                 dispatch(errMsg);
                                 reject(errMsg);
                             } else {
-                                dispatch(_createArticle(article.name, article.content,article.tags))
+                                dispatch(_createArticle(article))
                                 resolve('Article succesfully creted');
                             }
                         }
@@ -92,20 +85,21 @@ export const loadArticle: LoadArticleActionCreator = (name: string) => {
         const article: Article = {
             content: '',
             tags: [],
-            name
+            name,
+            background: ''
         }
         return new Promise((resolve, reject) => {
             let articleData;
             let filePath;
             try {
                 filePath = path.join(selectedWiki.path, 'articles', `${name}.json`);
-                const fileContents =fs.readFileSync(filePath, 'utf8');
+                const fileContents = fs.readFileSync(filePath, 'utf8');
                 articleData = JSON.parse(fileContents);
                 console.log(articleData);
-                if(articleData.content){
+                if (articleData.content) {
                     article.content = articleData.content;
                     article.tags = articleData.tags;
-                }else{
+                } else {
                     //in first versions of the app there was no tags so this keeps it backwards compatible with those wikis
                     article.content = fileContents;
                 }
@@ -128,27 +122,22 @@ export const loadArticle: LoadArticleActionCreator = (name: string) => {
 
 
 export interface SaveArticleAction extends Action {
-    article: ArticleMetaData
+    article: Article
 }
 
-export type SaveArticleActionCreator = (name: string, tags: string[], content: string) => ThunkAction<any, AppState, void, SaveArticleAction | ErrorAction>;
+export type SaveArticleActionCreator = (article: Article) => ThunkAction<any, AppState, void, SaveArticleAction | ErrorAction>;
 
-export const saveArticle: SaveArticleActionCreator = (name, tags, content) => {
+export const saveArticle: SaveArticleActionCreator = (article: Article) => {
     return (dispatch, getState) => {
         const selectedWiki = getState().selectedWiki;
-        const article = {
-            name,
-            tags,
-            content
-        }
         return new Promise((resolve, reject) => {
             fs.writeFile(
-                path.join(selectedWiki.path, 'articles', `${name}.json`),
+                path.join(selectedWiki.path, 'articles', `${article.name}.json`),
                 JSON.stringify(article),
                 'utf8',
                 (err) => {
                     if (err) {
-                        dispatch(fsError(`Error trying to edit article ${name}, please try running the app as administrator. If that doesn't work contact the developer`));
+                        dispatch(fsError(`Error trying to edit article ${article.name}, please try running the app as administrator. If that doesn't work contact the developer`));
                         reject(err);
                     } else {
                         dispatch({
@@ -175,7 +164,7 @@ export type DeleteArticleActionCreator = (name: string) => ThunkAction<any, AppS
 export const deleteArticle: DeleteArticleActionCreator = (name: string) => {
     return (dispatch, getState) => {
         const selectedWiki = getState().selectedWiki;
-        return new Promise((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
             let filePath = path.join(selectedWiki.path, 'articles', `${name}.json`);
             fs.unlink(filePath, (error) => {
                 if (error) {

@@ -29,3 +29,8 @@ export const getRelevantArticles= (search:string, selectedWiki: SelectedWiki): s
         }
     }).map((article)=>article.name);
 }
+
+
+export const getArticle = (name:string, selectedWiki: SelectedWiki)=>{
+    return selectedWiki.articles.find((article)=>article.name === name);
+}

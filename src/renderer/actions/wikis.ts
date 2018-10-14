@@ -25,10 +25,16 @@ export const createWiki: CreateWikiActionCreator = (name: string, background: st
             if (!fs.existsSync('./wikis')) {
                 fs.mkdirSync('./wikis');
             }
+            const wikiData: WikiMetaData = {
+                path: wikiPath,
+                name,
+                id: wikiId,
+                background
+            }
             fs.mkdirSync(wikiPath);
             fs.mkdirSync(path.join(wikiPath, 'articles'));
             console.log(path.join(wikiPath, 'myWikiConfig.json'));
-            fs.writeFile(path.join(wikiPath, 'myWikiConfig.json'), JSON.stringify(defaultWikiConfig), 'utf8', (error) => {
+            fs.writeFile(path.join(wikiPath, 'myWiki.config.json'), JSON.stringify(wikiData), 'utf8', (error) => {
                 if (error) {
                     console.log(error);
                     const errMsg = fsError(`Error creating the configuration file for ${name} wiki`);
@@ -37,12 +43,7 @@ export const createWiki: CreateWikiActionCreator = (name: string, background: st
                 } else {
                     dispatch({
                         type: 'CREATE_WIKI',
-                        wiki: {
-                            path: wikiPath,
-                            name,
-                            id: wikiId,
-                            background
-                        }
+                        wiki: wikiData
                     });
                     //fs.writeFileSync(path.join(wikiPath, 'home.md'), fs.readFileSync(path.join('./', 'src/static/wikiHome.md')),'utf8');
                     //fs.writeFileSync(path.join(wikiPath, 'articles', 'test.md'), fs.readFileSync(path.join('./','src/static/testArticle.md')),'utf8');
@@ -107,7 +108,7 @@ export const loadWiki: LoadWikiActionCreator = (id: string) => {
         return new Promise((resolve, reject) => {
             const state = getState();
             const wiki = state.wikis.find((wiki) => wiki.id === id);
-            const articles: ArticleMetaData[] = [];
+            const articles: Article[] = [];
             fs.readdir(`./wikis/${wiki.name}(${wiki.id})/articles`, (err, articleFiles: string[]) => {
                 if (err) {
                     dispatch(fsError('error while reading articles folder'));
@@ -118,10 +119,7 @@ export const loadWiki: LoadWikiActionCreator = (id: string) => {
                             const articleData: Article = JSON.parse(
                                 fs.readFileSync(`./wikis/${wiki.name}(${wiki.id})/articles/${article}`, 'utf8')
                             );
-                            articles.push({
-                                name: articleData.name,
-                                tags: articleData.tags
-                            });
+                            articles.push(articleData);
                         });
                         console.log('load wiki payload: ', {
                             type: 'LOAD_WIKI',

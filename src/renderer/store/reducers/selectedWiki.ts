@@ -1,11 +1,11 @@
 import { Reducer, AnyAction } from "redux";
 import { WikiMetaData } from "./wikis";
-import { ArticleMetaData } from "../../actions/article";
+import { ArticleMetaData, Article } from "../../actions/article";
 
 
 
 export interface SelectedWiki extends WikiMetaData {
-    articles: ArticleMetaData[],
+    articles: Article[],
     background: string
 }
 

@@ -11,32 +11,11 @@ import { Change, Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
 import Header from '../components/header';
 import { loadArticle, LoadArticleActionCreator, Article, DeleteArticleActionCreator, deleteArticle } from '../actions/article';
-import  WikiSearchBar from '../components/wikiSearchBar';
+import WikiSearchBar from '../components/wikiSearchBar';
+import { getArticle } from '../selectors/articles';
+import { WikiMetaData } from '../store/reducers/wikis';
+import { SelectedWiki } from '../store/reducers/selectedWiki';
 
-
-const getArticleContent = (props: any) => {
-    let content;
-    let filePath;
-    try {
-        if (props.routeParams && props.routeParams.article) {
-            filePath = path.join(props.selectedWiki.path, 'articles', `${props.routeParams.article}.json`);
-            content = fs.readFileSync(filePath, 'utf8');
-        } else {
-            filePath = path.join(props.selectedWiki.path, 'articles', 'home.json');
-            content = fs.readFileSync(filePath, 'utf8');
-        }
-    } catch (e) {
-        fs.access(filePath, (error) => {
-            if (error) {
-                props.fsError(`Error trying to fetch article ${props.routeParams.article}, please try running the app as administrator. If that doesn't work contact the developer`);
-                console.warn(e);
-            }
-        });
-    }
-    if (content) {
-        return JSON.parse(content);
-    }
-}
 
 
 
@@ -50,7 +29,11 @@ export interface DispatchProps {
 export interface WikiArticlePageOwnProps extends MemoryRouteProps {
 }
 
-export type WikiArticlePageReduxProps = Pick<AppState, 'selectedWiki'>
+export interface WikiArticlePageReduxProps {
+    selectedWiki: SelectedWiki,
+    article: Article
+}
+
 
 export interface WikiArticlePageProps extends MemoryRouteProps, WikiArticlePageReduxProps, DispatchProps {
 }
@@ -70,12 +53,12 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         }
         //@ts-ignore
         this.props.loadArticle(this.props.routeParams.article).then((article: Article) => {
-            console.log('Article returned from load article: ',article);
+            console.log('Article returned from load article: ', article);
             this.setState(() => ({
                 content: article.content ? Value.fromJSON(JSON.parse(article.content)) : defaultEditorContents,
                 fileExists: article.content ? true : false
             }));
-        }).catch((e:string) => {
+        }).catch((e: string) => {
             console.log(e);
             this.setState(() => ({
                 fileExists: false
@@ -100,33 +83,9 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
 
         }
     }
-
-    getArticleContent = () => {
-        let content;
-        let filePath;
-        try {
-            if (this.props.routeParams && this.props.routeParams.article) {
-                filePath = path.join(this.props.selectedWiki.path, 'articles', `${this.props.routeParams.article}.json`);
-                content = fs.readFileSync(filePath, 'utf8');
-            } else {
-                filePath = path.join(this.props.selectedWiki.path, 'articles', 'home.json');
-                content = fs.readFileSync(filePath, 'utf8');
-            }
-        } catch (e) {
-            fs.access(filePath, (error) => {
-                if (error) {
-                    this.props.fsError(`Error trying to fetch article ${this.props.routeParams.article}, please try running the app as administrator. If that doesn't work contact the developer`);
-                    console.warn(e, error);
-                }
-            });
-        }
-        if (content) {
-            return JSON.parse(content);
-        }
-    }
     deleteArticle = () => {
         //@ts-ignore
-        this.props.deleteArticle(this.props.routeParams.article).then(()=>{
+        this.props.deleteArticle(this.props.routeParams.article).then(() => {
             this.props.history.pushState('/wiki/article/home');
         });
     }
@@ -137,6 +96,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
     renderArticleNotFound = () => {
         return (
             <div className='wiki-route'>
+                <img className='wiki-route__background-image' src={this.getBackground()} alt="" />
                 <Header>
                     <i className='wiki-header__icon'>placeholder</i>
                     <MemoryLink to={`/wiki/create/${this.props.routeParams.article}`}> Create Article</MemoryLink>
@@ -145,15 +105,26 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
             </div>
         )
     }
-
+    getBackground = () => {
+        let background = this.props.selectedWiki.background;
+        if (!background) {
+            if (this.props.article && this.props.article.background) {
+                background = this.props.article.background;
+            } else {
+                //set background to the default here;
+            }
+        }
+        return background;
+    }
     render() {
         const article = this.props.routeParams.article;
         if (this.state.fileExists) {
             return (
                 <div className='wiki-route'>
+                    <img className='wiki-route__background-image' src={this.getBackground()} alt="" />
                     <Header>
                         <i className='wiki-header__icon'>placeholder</i>
-                        <WikiSearchBar/>
+                        <WikiSearchBar />
                         <div className='wiki-article__actions'>
                             <MemoryLink to={`/wiki/create/`}> Create Article</MemoryLink>
                             {article !== 'home' ? <button onClick={this.deleteArticle}>Delete article</button> : null}
@@ -184,7 +155,8 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
 
 const mapStateToProps: MapStateToProps<WikiArticlePageReduxProps, WikiArticlePageOwnProps, AppState> = (state, props) => {
     return {
-        selectedWiki: state.selectedWiki
+        selectedWiki: state.selectedWiki,
+        article: getArticle(props.routeParams.article, state.selectedWiki)
     };
 }
 

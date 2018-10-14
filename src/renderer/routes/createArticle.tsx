@@ -12,6 +12,7 @@ import { CreateArticleActionCreator, createArticle } from '../actions/article';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
 import Header from '../components/header';
 import TagForm from '../components/tagForm';
+import { SelectedWiki } from '../store/reducers/selectedWiki';
 
 export interface CreateArticlePageDispatchProps {
     createArticle: CreateArticleActionCreator,
@@ -20,7 +21,7 @@ export interface CreateArticlePageDispatchProps {
 
 
 export interface CreateArticlePageStateProps {
-    selectedWiki: WikiMetaData
+    selectedWiki: SelectedWiki
 }
 
 export interface CreateArticlePageOwnProps extends MemoryRouteProps {
@@ -31,6 +32,7 @@ export type CreateArticlePageProps = CreateArticlePageOwnProps & CreateArticlePa
 
 export interface CreateArticlePageState {
     editorContent: Value,
+    background: string,
     name: string,
     tags: string[],
     areTagsBeingManaged: boolean
@@ -42,6 +44,7 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
         this.state = {
             editorContent: defaultEditorContents,
             name: this.props.routeParams.article,
+            background: undefined,
             tags: [],
             areTagsBeingManaged: false
         }
@@ -61,7 +64,7 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
         }));
     }
     onChangeTags = (newTags: string[]) => {
-        this.setState(()=>({
+        this.setState(() => ({
             tags: newTags
         }));
 
@@ -72,15 +75,20 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
         }));
     }
     createArticle = () => {
-        this.props.createArticle(this.state.name, JSON.stringify(this.state.editorContent), this.state.tags)
+        this.props.createArticle({
+            name: this.state.name,
+            content: JSON.stringify(this.state.editorContent),
+            tags: this.state.tags,
+            background: this.state.background
             //@ts-ignore
-            .then(() => {
-                this.props.history.pushState(`/wiki/article/${this.state.name}`);
-            });
+        }).then(() => {
+            this.props.history.pushState(`/wiki/article/${this.state.name}`);
+        });
     }
     render() {
         return (
             <div className='wiki-route'>
+                <img className='wiki-route__background-image' src={this.state.background ? this.state.background : this.props.selectedWiki.background} alt="" />
                 <Header>
                     <input type="text" value={this.state.name} onChange={this.onNameChange} />
                     <button onClick={this.createArticle}>
