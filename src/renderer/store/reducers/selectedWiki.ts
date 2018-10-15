@@ -29,6 +29,17 @@ export const SelectedWikiReducer: Reducer<SelectedWiki> = (state: SelectedWiki =
                 ...action.wiki,
                 articles: action.articles
             }
+        case 'SAVE_ARTICLE':
+            return {
+                ...state,
+                articles: state.articles.map((article)=>{
+                    if(article.name === action.article.name){
+                        return action.article;
+                    }else{
+                        return article;
+                    }
+                })
+            }
         case 'CREATE_ARTICLE':
             return {
                 ...state,

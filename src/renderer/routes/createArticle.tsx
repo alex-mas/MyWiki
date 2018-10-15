@@ -13,6 +13,7 @@ import { fsError, FsErrorActionCreator } from '../actions/errors';
 import Header from '../components/header';
 import TagForm from '../components/tagForm';
 import { SelectedWiki } from '../store/reducers/selectedWiki';
+import { ImageInput } from '../components/imageInput';
 
 export interface CreateArticlePageDispatchProps {
     createArticle: CreateArticleActionCreator,
@@ -85,6 +86,11 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
             this.props.history.pushState(`/wiki/article/${this.state.name}`);
         });
     }
+    onBackgroundChange = (newBackground: string) => {
+        this.setState(() => ({
+            background: newBackground
+        }));
+    }
     render() {
         return (
             <div className='wiki-route'>
@@ -94,13 +100,22 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
                     <button onClick={this.createArticle}>
                         Create article
                     </button>
-                    <button onClick={this.toggleTagManagement}>Manage tags</button>
+                    <div>
+                        <button onClick={this.toggleTagManagement}>Manage tags</button>
+                        <ImageInput
+                            prompt='Choose Background'
+                            onChange={this.onBackgroundChange}
+                            windowTitle='Choose a background for the article'
+                        />
+                    </div>
+
                 </Header>
                 <TagForm
                     toggled={this.state.areTagsBeingManaged}
                     tags={this.state.tags}
                     onChange={this.onChangeTags}
                 />
+
                 <div className='body--article'>
                     <h1 className='wiki-article__title'>{this.state.name ? this.state.name : 'New Article'}</h1>
                     <div className='wiki-article__body--editor'>

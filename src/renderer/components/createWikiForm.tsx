@@ -9,6 +9,7 @@ import { fsError, FsErrorActionCreator } from '../actions/errors';
 import { createWiki, CreateWikiActionCreator } from '../actions/wikis';
 import { MemoryHistory } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
 import { encode } from 'punycode';
+import { ImageInput } from './imageInput';
 
 const accessFile = util.promisify(fs.access);
 
@@ -32,7 +33,7 @@ export class CreateWikiForm extends React.Component<CreateWikiFormOwnProps & Cre
         this.state = {
             name: 'defaultWiki',
             path: './wiki',
-            background: '../../../resources/images/radiant.png'
+            background: undefined
         }
     }
     onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,27 +47,10 @@ export class CreateWikiForm extends React.Component<CreateWikiFormOwnProps & Cre
         this.props.createWiki(this.state.name, this.state.background);
         this.props.history.pushState('/');
     }
-    changeBackgroundImage = (e: React.MouseEvent<HTMLButtonElement>) => {
-        dialog.showOpenDialog(remote.getCurrentWindow(), {
-            title: 'Choose a background image',
-            filters: [{
-                name: 'images',
-                extensions: ['jpg', 'jpeg', 'gif', 'png', 'apng', 'svg', 'bmp', '.webp']
-            }],
-            properties: ['openFile']
-        },
-            (filePaths: string[]) => {
-
-                if (filePaths.length === 1) {
-                    const background = path.relative(__dirname, filePaths[0]);
-                    console.log('relative path encoded: ', encodeURI(path.relative(__dirname, filePaths[0])));
-                    console.log('absolute path encoded: ', encodeURI(filePaths[0]));
-                    console.log('Value:', background);
-                    this.setState(() => ({
-                        background
-                    }));
-                }
-            });
+    onBackgroundChange = (newBackground: string)=>{
+        this.setState(()=>({
+            background: newBackground
+        }));
     }
     render() {
         return (
@@ -75,9 +59,14 @@ export class CreateWikiForm extends React.Component<CreateWikiFormOwnProps & Cre
                     <input className='form-input' type="text" placeholder='wiki name' value={this.state.name} onChange={this.onNameChange} />
                 </div>
                 <div className='form-field'>
-                    <span className='dialog-input'>{this.state.background}</span>
-                    <button type='button' onClick={this.changeBackgroundImage}>Change background image</button>
-                    <img className='background-image-preview' style={{ height: '150px', width: '150px' }} src={this.state.background} alt="Preview" />
+                    <ImageInput
+                        value={this.state.background}
+                        placeholder='Choose a background image'
+                        onChange={this.onBackgroundChange}
+                        prompt='Choose Image'
+                        windowTitle='Choose a background image'
+                    />
+                    <img className='background-image-preview' style={{ height: '150px', width: '150px' }} src={this.state.background}  />
                 </div>
 
                 <button className='form action' type='submit'>Submit</button>

@@ -14,6 +14,7 @@ import { loadArticle, LoadArticleAction, LoadArticleActionCreator, Article, save
 import TagForm from '../components/tagForm';
 import { getArticle } from '../selectors/articles';
 import { SelectedWiki } from '../store/reducers/selectedWiki';
+import { ImageInput } from '../components/imageInput';
 
 
 
@@ -36,7 +37,7 @@ export interface WikiEditPageProps extends WikiEditPageOwnProps, WikiEditPageRed
 }
 
 export interface WikiEditPageState {
-    editorContent: Value, 
+    editorContent: Value,
     tags: string[],
     areTagsBeingManaged: boolean,
     background: string
@@ -76,16 +77,21 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
         this.setState(() => ({ editorContent }));
     }
     saveChanges = () => {
-        //@ts-ignore
-        this.props.saveArticle(this.props.routeParams.article,this.state.tags, JSON.stringify(this.state.editorContent.toJSON())).then(()=>{
+        this.props.saveArticle({
+            name: this.props.routeParams.article,
+            tags: this.state.tags,
+            content: JSON.stringify(this.state.editorContent.toJSON()),
+            background: this.state.background
+            //@ts-ignore
+        }).then(() => {
             this.props.history.pushState(`/wiki/article/${this.props.routeParams.article}`);
-        }).catch((e:string)=>console.warn(e));
+        }).catch((e: string) => console.warn(e));
     }
     discardChanges = () => {
         this.props.history.pushState('/wiki/article/home');
     }
     onChangeTags = (newTags: string[]) => {
-        this.setState(()=>({
+        this.setState(() => ({
             tags: newTags
         }));
 
@@ -95,28 +101,39 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
             areTagsBeingManaged: !prevState.areTagsBeingManaged
         }));
     }
-    getBackground = ()=>{
+    getBackground = () => {
         let background = this.props.selectedWiki.background;
-        if(!background){
-            const article = this.props.selectedWiki.articles.find((currentArticle)=>currentArticle.name === this.props.routeParams.article);
-            if(article && article.background){
-                background = article.background;
-            }else{
-                //set background to the default here;
-            }
+        if (this.props.article &&
+            this.props.article.background ||
+            this.state.background
+        ) {
+            background = this.state.background;
+        }
+        if (!background) {
+            //set background to the default here;
         }
         return background;
+    }
+    onBackgroundChange = (newBackground: string) => {
+        this.setState(() => ({
+            background: newBackground
+        }));
     }
     render() {
         const article = this.props.routeParams.article;
         return (
             <div className='wiki-route'>
-            <img className='wiki-route__background-image' src={this.getBackground()} alt=""/>
+                <img className='wiki-route__background-image' src={this.getBackground()} alt="" />
                 <Header>
                     <div className='wiki-article__actions'>
                         <button onClick={this.saveChanges}>Save changes</button>
                         <button onClick={this.discardChanges}>Discard changes</button>
                         <button onClick={this.toggleTagManagement}>Manage tags</button>
+                        <ImageInput
+                            prompt='Choose Background'
+                            onChange={this.onBackgroundChange}
+                            windowTitle='Choose a background for the article'
+                        />
                     </div>
                 </Header>
                 <TagForm

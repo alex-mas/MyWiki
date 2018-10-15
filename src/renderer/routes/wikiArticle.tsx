@@ -107,12 +107,10 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
     }
     getBackground = () => {
         let background = this.props.selectedWiki.background;
-        if (!background) {
-            if (this.props.article && this.props.article.background) {
-                background = this.props.article.background;
-            } else {
-                //set background to the default here;
-            }
+        if (this.props.article && this.props.article.background) {
+            background = this.props.article.background;
+        } else if (!background) {
+            //set background to the default here;
         }
         return background;
     }
