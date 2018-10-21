@@ -96,7 +96,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
     renderArticleNotFound = () => {
         return (
             <div className='wiki-route'>
-                <img className='wiki-route__background-image' src={this.getBackground()} alt="" />
+                <img className='wiki-background' src={this.getBackground()} alt="" />
                 <Header>
                     <i className='wiki-header__icon'>placeholder</i>
                     <MemoryLink to={`/wiki/create/${this.props.routeParams.article}`}> Create Article</MemoryLink>
@@ -119,7 +119,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         if (this.state.fileExists) {
             return (
                 <div className='wiki-route'>
-                    <img className='wiki-route__background-image' src={this.getBackground()} alt="" />
+                    <img className='wiki-background' src={this.getBackground()} alt="" />
                     <Header>
                         <i className='wiki-header__icon'>placeholder</i>
                         <WikiSearchBar />

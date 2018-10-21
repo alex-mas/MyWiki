@@ -123,7 +123,7 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
         const article = this.props.routeParams.article;
         return (
             <div className='wiki-route'>
-                <img className='wiki-route__background-image' src={this.getBackground()} alt="" />
+                <img className='wiki-background' src={this.getBackground()} alt="" />
                 <Header>
                     <div className='wiki-article__actions'>
                         <button onClick={this.saveChanges}>Save changes</button>

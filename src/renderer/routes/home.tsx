@@ -7,14 +7,21 @@ import Wiki from '../components/wikiItem';
 import { MemoryRouteProps, MemoryLink } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
 import MyEditor from '../components/wikiEditor/wikiEditor';
 import AppHeader from '../components/appHeader';
+import CreateWikiForm from '../components/createWikiForm';
+import Modal from '../../../../../libraries/alex components/dist/layout/modal';
 
 export interface HomePageProps extends MemoryRouteProps {
     wikis: WikiMetaData[]
 }
 
-export class HomePage extends React.Component<HomePageProps, any>{
+export interface HomePageState {
+    shouldRenderWikiForm: boolean;
+}
+
+export class HomePage extends React.Component<HomePageProps, HomePageState>{
     constructor(props: HomePageProps) {
         super(props);
+
     }
     componentDidMount() {
         const appTitle = document.getElementById('pageTitle');
@@ -25,15 +32,17 @@ export class HomePage extends React.Component<HomePageProps, any>{
             <div className='wiki-route'>
                 <AppHeader />
                 <div className='body'>
-                    <h1 className='body__title'>Current wikis</h1>
                     <ul className='wiki-list'>
+                        <li className='wiki-list__header'>
+                            <h2>Wikis</h2>
+                        </li>
                         {this.props.wikis.map((wiki) => {
                             return <li className='wiki-list__item'><Wiki wiki={wiki} /></li>
                         })}
                     </ul>
                 </div>
             </div>
-        )
+        );
     }
 }
 

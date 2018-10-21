@@ -7,9 +7,10 @@ import * as util from 'util';
 import * as path from 'path';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
 import { createWiki, CreateWikiActionCreator } from '../actions/wikis';
-import { MemoryHistory } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
+import { MemoryHistory, withHistoryContext } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
 import { encode } from 'punycode';
 import { ImageInput } from './imageInput';
+
 
 const accessFile = util.promisify(fs.access);
 
@@ -47,8 +48,8 @@ export class CreateWikiForm extends React.Component<CreateWikiFormOwnProps & Cre
         this.props.createWiki(this.state.name, this.state.background);
         this.props.history.pushState('/');
     }
-    onBackgroundChange = (newBackground: string)=>{
-        this.setState(()=>({
+    onBackgroundChange = (newBackground: string) => {
+        this.setState(() => ({
             background: newBackground
         }));
     }
@@ -66,19 +67,20 @@ export class CreateWikiForm extends React.Component<CreateWikiFormOwnProps & Cre
                         prompt='Choose Image'
                         windowTitle='Choose a background image'
                     />
-                    <img className='background-image-preview' style={{ height: '150px', width: '150px' }} src={this.state.background}  />
+                    <img className='background-image-preview' style={{ height: '150px', width: '150px' }} src={this.state.background} />
                 </div>
 
                 <button className='form action' type='submit'>Submit</button>
             </form>
-        )
+        );
+
     }
 }
 
 
 
 
-export default connect<{}, CreateWikiFormDispatchProps, CreateWikiFormOwnProps, CreateWikiFormState>(undefined, {
+export default withHistoryContext(connect<{}, CreateWikiFormDispatchProps, CreateWikiFormOwnProps, CreateWikiFormState>(undefined, {
     fsError,
     createWiki
-})(CreateWikiForm);
+})(CreateWikiForm));

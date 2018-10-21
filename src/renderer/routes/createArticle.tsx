@@ -94,7 +94,7 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
     render() {
         return (
             <div className='wiki-route'>
-                <img className='wiki-route__background-image' src={this.state.background ? this.state.background : this.props.selectedWiki.background} alt="" />
+                <img className='wiki-background' src={this.state.background ? this.state.background : this.props.selectedWiki.background} alt="" />
                 <Header>
                     <input type="text" value={this.state.name} onChange={this.onNameChange} />
                     <button onClick={this.createArticle}>

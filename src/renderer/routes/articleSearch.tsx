@@ -49,7 +49,7 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
     render() {
         return (
             <div className='wiki-route'>
-                <img className='wiki-route__background-image' src={this.props.selectedWiki.background} alt=""/>
+                <img className='wiki-background' src={this.props.selectedWiki.background} alt=""/>
                 <Header>
                     <i className='wiki-header__icon'>placeholder</i>
                     <MemoryLink to={`/wiki/create/${this.props.routeParams.articleName}`}> Create Article</MemoryLink>

@@ -1,16 +1,16 @@
 
 
 .body{
-    height: 93vh;
     margin: 0 15vw;
+    min-height: 90vh;
 }
 
 .body--article{
     //box-shadow: 
     overflow-y:scroll;
+    min-height: 90vh;
     background-color: rgba(255,255,255,0.9);
-    height:91vh; 
-    margin: 5vh 10vw 0vh;
+    margin: 15vh 10vw 0vh;
 }
 
 .body__title{

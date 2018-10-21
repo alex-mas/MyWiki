@@ -1,8 +1,11 @@
 
 
 .wiki-header{
+    position: sticky;
+    top: 0;
     display: flex;
     justify-content: space-between;
-    height: 4vh;
+    height: 6vh;
     background: white;
+    z-index: 2;
 }
