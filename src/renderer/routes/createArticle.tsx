@@ -6,7 +6,7 @@ import { AppState } from '../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetaData } from '../store/reducers/wikis';
 import WikiEditor, { defaultEditorContents } from '../components/wikiEditor/wikiEditor';
-import { MemoryRouteProps } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
+import { MemoryRouteProps } from '@axc/react-components/dist/navigation/memoryRouter';
 import { Change, Value } from 'slate';
 import { CreateArticleActionCreator, createArticle } from '../actions/article';
 import { fsError, FsErrorActionCreator } from '../actions/errors';

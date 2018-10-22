@@ -3,7 +3,7 @@ import { RouteProps } from '../router/router';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetaData } from '../store/reducers/wikis';
 import { selectWiki, SelectWikiActionCreator, removeWiki, loadWiki, LoadWikiActionCreator } from '../actions/wikis';
-import { MemoryHistory, withHistoryContext } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
+import { MemoryHistory, withHistoryContext } from '@axc/react-components/dist/navigation/memoryRouter';
 import { ActionCreator } from 'redux';
 
 

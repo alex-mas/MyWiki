@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { MemoryRouteProps, MemoryLink } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
+import { MemoryRouteProps, MemoryLink } from '@axc/react-components/dist/navigation/memoryRouter';
 import AppHeader from '../components/appHeader';
 
 

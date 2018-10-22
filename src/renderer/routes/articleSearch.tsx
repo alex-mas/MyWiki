@@ -9,7 +9,7 @@ import WikiEditor, { defaultEditorContents } from '../components/wikiEditor/wiki
 import { Change, Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
 import Header from '../components/header';
-import { MemoryLink } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
+import { MemoryLink } from '@axc/react-components/dist/navigation/memoryRouter';
 import { getRelevantArticles } from '../selectors/articles';
 import { SelectedWiki } from '../store/reducers/selectedWiki';
 

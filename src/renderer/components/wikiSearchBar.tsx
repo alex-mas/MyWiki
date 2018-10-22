@@ -2,8 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { getArticleNames } from '../selectors/articles';
 import { AppState } from '../store/store';
-import AutoComplete from '../../../../../libraries/alex components/dist/interactive/autoComplete';
-import { withHistoryContext, MemoryHistory } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
+import AutoComplete from '@axc/react-components/dist/interactive/autoComplete';
+import { withHistoryContext, MemoryHistory } from '@axc/react-components/dist/navigation/memoryRouter';
 
 export interface WSBOwnProps {
     history: MemoryHistory

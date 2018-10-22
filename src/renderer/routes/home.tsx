@@ -4,18 +4,17 @@ import { AppState } from '../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetaData } from '../store/reducers/wikis';
 import Wiki from '../components/wikiItem';
-import { MemoryRouteProps, MemoryLink } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
+import { MemoryRouteProps, MemoryLink } from '@axc/react-components/dist/navigation/memoryRouter';
 import MyEditor from '../components/wikiEditor/wikiEditor';
 import AppHeader from '../components/appHeader';
 import CreateWikiForm from '../components/createWikiForm';
-import Modal from '../../../../../libraries/alex components/dist/layout/modal';
 
 export interface HomePageProps extends MemoryRouteProps {
     wikis: WikiMetaData[]
 }
 
 export interface HomePageState {
-    shouldRenderWikiForm: boolean;
+    shouldRenderWikiForm: boolean;``
 }
 
 export class HomePage extends React.Component<HomePageProps, HomePageState>{

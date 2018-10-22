@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Header from './header';
-import { MemoryLink } from '../../../../../libraries/alex components/dist/navigation/memoryRouter';
-import Modal from '../../../../../libraries/alex components/dist/layout/modal';
+import Modal from '@axc/react-components/dist/layout/modal';
 import CreateWikiForm from './createWikiForm';
 
 
