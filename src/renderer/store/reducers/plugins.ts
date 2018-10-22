@@ -7,16 +7,17 @@ export interface Plugin {
 }
 
 export interface PluginMetaData {
-    id: string
 
 }
 
 export interface PluginState {
-    plugins: PluginMetaData[]
+    plugins: PluginMetaData[],
+    loadedPlugins: Plugin[]
 }
 
 const defaultPluginState: PluginState = {
-    plugins: []
+    plugins: [],
+    loadedPlugins: []
 };
 
 export const pluginReducer: Reducer<PluginState> = (state: PluginState = defaultPluginState, action: AnyAction) => {
@@ -24,12 +25,17 @@ export const pluginReducer: Reducer<PluginState> = (state: PluginState = default
         case "UNLOAD_PLUGIN":
             return {
                 ...state,
-                plugins: state.plugins.filter((plugin) => plugin.id !== action.id)
+                loadedPlugins: state.loadedPlugins.filter((plugin) => plugin.id !== action.id)
             }
         case "LOAD_PLUGIN":
             return{
                 ...state,
-                plugins:[...state.plugins, action.plugin]
+                loadedPlugins:[...state.loadedPlugins, action.plugin]
+            }
+        case "PARSE_PLUGIN":
+            return{
+                ...state,
+                plugins: [...state.plugins, action.plugin]
             }
         default:
             return state;

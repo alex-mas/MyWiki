@@ -28,3 +28,33 @@ export const unloadPlugin = (id: string)=>{
         id
     }
 }
+
+
+export const parsePlugin = (pluginMetaData: any) =>{
+    return{
+        type: 'PARSE_PLUGIN',
+        plugin: JSON.parse(pluginMetaData)
+    }
+}
+
+export const parsePlugins = () =>{
+    return(dispatch: any,getState: any)=>{
+        return new Promise((resolve,reject)=>{
+            fs.readdir("./plugins",(error, plugins)=>{
+                if(error){
+                    dispatch(fsError("Error reading plugin directory"));
+                }else{
+                    plugins.forEach((plugin)=>{
+                        fs.readFile(`./plugins/${plugin}/plugin.config.json`, 'utf8',(error, pluginMetaData)=>{
+                            if(error){
+                                dispatch(fsError(`Error while parsing ${plugin} metadata`));
+                            }else{
+                                dispatch(parsePlugin(pluginMetaData));
+                            }
+                        });
+                    });
+                }
+            })
+        });
+    };
+}
