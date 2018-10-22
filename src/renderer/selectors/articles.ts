@@ -34,3 +34,8 @@ export const getRelevantArticles= (search:string, selectedWiki: SelectedWiki): s
 export const getArticle = (name:string, selectedWiki: SelectedWiki)=>{
     return selectedWiki.articles.find((article)=>article.name === name);
 }
+
+export const doesArticleExist = (name:string, selectedWiki: SelectedWiki)=>{
+    //cast results to a boolean
+    return !!getArticle(name, selectedWiki);
+}

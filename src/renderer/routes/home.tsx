@@ -14,7 +14,7 @@ export interface HomePageProps extends MemoryRouteProps {
 }
 
 export interface HomePageState {
-    shouldRenderWikiForm: boolean;``
+    shouldRenderWikiForm: boolean;
 }
 
 export class HomePage extends React.Component<HomePageProps, HomePageState>{

@@ -1,15 +1,30 @@
-import {Plugin} from "../store/reducers/plugins";
+import {Plugin, PluginMetaData} from "../store/reducers/plugins";
 import * as fs from 'fs';
 import * as path from 'path';
 import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
 import { error, fsError, ErrorAction, ErrorActionCodes } from "./errors";
+import { isPluginLoaded } from "../selectors/plugins";
 
 
-const loadPlugin = (plugin: Plugin)=>{
+const _loadPlugin = (plugin: Plugin)=>{
     return{
         type: "LOAD_PLUGIN",
         plugin
+    }
+}
+
+
+export const loadPlugin = (pluginMetaData: PluginMetaData)=>{
+    return(dispatch:any, getState: any)=>{
+        const state = getState();
+        return new Promise((resolve,reject)=>{
+            if(isPluginLoaded(pluginMetaData.id, state.plugins)){
+                //dispatch error, plugin cant be loaded twice
+            }else{
+                //validate meta data -> if its correct load it, else dispatch error
+            }
+        });
     }
 }
 

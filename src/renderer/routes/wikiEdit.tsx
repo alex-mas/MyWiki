@@ -10,6 +10,7 @@ import * as ReactMarkdown from 'react-markdown';
 import { ValueJSON, Change, Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
 import Header from '../components/header';
+import AppHeader from '../components/appHeader';
 import { loadArticle, LoadArticleAction, LoadArticleActionCreator, Article, saveArticle, SaveArticleActionCreator } from '../actions/article';
 import TagForm from '../components/tagForm';
 import { getArticle } from '../selectors/articles';
@@ -124,8 +125,16 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
         return (
             <div className='wiki-route'>
                 <img className='wiki-background' src={this.getBackground()} alt="" />
-                <Header>
-                    <div className='wiki-article__actions'>
+                <AppHeader/>
+                <TagForm
+                    toggled={this.state.areTagsBeingManaged}
+                    tags={this.state.tags}
+                    onChange={this.onChangeTags}
+                />
+                <div className='body--article'>
+                    <div className="wiki-article__header">
+                      <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
+                        <div className='wiki-article__actions'>
                         <button onClick={this.saveChanges}>Save changes</button>
                         <button onClick={this.discardChanges}>Discard changes</button>
                         <button onClick={this.toggleTagManagement}>Manage tags</button>
@@ -135,15 +144,8 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
                             windowTitle='Choose a background for the article'
                         />
                     </div>
-                </Header>
-                <TagForm
-                    toggled={this.state.areTagsBeingManaged}
-                    tags={this.state.tags}
-                    onChange={this.onChangeTags}
-                />
-                <div className='body--article'>
-                    <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
-                    <div
+                    </div>
+                   <div
                         className='wiki-article__body--editor'
                     >
                         <WikiEditor

@@ -227,7 +227,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                             {...props}
                             to={href}
                             active={this.props.readOnly}
-                            className='wiki-link'
                             isOutLink={isOutLink}
                         >
                             {children}

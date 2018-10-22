@@ -7,7 +7,7 @@ export interface Plugin {
 }
 
 export interface PluginMetaData {
-
+    id: string
 }
 
 export interface PluginState {
