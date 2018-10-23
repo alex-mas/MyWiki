@@ -96,19 +96,10 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
             <div className='wiki-route'>
                 <img className='wiki-background' src={this.state.background ? this.state.background : this.props.selectedWiki.background} alt="" />
                 <Header>
-                    <input type="text" value={this.state.name} onChange={this.onNameChange} />
-                    <button onClick={this.createArticle}>
-                        Create article
-                    </button>
                     <div>
-                        <button onClick={this.toggleTagManagement}>Manage tags</button>
-                        <ImageInput
-                            prompt='Choose Background'
-                            onChange={this.onBackgroundChange}
-                            windowTitle='Choose a background for the article'
-                        />
+                        <i className='wiki-header__icon'>placeholder</i>
+                        {this.props.routeParams.article ? null : <input type="text" value={this.state.name} onChange={this.onNameChange} />}
                     </div>
-
                 </Header>
                 <TagForm
                     toggled={this.state.areTagsBeingManaged}
@@ -117,10 +108,23 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
                 />
 
                 <div className='body--article'>
-                    <h1 className='wiki-article__title'>{this.state.name ? this.state.name : 'New Article'}</h1>
+                    <div className='wiki-article__header'>
+                        <h1 className='wiki-article__title'>{this.state.name ? this.state.name : 'New Article'}</h1>
+                        <div className='wiki-article__actions'>
+                            <button onClick={this.createArticle}>
+                                Create article
+                            </button>
+                            <button onClick={this.toggleTagManagement}>Manage tags</button>
+                            <ImageInput
+                                prompt='Choose Background'
+                                onChange={this.onBackgroundChange}
+                                windowTitle='Choose a background for the article'
+                            />
+                        </div>
+                    </div>
+
                     <div className='wiki-article__body--editor'>
                         <WikiEditor
-
                             content={this.state.editorContent}
                             onChange={this.onChange}
                             readOnly={false}

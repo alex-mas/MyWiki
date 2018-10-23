@@ -1,10 +1,29 @@
 
-
-.wiki-article__title{
+.wiki-article__header{
+    display: flex;
+    justify-content: space-between;
+    margin-left: $font-size-sm;
+    margin-right: $font-size-sm;
+    margin-bottom: $font-size-xxl;
     border-bottom: 2px solid black;
-    margin-right: 10%;
-    padding-bottom: 0.5rem;
-    margin-bottom: 2rem;
+}
+
+.wiki-article__actions{
+    a, button{
+        background: transparent;
+        border: none;
+        color:black;
+        :hover{
+            color:rgb(85, 85, 85);
+        }
+        i{
+            size: $font-size-m;
+        }
+    }
+
+}
+.wiki-article__title{
+    margin-bottom: 0.5rem;
 }
 
 .wiki-article__body{

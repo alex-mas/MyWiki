@@ -9,8 +9,14 @@
     //box-shadow: 
     overflow-y:scroll;
     min-height: 90vh;
-    background-color: rgba(255,255,255,0.9);
-    margin: 15vh 10vw 0vh;
+    background-color: rgba(255,255,255,0.95);
+    margin-top: 15vh;
+    margin-left: 10vh;
+    margin-right: 10vh;
+    margin-bottom: 8vh;
+    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, $shadow-key-penumbra-opacity),
+    0  6px 30px 5px rgba(0, 0, 0, $shadow-ambient-shadow-opacity),
+    0  8px 10px -5px rgba(0, 0, 0, $shadow-key-umbra-opacity);
 }
 
 .body__title{
