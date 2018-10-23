@@ -10,7 +10,8 @@ export interface TagFormProps {
 interface TagInputProps {
     tag: string,
     index: number,
-    onChange(tag: string, key: number): any
+    onChange(tag: string, key: number): any,
+    onRemove(index: number): any
 }
 
 class TagInput extends React.PureComponent<TagInputProps, any>{
@@ -18,8 +19,26 @@ class TagInput extends React.PureComponent<TagInputProps, any>{
         const value = event.target.value;
         this.props.onChange(value, this.props.index);
     }
+    onRemove = (event: React.MouseEvent<HTMLButtonElement>) => {
+        this.props.onRemove(this.props.index);
+    }
     render() {
-        return <input className='tag-input' type="text" value={this.props.tag} onChange={this.onChange} />
+        return (
+            <span className='tag'>
+                <input
+                    className='tag-input'
+                    type="text"
+                    value={this.props.tag}
+                    onChange={this.onChange}
+                />
+                <button
+                    className='tag-action'
+                    onClick={this.onRemove}
+                >
+                    <i className='material-icons'>delete_forever</i>
+                </button>
+            </span>
+        );
     }
 }
 
@@ -27,7 +46,7 @@ class TagInput extends React.PureComponent<TagInputProps, any>{
 
 
 class TagForm extends React.PureComponent<TagFormProps, any>{
-    onChangeTags = (newTagValue: string, index: number) => {
+    onChangeTag = (newTagValue: string, index: number) => {
         const newTags = this.props.tags.map((tag, currentIndex) => {
             if (currentIndex === index) {
                 return newTagValue;
@@ -40,6 +59,9 @@ class TagForm extends React.PureComponent<TagFormProps, any>{
     onAddTag = () => {
         this.props.onChange([...this.props.tags, '']);
     }
+    onRemoveTag = (index: number) => {
+        this.props.onChange(this.props.tags.filter((tag, currentIndex) => index !== currentIndex));
+    }
     render() {
         if (this.props.toggled) {
             return (
@@ -49,7 +71,8 @@ class TagForm extends React.PureComponent<TagFormProps, any>{
                             <TagInput
                                 tag={tag}
                                 index={index}
-                                onChange={this.onChangeTags}
+                                onChange={this.onChangeTag}
+                                onRemove={this.onRemoveTag}
                             />
                         );
                     })}
@@ -57,7 +80,7 @@ class TagForm extends React.PureComponent<TagFormProps, any>{
                         className='tag-form__action'
                         onClick={this.onAddTag}
                     >
-                        New tag
+                        <i className='material-design'></i>New tag
                     </button>
                 </div>
             )

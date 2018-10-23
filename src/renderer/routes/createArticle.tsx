@@ -101,11 +101,6 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
                         {this.props.routeParams.article ? null : <input type="text" value={this.state.name} onChange={this.onNameChange} />}
                     </div>
                 </Header>
-                <TagForm
-                    toggled={this.state.areTagsBeingManaged}
-                    tags={this.state.tags}
-                    onChange={this.onChangeTags}
-                />
 
                 <div className='body--article'>
                     <div className='wiki-article__header'>
@@ -121,6 +116,11 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
                                 windowTitle='Choose a background for the article'
                             />
                         </div>
+                        <TagForm
+                            toggled={this.state.areTagsBeingManaged}
+                            tags={this.state.tags}
+                            onChange={this.onChangeTags}
+                        />
                     </div>
 
                     <div className='wiki-article__body--editor'>

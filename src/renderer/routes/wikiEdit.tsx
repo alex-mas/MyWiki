@@ -125,27 +125,34 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
         return (
             <div className='wiki-route'>
                 <img className='wiki-background' src={this.getBackground()} alt="" />
-                <AppHeader/>
-                <TagForm
-                    toggled={this.state.areTagsBeingManaged}
-                    tags={this.state.tags}
-                    onChange={this.onChangeTags}
-                />
+                <AppHeader />
+
                 <div className='body--article'>
                     <div className="wiki-article__header">
-                      <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
+                        <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
                         <div className='wiki-article__actions'>
-                        <button onClick={this.saveChanges}>Save changes</button>
-                        <button onClick={this.discardChanges}>Discard changes</button>
-                        <button onClick={this.toggleTagManagement}>Manage tags</button>
-                        <ImageInput
-                            prompt='Choose Background'
-                            onChange={this.onBackgroundChange}
-                            windowTitle='Choose a background for the article'
+                            <button onClick={this.saveChanges}>
+                                <i className='material-icons'>Save changes</i>
+                            </button>
+                            <button onClick={this.discardChanges}>
+                                <i className='material-icons'>Discrd changes</i>
+                            </button>
+                            <button onClick={this.toggleTagManagement}>
+                                <i className='material-icons'>Manage tags</i>
+                            </button>
+                            <ImageInput
+                                prompt='Choose Background'
+                                onChange={this.onBackgroundChange}
+                                windowTitle='Choose a background for the article'
+                            />
+                        </div>
+                        <TagForm
+                            toggled={this.state.areTagsBeingManaged}
+                            tags={this.state.tags}
+                            onChange={this.onChangeTags}
                         />
                     </div>
-                    </div>
-                   <div
+                    <div
                         className='wiki-article__body--editor'
                     >
                         <WikiEditor
