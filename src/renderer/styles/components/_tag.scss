@@ -2,17 +2,21 @@
 
 .tag{
     background: lighten(black, 10%);
-
     border-radius: 5%;
 }
 
-.tag-action .tag-input{
+.tag-action,.tag-input{
     background: transparent;
     border: none;
     color: white;
 }
 
 .tag-action{
-    border-right: 2px solid white;
-    font-size: $s-size;
+    border-left: 2px solid white;
+    font-size: $font-size-sm;
+}
+
+.tag-input{
+    min-width: 3rem;
+    height: $font-size-s;
 }

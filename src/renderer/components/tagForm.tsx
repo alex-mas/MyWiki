@@ -1,4 +1,5 @@
 import * as React from 'react';
+import  DynamicTextInput  from './dynamicTextInput';
 
 
 export interface TagFormProps {
@@ -24,10 +25,10 @@ class TagInput extends React.PureComponent<TagInputProps, any>{
     }
     render() {
         return (
-            <span className='tag'>
-                <input
+            <div className='tag'>
+                <DynamicTextInput
                     className='tag-input'
-                    type="text"
+                    placeholder='new tag'
                     value={this.props.tag}
                     onChange={this.onChange}
                 />
@@ -35,9 +36,9 @@ class TagInput extends React.PureComponent<TagInputProps, any>{
                     className='tag-action'
                     onClick={this.onRemove}
                 >
-                    <i className='material-icons'>delete_forever</i>
+                    <i className='material-icons'>clear</i>
                 </button>
-            </span>
+            </div>
         );
     }
 }
