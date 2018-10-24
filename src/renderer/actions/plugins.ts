@@ -58,7 +58,7 @@ export const parsePlugin = (pluginMetaData: any) =>{
 export interface ParsePluginAction extends Action {
     plugin: PluginMetaData
 }
-export type ParsePluginActionCreator = () => ThunkAction<Promise<string>, AppState, void, ParsePluginAction | ErrorAction>;
+export type ParsePluginActionCreator = () => ThunkAction<Promise<ParsePluginAction| ErrorAction>, AppState, void, ParsePluginAction | ErrorAction>;
 
 
 export const parsePlugins: ParsePluginActionCreator = () =>{
@@ -66,7 +66,7 @@ export const parsePlugins: ParsePluginActionCreator = () =>{
         return new Promise((resolve,reject)=>{
             fs.readdir("./plugins",(error, plugins)=>{
                 if(error){
-                    dispatch(fsError("Error reading plugin directory"));
+                    reject(dispatch(fsError("Error reading plugin directory")));
                 }else{
                     plugins.forEach((plugin)=>{
                         fs.readFile(`./plugins/${plugin}/plugin.config.json`, 'utf8',(error, pluginMetaData)=>{

@@ -65,5 +65,3 @@ window.onbeforeunload = () => {
     });
 }
 
-
-store.dispatch(parsePlugins());
