@@ -19,7 +19,7 @@ export const getArticleNames = (selectedWiki: SelectedWiki): string[]=>{
  * 
  */
 export const getRelevantArticles= (search:string, selectedWiki: SelectedWiki): string[]=>{
-    return selectedWiki.articles.filter((article)=>{
+    const regularMatches = selectedWiki.articles.filter((article)=>{
         if(article.name.includes(search)){
             return true;
         }else if(article.tags.indexOf(search) > -1){
@@ -28,6 +28,8 @@ export const getRelevantArticles= (search:string, selectedWiki: SelectedWiki): s
             return false;
         }
     }).map((article)=>article.name);
+    
+    return regularMatches;
 }
 
 
