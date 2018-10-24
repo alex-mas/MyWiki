@@ -128,29 +128,37 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
                 <AppHeader />
 
                 <div className='body--article'>
-                    <div className="wiki-article__header">
-                        <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
-                        <div className='wiki-article__actions'>
-                            <button onClick={this.saveChanges}>
-                                <i className='material-icons'>Save changes</i>
-                            </button>
-                            <button onClick={this.discardChanges}>
-                                <i className='material-icons'>Discrd changes</i>
-                            </button>
-                            <button onClick={this.toggleTagManagement}>
-                                <i className='material-icons'>Manage tags</i>
-                            </button>
-                            <ImageInput
-                                prompt='Choose Background'
-                                onChange={this.onBackgroundChange}
-                                windowTitle='Choose a background for the article'
+                    <div className='wiki-article__header'>
+                        <div className='wiki-article__header__section'>
+                            <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
+                            <div className='wiki-article__actions'>
+                                <button onClick={this.saveChanges}>
+                                    <i className='material-icons'>check</i>
+                                </button>
+                                <button onClick={this.discardChanges}>
+                                    <i className='material-icons'>clear</i>
+                                </button>
+                                <button onClick={this.toggleTagManagement}>
+                                    <i className='material-icons'>local_offer</i>
+                                </button>
+                                <ImageInput
+                                    prompt='Choose Background'
+                                    onChange={this.onBackgroundChange}
+                                    windowTitle='Choose a background for the article'
+                                    className='wiki-article__image-input'
+                                >
+                                    <i className='material-icons'>panorama</i>
+                                </ImageInput>
+                            </div>
+                        </div>
+                        <div className='wiki-article__header__section'>
+                            <TagForm
+                                toggled={this.state.areTagsBeingManaged}
+                                tags={this.state.tags}
+                                onChange={this.onChangeTags}
                             />
                         </div>
-                        <TagForm
-                            toggled={this.state.areTagsBeingManaged}
-                            tags={this.state.tags}
-                            onChange={this.onChangeTags}
-                        />
+
                     </div>
                     <div
                         className='wiki-article__body--editor'

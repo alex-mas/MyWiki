@@ -10,6 +10,8 @@ export interface ImageInputProps {
     value?: string,
     windowTitle: string
     placeholder?: string,
+    children?: any,
+    className?:string
 }
 
 export class ImageInput extends React.PureComponent<ImageInputProps, any>{
@@ -31,13 +33,23 @@ export class ImageInput extends React.PureComponent<ImageInputProps, any>{
     }
     render() {
         return (
-            <div>
+            <div className={this.props.className ? this.props.className :'image-input'}>
                 {!this.props.value && !this.props.placeholder ?
-                    <span className='image-input__label'>{this.props.value ? this.props.value : this.props.placeholder}</span>
+                    <span
+                        className='image-input__label'
+                    >
+                        {this.props.value ? this.props.value : this.props.placeholder}
+                    </span>
                     :
                     null
                 }
-                <button type='button' className='image-input__prompt' onClick={this.changeBackgroundImage}>{this.props.prompt}</button>
+                <button
+                    type='button'
+                    className='image-input__prompt'
+                    onClick={this.changeBackgroundImage}
+                >
+                    {this.props.children ? this.props.children : this.props.prompt}
+                </button>
             </div>
         )
     }

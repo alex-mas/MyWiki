@@ -86,6 +86,9 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
             this.props.history.pushState(`/wiki/article/${this.state.name}`);
         });
     }
+    discardChanges = () =>{
+        this.props.history.back();
+    }
     onBackgroundChange = (newBackground: string) => {
         this.setState(() => ({
             background: newBackground
@@ -104,23 +107,37 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
 
                 <div className='body--article'>
                     <div className='wiki-article__header'>
-                        <h1 className='wiki-article__title'>{this.state.name ? this.state.name : 'New Article'}</h1>
-                        <div className='wiki-article__actions'>
-                            <button onClick={this.createArticle}>
-                                Create article
-                            </button>
-                            <button onClick={this.toggleTagManagement}>Manage tags</button>
-                            <ImageInput
-                                prompt='Choose Background'
-                                onChange={this.onBackgroundChange}
-                                windowTitle='Choose a background for the article'
+                        <div className='wiki-article__header__section'>
+                            <h1 className='wiki-article__title'>{this.state.name ? this.state.name : 'New Article'}</h1>
+                            <div className='wiki-article__actions'>
+                                <button onClick={this.createArticle}>
+                                    <i className='material-icons'>check</i>
+                                </button>
+                                <button onClick={this.discardChanges}>
+                                    <i className='material-icons'>clear</i>
+                                </button>
+                                <button
+                                    onClick={this.toggleTagManagement}
+                                >
+                                    <i className='material-icons'>local_offer</i>
+                                </button>
+                                <ImageInput
+                                    prompt='Choose Background'
+                                    onChange={this.onBackgroundChange}
+                                    windowTitle='Choose a background for the article'
+                                    className='wiki-article__image-input'
+                                >
+                                    <i className='material-icons'>panorama</i>
+                                </ImageInput>
+                            </div>
+                        </div>
+                        <div className='wiki-article__header__section'>
+                            <TagForm
+                                toggled={this.state.areTagsBeingManaged}
+                                tags={this.state.tags}
+                                onChange={this.onChangeTags}
                             />
                         </div>
-                        <TagForm
-                            toggled={this.state.areTagsBeingManaged}
-                            tags={this.state.tags}
-                            onChange={this.onChangeTags}
-                        />
                     </div>
 
                     <div className='wiki-article__body--editor'>

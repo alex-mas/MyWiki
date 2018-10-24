@@ -326,11 +326,12 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             } else {
 
                 if (type === 'align') {
-
-
                     const isSameAlignment = value.blocks.some(block => {
                         //@ts-ignore
-                        return !!document.getClosest(block.key, parent => parent.type == type && parent.data.align === data.align)
+                        const closestBlock =document.getClosest(block.key, parent => parent.type === type);
+                        //@ts-ignore
+        
+                        return closestBlock && closestBlock.data && closestBlock.data.get('align') === data.align;
                     });
                     if (isType) {
                         if (isSameAlignment) {
@@ -504,6 +505,15 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 isActive = this.hasBlockType('list-item') && parent && parent.type === type;
             }
         }
+        if(type === 'align'){
+            const value = this.props.content;
+            const block = value.blocks.first();
+            if (block) {
+                const parent = value.document.getParent(block.key);
+                //@ts-ignore
+                isActive = this.hasBlockType('align') || (parent && parent.type === type && parent.data.get('align') === data.align);
+            }
+        }
 
         return (
             <EditorButton
@@ -528,7 +538,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         )
     }
     render() {
-        console.log(this.props);
         if (this.props.readOnly) {
             return (
                 <Editor
@@ -548,7 +557,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                             onClick={this.addLink}
                             active={this.hasInlineType('link')}
                             type='link'
-                            icon='link'
+                            icon={'link'}
                             data={undefined}
                         />
                         {BUTTON_MARK_TYPES.map((mark) => {

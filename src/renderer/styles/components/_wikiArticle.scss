@@ -1,11 +1,16 @@
 
 .wiki-article__header{
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     margin-left: $font-size-sm;
     margin-right: $font-size-sm;
     margin-bottom: $font-size-xxl;
     border-bottom: 2px solid black;
+}
+
+.wiki-article__header__section{
+    display: flex;
+    justify-content: space-between;
 }
 
 .wiki-article__actions{
@@ -32,4 +37,8 @@
 }
 .wiki-article__body--editor{
     @extend .wiki-article__body;
+}
+
+.wiki-article__image-input{
+    display: inline;
 }

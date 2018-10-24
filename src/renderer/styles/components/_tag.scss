@@ -3,20 +3,37 @@
 .tag{
     background: lighten(black, 10%);
     border-radius: 5%;
+    display: inline;
 }
 
 .tag-action,.tag-input{
     background: transparent;
     border: none;
     color: white;
+
 }
 
 .tag-action{
     border-left: 2px solid white;
-    font-size: $font-size-sm;
+    i{
+        font-size: $font-size-xs;
+    }
+    height: $size-xs;
+    &:hover{
+        background: rgba(255,255,255,0.15);
+    }
+    &:active{
+        background: rgba(255,255,255,0.25);
+    }
 }
 
 .tag-input{
     min-width: 3rem;
-    height: $font-size-s;
+    line-height: $size-xs;
+    &:hover{
+        background: rgba(255,255,255,0.05);
+    }
+    &:active{
+        background: rgba(255,255,255,0.15);
+    }
 }
