@@ -42,3 +42,12 @@
 .wiki-article__image-input{
     display: inline;
 }
+
+.wiki-article__header-input{
+    @extend h1;
+    background: none;
+    border:1px solid grey;
+}
+
+
+

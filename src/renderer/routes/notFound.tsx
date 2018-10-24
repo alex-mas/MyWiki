@@ -1,7 +1,6 @@
 import * as React from 'react';
-
 import { MemoryRouteProps, MemoryLink } from '@axc/react-components/dist/navigation/memoryRouter';
-import AppHeader from '../components/appHeader';
+import WikiHeader from '../components/wikiHeader';
 
 
 export interface NotFoundPageProps extends MemoryRouteProps{
@@ -19,7 +18,7 @@ export class NotFoundPage extends React.Component<NotFoundPageProps, any>{
     render() {
         return (
             <div className='wiki-route'>
-                <AppHeader/>
+                <WikiHeader/>
                 <h1 className='page__title'>Not found</h1>
                 <h2 className='page__subtitle'>The page you requested couldn't be located</h2>
                 <MemoryLink className='page__action' to='/' text='Home'/>

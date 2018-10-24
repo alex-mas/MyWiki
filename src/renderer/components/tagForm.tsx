@@ -81,7 +81,7 @@ class TagForm extends React.PureComponent<TagFormProps, any>{
                         className='tag-form__action'
                         onClick={this.onAddTag}
                     >
-                        <i className='material-design'></i>New tag
+                        <i className='material-design'>add</i>
                     </button>
                 </div>
             )

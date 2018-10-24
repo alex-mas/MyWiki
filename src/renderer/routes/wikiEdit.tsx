@@ -16,6 +16,7 @@ import TagForm from '../components/tagForm';
 import { getArticle } from '../selectors/articles';
 import { SelectedWiki } from '../store/reducers/selectedWiki';
 import { ImageInput } from '../components/imageInput';
+import WikiHeader from '../components/wikiHeader';
 
 
 
@@ -125,7 +126,7 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
         return (
             <div className='wiki-route'>
                 <img className='wiki-background' src={this.getBackground()} alt="" />
-                <AppHeader />
+                <WikiHeader />
 
                 <div className='body--article'>
                     <div className='wiki-article__header'>

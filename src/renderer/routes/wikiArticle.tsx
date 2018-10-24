@@ -15,8 +15,9 @@ import WikiSearchBar from '../components/wikiSearchBar';
 import { getArticle } from '../selectors/articles';
 import { WikiMetaData } from '../store/reducers/wikis';
 import { SelectedWiki } from '../store/reducers/selectedWiki';
-
-
+import WikiHeader from '../components/wikiHeader';
+import HomeButton from '../components/homeButton';
+const { dialog } = require('electron').remote
 
 
 
@@ -84,10 +85,19 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         }
     }
     deleteArticle = () => {
-        //@ts-ignore
-        this.props.deleteArticle(this.props.routeParams.article).then(() => {
-            this.props.history.pushState('/wiki/article/home');
-        });
+
+        const dialogOptions = { type: 'warning', buttons: ['Cancel', 'Yes'], message: 'Are you sure you want to delete the article?' }
+
+        dialog.showMessageBox(dialogOptions, (response) => {
+            if (response) {
+                //@ts-ignore
+                this.props.deleteArticle(this.props.routeParams.article).then(() => {
+                    this.props.history.pushState('/wiki/article/home');
+                });
+            }
+        })
+
+
     }
     onChange = (change: Change) => {
         const content = change.value;
@@ -97,11 +107,22 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         return (
             <div className='wiki-route'>
                 <img className='wiki-background' src={this.getBackground()} alt="" />
-                <Header>
-                    <i className='wiki-header__icon'>placeholder</i>
-                    <MemoryLink to={`/wiki/create/${this.props.routeParams.article}`}> Create Article</MemoryLink>
-                </Header>
-                <h1>Article not found</h1>
+                <WikiHeader />
+                <div className='body--article'>
+                    <div className='wiki-article__header'>
+                        <div className='wiki-article__header__section'>
+                            <h1 className='wiki-article__title'>Article not found</h1>
+                            <div className='wiki-article__actions'>
+                                <MemoryLink to={`/wiki/create/${this.props.routeParams.article}`}> Create it</MemoryLink>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    className='wiki-article__body'
+                >
+                </div>
+
             </div>
         )
     }
@@ -121,11 +142,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
             return (
                 <div className='wiki-route'>
                     <img className='wiki-background' src={this.getBackground()} alt="" />
-                    <Header>
-                        <i className='wiki-header__icon'>placeholder</i>
-                        <WikiSearchBar />
-                        <div></div>
-                    </Header>
+                    <WikiHeader/>
                     <div className='body--article'>
                         <div className='wiki-article__header'>
                             <div className='wiki-article__header__section'>

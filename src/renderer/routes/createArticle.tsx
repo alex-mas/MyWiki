@@ -14,6 +14,7 @@ import Header from '../components/header';
 import TagForm from '../components/tagForm';
 import { SelectedWiki } from '../store/reducers/selectedWiki';
 import { ImageInput } from '../components/imageInput';
+import WikiHeader from '../components/wikiHeader';
 
 export interface CreateArticlePageDispatchProps {
     createArticle: CreateArticleActionCreator,
@@ -86,7 +87,7 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
             this.props.history.pushState(`/wiki/article/${this.state.name}`);
         });
     }
-    discardChanges = () =>{
+    discardChanges = () => {
         this.props.history.back();
     }
     onBackgroundChange = (newBackground: string) => {
@@ -98,17 +99,24 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
         return (
             <div className='wiki-route'>
                 <img className='wiki-background' src={this.state.background ? this.state.background : this.props.selectedWiki.background} alt="" />
-                <Header>
-                    <div>
-                        <i className='wiki-header__icon'>placeholder</i>
-                        {this.props.routeParams.article ? null : <input type="text" value={this.state.name} onChange={this.onNameChange} />}
-                    </div>
-                </Header>
-
+                <WikiHeader/>
                 <div className='body--article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
-                            <h1 className='wiki-article__title'>{this.state.name ? this.state.name : 'New Article'}</h1>
+                            <h1 className='wiki-article__title'>
+                                Creating: {this.props.routeParams.article ?
+                                    this.state.name
+                                    :
+                                    <input
+                                        className='wiki-article__header-input'
+                                        type="text"
+                                        value={this.state.name}
+                                        onChange={this.onNameChange}
+                                        placeholder='Article Name'
+                                    />
+                                }
+
+                            </h1>
                             <div className='wiki-article__actions'>
                                 <button onClick={this.createArticle}>
                                     <i className='material-icons'>check</i>

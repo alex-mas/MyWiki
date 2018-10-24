@@ -18,6 +18,57 @@
 }
 
 
+//shadows
+$shadow-key-umbra-opacity:      0.20 !default;
+$shadow-key-penumbra-opacity:   0.14 !default;
+$shadow-ambient-shadow-opacity: 0.12 !default;
+
+
+//elevations
+
+$elevation-2p: 0 2px 2px 0 rgba(0, 0, 0, $shadow-key-penumbra-opacity),
+                0 3px 1px -2px rgba(0, 0, 0, $shadow-key-umbra-opacity),
+                0 1px 5px 0 rgba(0, 0, 0, $shadow-ambient-shadow-opacity);
+
+  
+
+$elevation-3p: 0 3px 4px 0 rgba(0, 0, 0, $shadow-key-penumbra-opacity),
+                0 3px 3px -2px rgba(0, 0, 0, $shadow-key-umbra-opacity),
+                0 1px 8px 0 rgba(0, 0, 0, $shadow-ambient-shadow-opacity);
+
+
+$elevation-4p: 0 4px 5px 0 rgba(0, 0, 0, $shadow-key-penumbra-opacity),
+                0 1px 10px 0 rgba(0, 0, 0, $shadow-ambient-shadow-opacity),
+                0 2px 4px -1px rgba(0, 0, 0, $shadow-key-umbra-opacity);
+
+  
+
+$elevation-6p: 0 6px 10px 0 rgba(0, 0, 0, $shadow-key-penumbra-opacity),
+                0 1px 18px 0 rgba(0, 0, 0, $shadow-ambient-shadow-opacity),
+                0 3px 5px -1px rgba(0, 0, 0, $shadow-key-umbra-opacity);
+
+ 
+$elevation-8p: 0 8px 10px 1px rgba(0, 0, 0, $shadow-key-penumbra-opacity),
+                0 3px 14px 2px rgba(0, 0, 0, $shadow-ambient-shadow-opacity),
+                0 5px 5px -3px rgba(0, 0, 0, $shadow-key-umbra-opacity);
+
+
+$elevation-12p: 0 12px 15px 1px rgba(0, 0, 0, $shadow-key-penumbra-opacity),
+                0  5px 20px 3px rgba(0, 0, 0, $shadow-ambient-shadow-opacity),
+                0  6px 8px -4px rgba(0, 0, 0, $shadow-key-umbra-opacity);
+
+$elevation-16p: 0 16px 24px 2px rgba(0, 0, 0, $shadow-key-penumbra-opacity),
+                0  6px 30px 5px rgba(0, 0, 0, $shadow-ambient-shadow-opacity),
+                0  8px 10px -5px rgba(0, 0, 0, $shadow-key-umbra-opacity);
+
+
+$elevation-24p: 0  9px 46px  8px rgba(0, 0, 0, $shadow-key-penumbra-opacity),
+                0 11px 15px -7px rgba(0, 0, 0, $shadow-ambient-shadow-opacity),
+                0 24px 38px  3px rgba(0, 0, 0, $shadow-key-umbra-opacity);
+
+
+
+//size
 
 
 $size-xxl: 4rem;
@@ -37,8 +88,4 @@ $font-size-m: 1.4rem;
 $font-size-sm:1.2rem;
 $font-size-s: 1rem;
 $font-size-xs: 0.8rem;
-
-$shadow-key-umbra-opacity:      0.20 !default;
-$shadow-key-penumbra-opacity:   0.14 !default;
-$shadow-ambient-shadow-opacity: 0.12 !default;
 

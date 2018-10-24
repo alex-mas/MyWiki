@@ -2,14 +2,20 @@ import * as React from 'react';
 import Header from './header';
 import Modal from '@axc/react-components/dist/layout/modal';
 import CreateWikiForm from './createWikiForm';
+import { withHistoryContext, MemoryHistory, MemoryLink} from '@axc/react-components/dist/navigation/memoryRouter';
+import HomeButton from './homeButton';
 
 
+export interface AppHeaderProps {
+    
+}
 
 export interface AppHeaderState {
     shouldRenderWikiForm: boolean;
+
 }
 
-class AppHeader extends React.Component<any, AppHeaderState>{
+class AppHeader extends React.Component<AppHeaderProps, AppHeaderState>{
     constructor(props: any) {
         super(props);
         this.state = {
@@ -24,15 +30,20 @@ class AppHeader extends React.Component<any, AppHeaderState>{
     render() {
         return (
             <Header>
-                <i className='wiki-header__icon'>placeholder</i>
+                <HomeButton/>
                 <div className='wiki-header__actions'>
                     <button
-                        className='page__action--secondary'
+                        className='wiki-header__action--secondary'
                         onClick={this.toggleWikiForm}
                     >
-                        Create
+                        <i className='material-icons'>add</i>
                     </button>
-                    <button className='page__action--secondary'>Settings</button>
+                    <MemoryLink
+                        to='/settings'
+                        className='wiki-header__action--secondary'
+                    >
+                        <i className='material-icons'>settings</i>
+                    </MemoryLink>
                 </div>
                 <Modal
                     isOpen={this.state.shouldRenderWikiForm}
@@ -47,4 +58,4 @@ class AppHeader extends React.Component<any, AppHeaderState>{
 
 
 
-export default AppHeader
+export default AppHeader;

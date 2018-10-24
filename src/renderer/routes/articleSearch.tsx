@@ -12,6 +12,8 @@ import Header from '../components/header';
 import { MemoryLink } from '@axc/react-components/dist/navigation/memoryRouter';
 import { getRelevantArticles } from '../selectors/articles';
 import { SelectedWiki } from '../store/reducers/selectedWiki';
+import WikiHeader from '../components/wikiHeader';
+
 
 
 export interface ArticleSearchPageDispatchProps {
@@ -38,8 +40,8 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
         super(props);
 
     }
-    renderNotFoundMessage = () =>{
-        return(
+    renderNotFoundMessage = () => {
+        return (
             <div className='search-results'>
                 <h2 className='wiki-article__subtitle'>There are no articles relevant to the search</h2>
                 <MemoryLink to='/wiki/article/home'>Go home</MemoryLink>
@@ -49,11 +51,8 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
     render() {
         return (
             <div className='wiki-route'>
-                <img className='wiki-background' src={this.props.selectedWiki.background} alt=""/>
-                <Header>
-                    <i className='wiki-header__icon'>placeholder</i>
-                    <MemoryLink to={`/wiki/create/${this.props.routeParams.articleName}`}> Create Article</MemoryLink>
-                </Header>
+                <img className='wiki-background' src={this.props.selectedWiki.background} alt="" />
+                <WikiHeader/>
                 <div className='body--article'>
                     <h1 className='wiki-article__title'>{this.props.routeParams.articleName}</h1>
                     <div className='search-results'>

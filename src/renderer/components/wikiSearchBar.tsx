@@ -41,7 +41,7 @@ export class WikiSearchBar extends React.Component<WSBProps, WSBState>{
             value
         }));
     }
-    validateInput(val:string): string{
+    validateInput(val: string): string {
         return val.trim();
     }
     visitArticle = (val: string) => {
@@ -57,15 +57,14 @@ export class WikiSearchBar extends React.Component<WSBProps, WSBState>{
     }
     render() {
         return (
-            <div>
-                <AutoComplete
-                    value={this.state.value}
-                    placeholder='search article'
-                    getSuggestions={this.getSuggestions}
-                    onChange={this.onChange}
-                    onSubmit={this.visitArticle}
-                />
-            </div>
+            <AutoComplete
+                value={this.state.value}
+                placeholder='search article'
+                getSuggestions={this.getSuggestions}
+                onChange={this.onChange}
+                onSubmit={this.visitArticle}
+                className='wiki-header__search-bar'
+            />
         )
     }
 }
