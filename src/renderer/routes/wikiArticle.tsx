@@ -86,7 +86,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
     }
     deleteArticle = () => {
 
-        const dialogOptions = { type: 'warning', buttons: ['Cancel', 'Yes'], message: 'Are you sure you want to delete the article?' }
+        const dialogOptions = { title:`Delete ${this.props.routeParams.article}`,type: 'warning', buttons: ['Cancel', 'Yes'], message: 'Are you sure you want to delete the article?' }
 
         dialog.showMessageBox(dialogOptions, (response) => {
             if (response) {
