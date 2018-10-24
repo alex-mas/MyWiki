@@ -5,6 +5,7 @@ import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
 import { error, fsError, ErrorAction, ErrorActionCodes } from "./errors";
 import { isPluginLoaded } from "../selectors/plugins";
+import {Action} from 'redux';
 
 
 const _loadPlugin = (plugin: Plugin)=>{
@@ -52,8 +53,16 @@ export const parsePlugin = (pluginMetaData: any) =>{
     }
 }
 
-export const parsePlugins = () =>{
-    return(dispatch: any,getState: any)=>{
+
+
+export interface ParsePluginAction extends Action {
+    plugin: PluginMetaData
+}
+export type ParsePluginActionCreator = () => ThunkAction<Promise<string>, AppState, void, ParsePluginAction | ErrorAction>;
+
+
+export const parsePlugins: ParsePluginActionCreator = () =>{
+    return(dispatch,getState)=>{
         return new Promise((resolve,reject)=>{
             fs.readdir("./plugins",(error, plugins)=>{
                 if(error){

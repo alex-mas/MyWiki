@@ -8,7 +8,7 @@ import userData, { UserData } from './reducers/userData';
 import selectedWiki, { SelectedWiki } from './reducers/selectedWiki';
 
 
-export type ReduxAction = AnyAction | ThunkAction<any,any,any,any>;
+export type ReduxAction = AnyAction | ThunkAction<any,AppState,any,any>;
 
 export interface AppState{
     wikis: WikiMetaData[],

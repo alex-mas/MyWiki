@@ -11,6 +11,7 @@ import AppRouter from './router/router';
 import { loadWikis } from './actions/wikis';
 import { WikiMetaData } from './store/reducers/wikis';
 import { fsError } from './actions/errors';
+import { parsePlugins} from './actions/plugins';
 
 
 
@@ -63,3 +64,6 @@ window.onbeforeunload = () => {
         });
     });
 }
+
+
+store.dispatch(parsePlugins());

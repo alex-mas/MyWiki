@@ -8,4 +8,7 @@
     height: 6vh;
     background: white;
     z-index: 2;
+    box-shadow: 0 16px 12px 2px rgba(0, 0, 0, $shadow-key-penumbra-opacity),
+    0  6px 15px 5px rgba(0, 0, 0, $shadow-ambient-shadow-opacity),
+    0  8px 5px -5px rgba(0, 0, 0, $shadow-key-umbra-opacity);
 }
