@@ -6,14 +6,15 @@ import errorHandler from './middleware/errorHandler';
 import wikis, { WikiMetaData } from './reducers/wikis';
 import userData, { UserData } from './reducers/userData';
 import selectedWiki, { SelectedWiki } from './reducers/selectedWiki';
-import plugins from './reducers/plugins';
+import plugins, { PluginState } from './reducers/plugins';
 
 export type ReduxAction = AnyAction | ThunkAction<any,AppState,any,any>;
 
 export interface AppState{
     wikis: WikiMetaData[],
     userData: UserData,
-    selectedWiki: SelectedWiki
+    selectedWiki: SelectedWiki,
+    plugins: PluginState
 }
 
 //@ts-ignore

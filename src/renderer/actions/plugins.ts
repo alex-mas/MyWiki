@@ -7,6 +7,7 @@ import { error, fsError, ErrorAction, ErrorActionCodes } from "./errors";
 import { isPluginLoaded } from "../selectors/plugins";
 import {Action} from 'redux';
 import { isPluginMetaDataValid } from "../validators/plugins";
+import { settle } from "../utilities/promise";
 
 
 const _loadPlugin = (plugin: Plugin)=>{
@@ -64,7 +65,8 @@ export const parsePlugin = (pluginMetaData: any) =>{
 export interface ParsePluginAction extends Action {
     plugin: PluginMetaData
 }
-export type ParsePluginActionCreator = () => ThunkAction<Promise<ParsePluginAction| ErrorAction>, AppState, void, ParsePluginAction | ErrorAction>;
+export type ParsePluginActionCreator = () => ThunkAction<Promise<ParsePluginAction[]| ErrorAction>, AppState, void, ParsePluginAction | ErrorAction>;
+
 
 
 export const parsePlugins: ParsePluginActionCreator = () =>{
@@ -74,17 +76,27 @@ export const parsePlugins: ParsePluginActionCreator = () =>{
                 if(error){
                     reject(dispatch(fsError("Error reading plugin directory")));
                 }else{
-                    plugins.forEach((plugin)=>{
-                        fs.readFile(`./plugins/${plugin}/plugin.config.json`, 'utf8',(error, pluginMetaData)=>{
-                            if(error){
-                                dispatch(fsError(`Error while parsing ${plugin} metadata`));
-                            }else{
-                                dispatch(parsePlugin(pluginMetaData));
-                            }
-                        });
-                    });
+                    Promise.all(plugins.map((plugin)=>{
+                        return new Promise((resolve, reject)=>{
+                            fs.readFile(`./plugins/${plugin}/plugin.config.json`, 'utf8',(error, pluginMetaData)=>{
+                                const data: PluginMetaData = JSON.parse(pluginMetaData);
+                                data.loaded = false;
+                                if(error){
+                                    reject(dispatch(fsError(`Error while parsing ${plugin} metadata`)));
+                                }else{
+                                    resolve(dispatch(parsePlugin(pluginMetaData)));
+                                }
+                            });
+                        })
+                    }))
+                    //@ts-ignore
+                    .then((data)=>resolve(data))
+                    .catch((e)=>reject(e));
+
                 }
             })
         });
     };
 }
+
+
