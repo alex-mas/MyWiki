@@ -1,0 +1,5 @@
+{
+    "id": "test id",
+    "name": "testPlugin",
+    "main": "dist/main.js"
+}

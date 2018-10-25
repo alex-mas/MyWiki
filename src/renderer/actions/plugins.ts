@@ -6,6 +6,7 @@ import { AppState } from "../store/store";
 import { error, fsError, ErrorAction, ErrorActionCodes } from "./errors";
 import { isPluginLoaded } from "../selectors/plugins";
 import {Action} from 'redux';
+import { isPluginMetaDataValid } from "../validators/plugins";
 
 
 const _loadPlugin = (plugin: Plugin)=>{
@@ -24,6 +25,11 @@ export const loadPlugin = (pluginMetaData: PluginMetaData)=>{
                 //dispatch error, plugin cant be loaded twice
             }else{
                 //validate meta data -> if its correct load it, else dispatch error
+                if(isPluginMetaDataValid(pluginMetaData)){
+                    const plugin = eval(`require(plugins/${pluginMetaData.name}/${pluginMetaData.main})`);
+                    plugin();
+                }
+                
             }
         });
     }
@@ -32,7 +38,7 @@ export const loadPlugin = (pluginMetaData: PluginMetaData)=>{
 export const loadPlugins = ()=>{
     return(dispatch:any, getState:any)=>{
         return new Promise((resolve,reject)=>{
-        
+           
         });
     }
 }

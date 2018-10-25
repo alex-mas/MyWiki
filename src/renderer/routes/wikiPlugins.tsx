@@ -1,6 +1,6 @@
 import * as React from 'react';
 import WikiHeader from '../components/wikiHeader';
-
+import {connect} from 'react-redux';
 
 
 export class WikiPluginsPage extends React.Component<any, any>{
@@ -17,4 +17,10 @@ export class WikiPluginsPage extends React.Component<any, any>{
 }
 
 
-export default WikiPluginsPage;
+export default connect((state, props)=>{
+    return {
+        
+    }
+}, {
+
+})(WikiPluginsPage);

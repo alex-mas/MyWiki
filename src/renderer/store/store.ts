@@ -6,7 +6,7 @@ import errorHandler from './middleware/errorHandler';
 import wikis, { WikiMetaData } from './reducers/wikis';
 import userData, { UserData } from './reducers/userData';
 import selectedWiki, { SelectedWiki } from './reducers/selectedWiki';
-
+import plugins from './reducers/plugins';
 
 export type ReduxAction = AnyAction | ThunkAction<any,AppState,any,any>;
 
@@ -24,7 +24,8 @@ export default () => {
         combineReducers<AppState, AnyAction>({
             wikis,
             userData,
-            selectedWiki
+            selectedWiki,
+            plugins
         }),
         composeEnhancers(applyMiddleware(thunk, errorHandler))
     );
