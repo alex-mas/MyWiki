@@ -5,6 +5,13 @@ import * as fs from 'fs';
 import WikiLink from './wikiLink';
 import Modal from '@axc/react-components/dist/layout/modal';
 import EditorButton from './editorButton';
+import { remote, Dialog } from 'electron';
+import * as path from 'path';
+//@ts-ignore
+import { ResizableBox, Resizable } from 'react-resizable';
+
+
+const dialog: Dialog = remote.dialog;
 
 export const defaultEditorContents = Value.fromJSON({
     document: {
@@ -104,8 +111,8 @@ export const BUTTON_NODE_TYPES: { type: string, icon: string, data: any }[] = [
         type: 'image',
         icon: 'insert_photo',
         data: {
-            width: '150px',
-            height: '150px',
+            width: '150',
+            height: '150',
             src: '../../../../../../../../Media/public domain images/knight-armor-helmet-weapons-161936.jpeg'
         }
     }
@@ -276,17 +283,31 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     </div>
                 );
             case 'image':
+                console.log('rendering image to slate');
                 return (
                     <div {...attributes}>
-                        <img
-                            //@ts-ignore
-                            src={node.data.get('src')}
-                            //@ts-ignore
-                            style={{ width: node.data.get('width'), height: node.data.get('height') }}
 
-                        />
+                        <ResizableBox
+                            //@ts-ignore
+                            width={Number(node.data.get('width'))}
+                            //@ts-ignore
+                            height={Number(node.data.get('height'))}
+                            lockAspectRatio={true}
+                        >
+                            <span style={{ width: '100%', height: '100%' }} >
+                                <img
+                                    //@ts-ignore
+                                    src={node.data.get('src')}
+                                    //@ts-ignore
+                                    style={{ width: '100%', height: '100%' }}
+                                //style={{ width: node.data.get('width'), height: node.data.get('height') }}
+                                />
+                            </span>
+
+                        </ResizableBox>
+
                     </div>
-                )
+                );
         }
     }
     renderMark = (props: RenderMarkProps) => {
@@ -378,6 +399,30 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                             data
                         }).moveToEnd();
                     }
+                } else if (type === 'image') {
+                    dialog.showOpenDialog(remote.getCurrentWindow(), {
+                        title: 'choose image source',
+                        filters: [{
+                            name: 'images',
+                            extensions: ['jpg', 'jpeg', 'gif', 'png', 'apng', 'svg', 'bmp', '.webp']
+                        }],
+                        properties: ['openFile']
+                    },
+                        (filePaths: string[]) => {
+                            if (filePaths.length === 1) {
+                                const imagePath = path.relative(__dirname, filePaths[0]);
+                                console.log('Inserting image: ', imagePath, change);
+                                change.insertBlock({
+                                    type,
+                                    data: {
+                                        ...data,
+                                        src: imagePath
+                                    }
+                                });
+                                this.props.onChange(change);
+                            }
+                        });
+
                 } else {
                     change.setBlocks(isActive ? DEFAULT_NODE : {
                         type,
@@ -425,7 +470,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         const value = this.props.content;
         const hasLinks = this.hasInlineType('link');
         const change = value.change();
-
         if (hasLinks) {
             //@ts-ignore
             change.call(unwrapLink)

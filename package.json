@@ -67,6 +67,7 @@
     "react-dom": "^16.4.2",
     "react-markdown": "^3.6.0",
     "react-redux": "^5.0.7",
+    "react-resizable": "^1.7.5",
     "redux": "^4.0.0",
     "reset-css": "^4.0.1",
     "showdown": "^1.8.6",
