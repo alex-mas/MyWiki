@@ -57,7 +57,7 @@
     "@slate-editor/alignment-plugin": "^5.0.0",
     "@types/draft-js": "^0.10.25",
     "@types/showdown": "^1.7.5",
-    "@types/slate": "^0.40.0",
+    "@types/slate": "^0.42.0",
     "@types/slate-react": "^0.18.0",
     "draft-js": "^0.10.5",
     "express": "^4.16.3",

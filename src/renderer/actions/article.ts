@@ -4,7 +4,6 @@ import { WikiMetaData } from "../store/reducers/wikis";
 import * as uuid from 'uuid/v4';
 import * as fs from 'fs';
 import * as path from 'path';
-import defaultWikiConfig from '../../shared/data/defaultWikiConfig.json';
 import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
 import { error, fsError, ErrorAction, ErrorActionCodes } from "./errors";

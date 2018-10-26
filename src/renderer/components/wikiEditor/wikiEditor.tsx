@@ -99,6 +99,15 @@ export const BUTTON_NODE_TYPES: { type: string, icon: string, data: any }[] = [
         data: {
             align: 'center'
         }
+    },
+    {
+        type: 'image',
+        icon: 'insert_photo',
+        data: {
+            width: '150px',
+            height: '150px',
+            src: '../../../../../../../../Media/public domain images/knight-armor-helmet-weapons-161936.jpeg'
+        }
     }
 ]
 
@@ -266,6 +275,18 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                         {children}
                     </div>
                 );
+            case 'image':
+                return (
+                    <div {...attributes}>
+                        <img
+                            //@ts-ignore
+                            src={node.data.get('src')}
+                            //@ts-ignore
+                            style={{ width: node.data.get('width'), height: node.data.get('height') }}
+
+                        />
+                    </div>
+                )
         }
     }
     renderMark = (props: RenderMarkProps) => {
@@ -328,9 +349,9 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 if (type === 'align') {
                     const isSameAlignment = value.blocks.some(block => {
                         //@ts-ignore
-                        const closestBlock =document.getClosest(block.key, parent => parent.type === type);
+                        const closestBlock = document.getClosest(block.key, parent => parent.type === type);
                         //@ts-ignore
-        
+
                         return closestBlock && closestBlock.data && closestBlock.data.get('align') === data.align;
                     });
                     if (isType) {
@@ -505,7 +526,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 isActive = this.hasBlockType('list-item') && parent && parent.type === type;
             }
         }
-        if(type === 'align'){
+        if (type === 'align') {
             const value = this.props.content;
             const block = value.blocks.first();
             if (block) {

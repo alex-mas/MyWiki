@@ -13,21 +13,9 @@ export class PluginSystem extends React.Component<any, any>{
         this.state = {
         };
     }
-    registerHeaderIcon = ()=>{
-
-    }
-    registerWikiCategoy = ()=>{
-
-    }
-    registerWikiView = ()=>{
-
-    }
-    registerWikiAction = ()=>{
-
-    }
     getPluginAPI = ()=>{
         return{
-            registerHeaderIcon: this.registerHeaderIcon,
+ 
             
         };
     }
