@@ -56,7 +56,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         this.props.loadArticle(this.props.routeParams.article).then((article: Article) => {
             console.log('Article returned from load article: ', article);
             this.setState(() => ({
-                content: article.content ? Value.fromJSON(JSON.parse(article.content)) : defaultEditorContents,
+                content: article.content ? Value.fromJSON(article.content) : defaultEditorContents,
                 fileExists: article.content ? true : false
             }));
         }).catch((e: string) => {
@@ -73,7 +73,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
             //@ts-ignore
             this.props.loadArticle(this.props.routeParams.article).then((article: Article) => {
                 this.setState(() => ({
-                    content: article.content ? Value.fromJSON(JSON.parse(article.content)) : defaultEditorContents,
+                    content: article.content ? Value.fromJSON(article.content) : defaultEditorContents,
                     fileExists: article.content ? true : false
                 }));
             }).catch(() => {

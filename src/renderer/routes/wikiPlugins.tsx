@@ -17,7 +17,6 @@ export class WikiPluginsPage extends React.Component<{plugins: PluginState}, any
                                 {plugin.name} -  {plugin.version} - {plugin.id} - {plugin.loaded ? 'loaded' : 'not loaded'}
                                 {plugin.description}
                                 Main: {plugin.main}
-                    
                             </div>
                         )
                     })}

@@ -1,5 +1,5 @@
 
-import { ActionCreator, Dispatch, Action } from "redux";
+import { ActionCreator, Dispatch, Action, AnyAction } from "redux";
 import { WikiMetaData } from "../store/reducers/wikis";
 import * as uuid from 'uuid/v4';
 import * as fs from 'fs';
@@ -8,6 +8,7 @@ import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
 import { error, fsError, ErrorAction, ErrorActionCodes } from "./errors";
 import { deleteFolderRecursively } from '../utilities/fsutils';
+import { ValueJSON } from "slate";
 
 
 export interface ArticleMetaData {
@@ -18,7 +19,7 @@ export interface ArticleMetaData {
 export interface Article {
     name: string,
     tags: string[],
-    content: string,
+    content: ValueJSON,
     background: string
 }
 
@@ -82,7 +83,7 @@ export const loadArticle: LoadArticleActionCreator = (name: string) => {
     return (dispatch, getState) => {
         const selectedWiki = getState().selectedWiki;
         const article: Article = {
-            content: '',
+            content: {},
             tags: [],
             name,
             background: ''
@@ -96,11 +97,16 @@ export const loadArticle: LoadArticleActionCreator = (name: string) => {
                 articleData = JSON.parse(fileContents);
                 console.log(articleData);
                 if (articleData.content) {
-                    article.content = articleData.content;
+                    if(typeof articleData.content === 'string'){
+                        article.content = JSON.parse(articleData.content);
+                    }else{
+                        article.content = articleData.content;
+                    }
+                  
                     article.tags = articleData.tags;
                 } else {
                     //in first versions of the app there was no tags so this keeps it backwards compatible with those wikis
-                    article.content = fileContents;
+                    article.content = JSON.parse(fileContents);
                 }
                 dispatch({
                     type: 'LOAD_ARTICLE',
@@ -126,6 +132,15 @@ export interface SaveArticleAction extends Action {
 
 export type SaveArticleActionCreator = (article: Article) => ThunkAction<any, AppState, void, SaveArticleAction | ErrorAction>;
 
+
+const _saveArticle: ActionCreator<ArticleAction>= (article:Article)=>{
+    return{
+        type: 'SAVE_ARTICLE',
+        article
+    };
+}
+
+
 export const saveArticle: SaveArticleActionCreator = (article: Article) => {
     return (dispatch, getState) => {
         const selectedWiki = getState().selectedWiki;
@@ -139,10 +154,7 @@ export const saveArticle: SaveArticleActionCreator = (article: Article) => {
                         dispatch(fsError(`Error trying to edit article ${article.name}, please try running the app as administrator. If that doesn't work contact the developer`));
                         reject(err);
                     } else {
-                        dispatch({
-                            type: 'SAVE_ARTICLE',
-                            article
-                        });
+                        dispatch(_saveArticle);
                         resolve()
                     }
                 }

@@ -79,7 +79,7 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
     createArticle = () => {
         this.props.createArticle({
             name: this.state.name,
-            content: JSON.stringify(this.state.editorContent),
+            content: this.state.editorContent.toJSON(),
             tags: this.state.tags,
             background: this.state.background
             //@ts-ignore

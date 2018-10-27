@@ -66,9 +66,9 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
         this.props.loadArticle(this.props.routeParams.article ? this.props.routeParams.article : 'home').then((article: Article) => {
             console.log('loaded article to edit');
             console.log(article);
-            console.log(JSON.parse(article.content));
+            console.log(article.content);
             this.setState(() => ({
-                editorContent: Value.fromJSON(JSON.parse(article.content)),
+                editorContent: Value.fromJSON(article.content),
                 tags: article.tags
             }));
         });
@@ -82,7 +82,7 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
         this.props.saveArticle({
             name: this.props.routeParams.article,
             tags: this.state.tags,
-            content: JSON.stringify(this.state.editorContent.toJSON()),
+            content: this.state.editorContent.toJSON(),
             background: this.state.background
             //@ts-ignore
         }).then(() => {
