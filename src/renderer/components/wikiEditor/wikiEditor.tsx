@@ -10,6 +10,9 @@ import * as path from 'path';
 //@ts-ignore
 import { ResizableBox, Resizable } from 'react-resizable';
 import { BoldPlugin } from './plugins/bold';
+import { ItalicPlugin } from './plugins/italic';
+import { UnderlinedPlugin } from './plugins/underlined';
+import { CodePlugin } from './plugins/code';
 
 
 
@@ -129,23 +132,6 @@ export const BUTTON_NODE_TYPES: { type: string, icon: string, data: any }[] = [
 ]
 
 
-export const BUTTON_MARK_TYPES: { type: string, icon: string, data: any }[] = [
-    {
-        type: 'code',
-        icon: 'code',
-        data: undefined
-    },
-    {
-        type: 'italic',
-        icon: 'format_italic',
-        data: undefined
-    },
-    {
-        type: 'underlined',
-        icon: 'format_underlined',
-        data: undefined
-    }
-]
 
 
 export const BUTTON_INLINE_TYPES: any[] = [
@@ -232,7 +218,12 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 linkText: undefined,
                 linkDest: undefined,
                 isOutLink: undefined,
-                plugins: [BoldPlugin(this.getPluginContext())]
+                plugins: [
+                    BoldPlugin(this.getPluginContext()),
+                    ItalicPlugin(this.getPluginContext()),
+                    UnderlinedPlugin(this.getPluginContext()),
+                    CodePlugin(this.getPluginContext())
+                ]
             }
         }
     }
@@ -644,9 +635,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                             icon={'link'}
                             data={undefined}
                         />
-                        {BUTTON_MARK_TYPES.map((mark) => {
-                            return this.markButton(mark.type, mark.icon, mark.data);
-                        })}
                         {BUTTON_NODE_TYPES.map((node) => {
                             return this.nodeButton(node.type, node.icon, node.data);
                         })}

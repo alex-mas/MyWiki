@@ -7,30 +7,30 @@ import { Value } from 'slate';
 
 
 
-export const BoldPlugin = (options: EditorPluginOptions) => {
+export const UnderlinedPlugin = (options: EditorPluginOptions) => {
 
-    const renderBoldText = (props: RenderMarkProps) => {
+    const renderUnderlinedText = (props: RenderMarkProps) => {
         const { children, mark, attributes } = props;
-        return <strong className='wiki-bold-text'{...attributes}>{children}</strong>;
+        return <u className='wiki-underlined-text'{...attributes}>{children}</u>;
     }
 
     const onClickButton = onClickMarkButton(options.getContent,options.onChange);
 
     return {
-        renderMark: RenderMark('bold', renderBoldText),
+        renderMark: RenderMark('underlined', renderUnderlinedText),
 
         Button() {
-            const isActive = hasMarkType(options.getContent(), 'bold');
+            const isActive = hasMarkType(options.getContent(), 'underlined');
             return (
                 <EditorButton
                     onClick={onClickButton}
                     active={isActive}
-                    icon={'format_bold'}
-                    type={'bold'}
+                    icon={'format_underlined'}
+                    type={'underlined'}
                 />
             )
         }
     }
 }
 
-export default BoldPlugin;
+export default UnderlinedPlugin;

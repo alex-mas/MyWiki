@@ -7,30 +7,30 @@ import { Value } from 'slate';
 
 
 
-export const BoldPlugin = (options: EditorPluginOptions) => {
+export const CodePlugin = (options: EditorPluginOptions) => {
 
-    const renderBoldText = (props: RenderMarkProps) => {
+    const renderCodeBlock = (props: RenderMarkProps) => {
         const { children, mark, attributes } = props;
-        return <strong className='wiki-bold-text'{...attributes}>{children}</strong>;
+        return <code className='wiki-code-block' {...attributes}>{children}</code>;
     }
 
     const onClickButton = onClickMarkButton(options.getContent,options.onChange);
 
     return {
-        renderMark: RenderMark('bold', renderBoldText),
+        renderMark: RenderMark('code', renderCodeBlock),
 
         Button() {
-            const isActive = hasMarkType(options.getContent(), 'bold');
+            const isActive = hasMarkType(options.getContent(), 'code');
             return (
                 <EditorButton
                     onClick={onClickButton}
                     active={isActive}
-                    icon={'format_bold'}
-                    type={'bold'}
+                    icon={'code'}
+                    type={'code'}
                 />
             )
         }
     }
 }
 
-export default BoldPlugin;
+export default CodePlugin;
