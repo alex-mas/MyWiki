@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Editor, RenderNodeProps, RenderMarkProps } from 'slate-react';
 import { Value, Change, Data, Schema } from 'slate';
+import {connect} from 'react-redux';
 import * as fs from 'fs';
 import WikiLink from './wikiLink';
 import Modal from '@axc/react-components/dist/layout/modal';
@@ -9,13 +10,19 @@ import { remote, Dialog } from 'electron';
 import * as path from 'path';
 //@ts-ignore
 import { ResizableBox, Resizable } from 'react-resizable';
-import { BoldPlugin } from './plugins/bold';
-import { ItalicPlugin } from './plugins/italic';
-import { UnderlinedPlugin } from './plugins/underlined';
-import { CodePlugin } from './plugins/code';
+import { BoldPlugin } from './plugins/marks/bold';
+import { ItalicPlugin } from './plugins/marks/italic';
+import { UnderlinedPlugin } from './plugins/marks/underlined';
+import { CodePlugin } from './plugins/marks/code';
+import { generateHeaderPlugins } from './plugins/blocks/header';
 
 
 
+export type WikiEditorPluginCreator = (options: EditorPluginOptions)=>WikiEditorPlugin;
+
+export interface WikiEditorPlugin{
+    
+}
 
 export interface EditorPluginOptions {
     getContent: ()=>Value,
@@ -62,36 +69,6 @@ export const BUTTON_NODE_TYPES: { type: string, icon: string, data: any }[] = [
     {
         type: 'bulleted-list',
         icon: 'format_list_bulleted',
-        data: undefined
-    },
-    {
-        type: 'heading-one',
-        icon: 'looks_one',
-        data: undefined
-    },
-    {
-        type: 'heading-two',
-        icon: 'looks_two',
-        data: undefined
-    },
-    {
-        type: 'heading-three',
-        icon: 'looks_3',
-        data: undefined
-    },
-    {
-        type: 'heading-four',
-        icon: 'looks_4',
-        data: undefined
-    },
-    {
-        type: 'heading-five',
-        icon: 'looks_5',
-        data: undefined
-    },
-    {
-        type: 'heading-six',
-        icon: 'looks_6',
         data: undefined
     },
     {
@@ -194,11 +171,16 @@ export interface WikiEditorState {
     plugins: any[]
 }
 
-export interface WikiEditorProps {
+export interface WikiEditorStateProps{
+    plugins: WikiEditorPlugin[]
+}
+
+export interface WikiEditorOwnProps {
     content: Value,
     onChange: (change: Change) => any,
     readOnly: boolean
 }
+export type WikiEditorProps = WikiEditorOwnProps & WikiEditorStateProps;
 
 class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
     state: Readonly<WikiEditorState> = {
@@ -222,7 +204,8 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     BoldPlugin(this.getPluginContext()),
                     ItalicPlugin(this.getPluginContext()),
                     UnderlinedPlugin(this.getPluginContext()),
-                    CodePlugin(this.getPluginContext())
+                    CodePlugin(this.getPluginContext()),
+                    ...generateHeaderPlugins(this.getPluginContext())
                 ]
             }
         }
@@ -265,20 +248,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 return <ul {...attributes} className='wiki-bulleted-list'>
                     {children}
                 </ul>
-            case 'heading-one':
-                return <h1 {...attributes} className='wiki-heading'>
-                    {children}
-                </h1>
-            case 'heading-two':
-                return <h2 {...attributes} className='wiki-heading'>{children}</h2>
-            case 'heading-three':
-                return <h3 {...attributes} className='wiki-heading'>{children}</h3>
-            case 'heading-four':
-                return <h4 {...attributes} className='wiki-heading'>{children}</h4>
-            case 'heading-five':
-                return <h5 {...attributes} className='wiki-heading'>{children}</h5>
-            case 'heading-six':
-                return <h6 {...attributes} className='wiki-heading'>{children}</h6>
             case 'list-item':
                 return <li {...attributes} className='wiki-list-item'>{children}</li>
             case 'numbered-list':
@@ -318,17 +287,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 );
         }
     }
-    /*renderMark = (props: RenderMarkProps) => {
-        const { children, mark, attributes } = props;
-        switch (mark.type) {
-            case 'code':
-                return <code className='wiki-code-block' {...attributes}>{children}</code>
-            case 'italic':
-                return <em className='wiki-italic-text'{...attributes}>{children}</em>
-            case 'underlined':
-                return <u className='wiki-underlined-text'{...attributes}>{children}</u>
-        }
-    }*/
     hasInlineType = (type: string) => {
         return this.props.content.inlines.some(inline => inline.type === type);
     }
@@ -605,6 +563,9 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             />
         )
     }
+    getMergedPlugins = ()=>{
+        return [...this.state.plugins, ...this.props.plugins];
+    }
     render() {
         if (this.props.readOnly) {
             return (
@@ -644,7 +605,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     </div>
                     <Editor
                         plugins={this.state.plugins}
-            
                         readOnly={this.props.readOnly}
                         value={this.props.content}
                         onChange={this.props.onChange}
@@ -678,5 +638,10 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
     }
 }
 
+export const defaultPlugins: WikiEditorPlugin[] = [];
 
-export default WikiEditor;
+export default connect((state,props)=>{
+    return{
+        plugins: defaultPlugins
+    }
+})(WikiEditor);

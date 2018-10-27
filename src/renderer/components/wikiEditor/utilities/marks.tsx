@@ -11,8 +11,6 @@ export const hasMarkType = (content: Value, type: string) => {
 
 export const RenderMark = (type: string, fn: (props:RenderMarkProps)=>React.ReactNode)=>{
     return (props: RenderMarkProps)=>{
-        debugger;
-        console.log(props);
         if(props.mark.type === type){
             return fn(props);
         }
@@ -27,6 +25,7 @@ export const onClickMarkButton = (getContent: ()=>Value, onChange: Function)=>{
         onChange(change);
     }
 }
+
 
 export default {
     hasMarkType,
