@@ -9,6 +9,16 @@ import { remote, Dialog } from 'electron';
 import * as path from 'path';
 //@ts-ignore
 import { ResizableBox, Resizable } from 'react-resizable';
+import { BoldPlugin } from './plugins/bold';
+
+
+
+
+export interface EditorPluginOptions {
+    getContent: ()=>Value,
+    onChange: (change: Change) => any
+}
+
 
 
 const dialog: Dialog = remote.dialog;
@@ -121,11 +131,6 @@ export const BUTTON_NODE_TYPES: { type: string, icon: string, data: any }[] = [
 
 export const BUTTON_MARK_TYPES: { type: string, icon: string, data: any }[] = [
     {
-        type: 'bold',
-        icon: 'format_bold',
-        data: undefined
-    },
-    {
         type: 'code',
         icon: 'code',
         data: undefined
@@ -199,7 +204,8 @@ export interface WikiEditorState {
     promptForText: boolean,
     linkText: string,
     linkDest: string,
-    isOutLink: boolean
+    isOutLink: boolean,
+    plugins: any[]
 }
 
 export interface WikiEditorProps {
@@ -214,7 +220,8 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         promptForText: false,
         linkText: undefined,
         linkDest: undefined,
-        isOutLink: undefined
+        isOutLink: undefined,
+        plugins: []
     }
     constructor(props: any) {
         super(props);
@@ -224,9 +231,19 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 promptForText: false,
                 linkText: undefined,
                 linkDest: undefined,
-                isOutLink: undefined
+                isOutLink: undefined,
+                plugins: [BoldPlugin(this.getPluginContext())]
             }
         }
+    }
+    getPluginContext = ()=>{
+        return{
+            getContent:this.getContent,
+            onChange: this.props.onChange
+        }
+    }
+    getContent = ()=>{
+        return this.props.content;
     }
     renderNode = (props: RenderNodeProps) => {
         const { attributes, children, node } = props;
@@ -313,8 +330,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
     renderMark = (props: RenderMarkProps) => {
         const { children, mark, attributes } = props;
         switch (mark.type) {
-            case 'bold':
-                return <strong className='wiki-bold-text'{...attributes}>{children}</strong>
             case 'code':
                 return <code className='wiki-code-block' {...attributes}>{children}</code>
             case 'italic':
@@ -323,7 +338,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 return <u className='wiki-underlined-text'{...attributes}>{children}</u>
         }
     }
-
     hasInlineType = (type: string) => {
         return this.props.content.inlines.some(inline => inline.type === type);
     }
@@ -337,11 +351,9 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
 
     onClickMark = (event: React.MouseEvent<HTMLElement>, type: string) => {
         event.preventDefault();
-
         const change = this.props.content.change().toggleMark(type);
         this.props.onChange(change);
     }
-
 
     onClickBlock = (event: React.MouseEvent<HTMLSpanElement>, type: string, data: any) => {
         event.preventDefault()
@@ -618,6 +630,13 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             return (
                 <div>
                     <div id='editor__actions'>
+                        {this.state.plugins.map((plugin)=>{
+                            if(plugin.Button){
+                                return <plugin.Button/>;
+                            }else{
+                                return null;
+                            }
+                        })}
                         <EditorButton
                             onClick={this.addLink}
                             active={this.hasInlineType('link')}
@@ -636,6 +655,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                         })}
                     </div>
                     <Editor
+                        plugins={this.state.plugins}
                         renderMark={this.renderMark}
                         readOnly={this.props.readOnly}
                         value={this.props.content}
