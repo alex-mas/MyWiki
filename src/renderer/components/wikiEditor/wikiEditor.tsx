@@ -318,7 +318,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 );
         }
     }
-    renderMark = (props: RenderMarkProps) => {
+    /*renderMark = (props: RenderMarkProps) => {
         const { children, mark, attributes } = props;
         switch (mark.type) {
             case 'code':
@@ -328,7 +328,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             case 'underlined':
                 return <u className='wiki-underlined-text'{...attributes}>{children}</u>
         }
-    }
+    }*/
     hasInlineType = (type: string) => {
         return this.props.content.inlines.some(inline => inline.type === type);
     }
@@ -609,7 +609,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         if (this.props.readOnly) {
             return (
                 <Editor
-                    renderMark={this.renderMark}
+                    plugins={this.state.plugins}
                     readOnly={this.props.readOnly}
                     value={this.props.content}
                     onChange={this.props.onChange}
@@ -644,7 +644,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     </div>
                     <Editor
                         plugins={this.state.plugins}
-                        renderMark={this.renderMark}
+            
                         readOnly={this.props.readOnly}
                         value={this.props.content}
                         onChange={this.props.onChange}

@@ -10,18 +10,18 @@ export const hasMarkType = (content: Value, type: string) => {
 
 
 export const RenderMark = (type: string, fn: (props:RenderMarkProps)=>React.ReactNode)=>{
-    return (props: RenderMarkProps, next: Function)=>{
-        if(props.mark.type){
+    return (props: RenderMarkProps)=>{
+        debugger;
+        console.log(props);
+        if(props.mark.type === type){
             return fn(props);
-        }else{
-            next();
         }
     }
 }
 
 export const onClickMarkButton = (getContent: ()=>Value, onChange: Function)=>{
     return(event: React.MouseEvent<HTMLSpanElement>, type: string, data:any)=>{
-        console.log('here!', type,);
+        console.log('here!', type);
         event.preventDefault();
         const change = getContent().change().toggleMark({type,data});
         onChange(change);
