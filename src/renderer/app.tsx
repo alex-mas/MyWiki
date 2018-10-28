@@ -11,7 +11,7 @@ import AppRouter from './router/router';
 import { loadWikis } from './actions/wikis';
 import { WikiMetaData } from './store/reducers/wikis';
 import { fsError } from './actions/errors';
-import { parsePlugins} from './actions/plugins';
+import { parsePlugins } from './actions/plugins';
 
 
 
@@ -20,11 +20,10 @@ const appRoot = document.getElementById('app');
 export const store = configureStore();
 
 
-
 const App = (
-    <Provider store={store}>
-        <AppRouter />
-    </Provider>
+        <Provider store={store}>
+            <AppRouter />
+        </Provider>
 );
 
 ReactDOM.render(App, appRoot);
@@ -39,13 +38,13 @@ window.onload = () => {
             console.warn(err);
             store.dispatch(fsError('Error loading meta-data from filesystem'));
         } else {
-            console.log('About to parse contained wikis: ',files);
+            console.log('About to parse contained wikis: ', files);
             files.forEach((file) => {
-                try{
+                try {
                     const data = fs.readFileSync(`./wikis/${file}/myWiki.config.json`, 'utf8');
                     wikisFs.push(JSON.parse(data));
-                }catch(e){
-                    console.warn('Error while parsing wiki meta data',e);
+                } catch (e) {
+                    console.warn('Error while parsing wiki meta data', e);
                 }
 
             });

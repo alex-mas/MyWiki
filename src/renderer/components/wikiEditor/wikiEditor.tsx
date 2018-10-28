@@ -1,37 +1,42 @@
 import * as React from 'react';
 import { Editor, RenderNodeProps, RenderMarkProps } from 'slate-react';
 import { Value, Change, Data, Schema } from 'slate';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as fs from 'fs';
 import WikiLink from './wikiLink';
 import Modal from '@axc/react-components/dist/layout/modal';
-import EditorButton from './editorButton';
+import EditorButton from './components/editorButton';
 import { remote, Dialog } from 'electron';
 import * as path from 'path';
 //@ts-ignore
 import { ResizableBox, Resizable } from 'react-resizable';
-import { BoldPlugin } from './plugins/marks/bold';
-import { ItalicPlugin } from './plugins/marks/italic';
-import { UnderlinedPlugin } from './plugins/marks/underlined';
-import { CodePlugin } from './plugins/marks/code';
-import { generateHeaderPlugins } from './plugins/blocks/header';
-import { generateAlignmentPlugins } from './plugins/blocks/align';
-import { generateListPlugins } from './plugins/blocks/lists';
-import { BlockQuotePlugin } from './plugins/blocks/blockQuote';
 
 
 
-export type WikiEditorPluginCreator = (options: EditorPluginOptions)=>WikiEditorPlugin;
+//plugins
+import BoldPlugin from './plugins/marks/bold';
+import ItalicPlugin from './plugins/marks/italic';
+import UnderlinedPlugin from './plugins/marks/underlined';
+import CodePlugin from './plugins/marks/code';
+import generateHeaderPlugins from './plugins/blocks/header';
+import generateAlignmentPlugins from './plugins/blocks/align';
+import generateListPlugins from './plugins/blocks/lists';
+import BlockQuotePlugin from './plugins/blocks/blockQuote';
+import LinkPlugin from './plugins/blocks/link';
 
-export interface WikiEditorPlugin{
-    
+
+
+export type WikiEditorPluginCreator = (options: EditorPluginOptions) => WikiEditorPlugin;
+
+export interface WikiEditorPlugin {
+
 }
 
 export interface EditorPluginOptions {
-    getContent: ()=>Value,
-    onChange: (change: Change) => any
+    getContent: () => Value,
+    onChange: (change: Change) => any,
+    isReadOnly: () => boolean
 }
-
 
 
 const dialog: Dialog = remote.dialog;
@@ -56,7 +61,6 @@ export const defaultEditorContents = Value.fromJSON({
         ],
     },
 });
-
 
 
 
@@ -97,37 +101,6 @@ const schema: Schema = {
 }
 
 
-const wrapInline = (change: Change, type: string, data?: any) => {
-    change.wrapInline({
-        type,
-        data: data ? data : {}
-    }).moveToEnd();
-};
-
-
-const unwrapInline = (change: Change, type: string) => {
-    change.unwrapInline(type);
-}
-
-
-
-
-
-function wrapLink(change: Change, href: string, isOutLink: boolean = false) {
-    console.log('Href: ', href);
-    change.wrapInline({
-        type: 'link',
-        data: { href, isOutLink }
-    });
-    change.moveToEnd()
-}
-
-
-
-function unwrapLink(change: Change) {
-    change.unwrapInline('link')
-}
-
 
 export interface WikiEditorState {
     isModalOpen: boolean,
@@ -138,7 +111,7 @@ export interface WikiEditorState {
     plugins: any[]
 }
 
-export interface WikiEditorStateProps{
+export interface WikiEditorStateProps {
     plugins: WikiEditorPlugin[]
 }
 
@@ -176,46 +149,33 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     ...generateHeaderPlugins(pluginContext),
                     ...generateAlignmentPlugins(pluginContext),
                     ...generateListPlugins(pluginContext),
-                    BlockQuotePlugin(pluginContext)
+                    BlockQuotePlugin(pluginContext),
+                    LinkPlugin(pluginContext)
                 ]
             }
         }
     }
-    getPluginContext = ()=>{
-        return{
-            getContent:this.getContent,
-            onChange: this.props.onChange
+    getPluginContext = () => {
+        return {
+            getContent: this.getContent,
+            onChange: this.props.onChange,
+            isReadOnly: this.isReadOnly
         }
     }
-    getContent = ()=>{
+    getContent = () => {
         return this.props.content;
+    }
+    isReadOnly = () => {
+        return this.props.readOnly;
     }
     renderNode = (props: RenderNodeProps) => {
         const { attributes, children, node } = props;
         //@ts-ignore
         switch (node.type) {
-            case 'link':
-                {
-                    //@ts-ignore
-                    const href = node.data.get('href');
-                    //@ts-ignore
-                    const isOutLink = node.data.get('isOutLink');
-                    return (
-                        <WikiLink
-                            {...props}
-                            to={href}
-                            active={this.props.readOnly}
-                            isOutLink={isOutLink}
-                        >
-                            {children}
-                        </WikiLink>
-                    );
-                }
             case 'image':
                 console.log('rendering image to slate');
                 return (
                     <div {...attributes}>
-
                         <ResizableBox
                             //@ts-ignore
                             width={Number(node.data.get('width'))}
@@ -250,12 +210,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         return this.props.content.blocks.some(block => block.type === type)
     }
 
-    onClickMark = (event: React.MouseEvent<HTMLElement>, type: string) => {
-        event.preventDefault();
-        const change = this.props.content.change().toggleMark(type);
-        this.props.onChange(change);
-    }
-
     onClickBlock = (event: React.MouseEvent<HTMLSpanElement>, type: string, data: any) => {
         event.preventDefault()
         const value = this.props.content;
@@ -279,40 +233,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     .unwrapBlock('bulleted-list')
                     .unwrapBlock('numbered-list')
             } else {
-
-                if (type === 'align') {
-                    const isSameAlignment = value.blocks.some(block => {
-                        //@ts-ignore
-                        const closestBlock = document.getClosest(block.key, parent => parent.type === type);
-                        //@ts-ignore
-
-                        return closestBlock && closestBlock.data && closestBlock.data.get('align') === data.align;
-                    });
-                    if (isType) {
-                        if (isSameAlignment) {
-                            change.unwrapBlock({
-                                type,
-                                data
-                            });
-                        } else {
-                            change
-                                .unwrapBlock({
-                                    type
-                                })
-                                .wrapBlock({
-                                    type,
-                                    data
-                                })
-                                .moveToEnd();
-                        }
-
-                    } else {
-                        change.wrapBlock({
-                            type,
-                            data
-                        }).moveToEnd();
-                    }
-                } else if (type === 'image') {
+                if (type === 'image') {
                     dialog.showOpenDialog(remote.getCurrentWindow(), {
                         title: 'choose image source',
                         filters: [{
@@ -363,113 +284,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
 
         this.props.onChange(change);
     }
-
-    onClickInline = (event: React.MouseEvent<HTMLSpanElement>, type: string, data: any) => {
-        event.preventDefault();
-        const value = this.props.content;
-        const isActive = this.hasInlineType(type);
-        const change = value.change();
-        if (isActive) {
-            //@ts-ignore
-            change.call(unwrapInline, type, data);
-        } else if (value.selection.isExpanded) {
-            //@ts-ignore
-            change.call(wrapInline, type, data);
-        }
-        this.props.onChange(change);
-    }
-    addLink = (event: React.MouseEvent<HTMLSpanElement>) => {
-        event.preventDefault();
-        const value = this.props.content;
-        const hasLinks = this.hasInlineType('link');
-        const change = value.change();
-        if (hasLinks) {
-            //@ts-ignore
-            change.call(unwrapLink)
-        } else if (value.selection.isExpanded) {
-            if (this.state.isModalOpen) {
-                this.closeModal();
-                const dest = this.state.linkDest;
-                const isOutLink = this.state.isOutLink;
-
-                if (dest === null) {
-                    return;
-                }
-
-                //@ts-ignore
-                change.call(wrapLink, dest, isOutLink);
-
-            } else {
-                this.setState(() => ({
-                    isModalOpen: true,
-                    promptForText: false
-                }));
-            }
-
-        } else {
-            if (this.state.isModalOpen) {
-                this.closeModal();
-
-                const dest = this.state.linkDest;
-                const text = this.state.linkText;
-                const isOutLink = this.state.isOutLink;
-
-                if (dest === null || text === null) {
-                    return;
-                }
-                //@ts-ignore
-                change
-                    .insertText(text)
-                    .moveFocusBackward(text.length)
-                    .call(wrapLink, dest, isOutLink);
-
-            } else {
-                this.setState(() => ({
-                    isModalOpen: true,
-                    promptForText: true
-                }));
-            }
-        }
-        this.props.onChange(change);
-    }
-    closeModal = () => {
-        this.setState(() => ({
-            isModalOpen: false
-        }));
-    }
-    onChangeLinkDest = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const linkDest = e.target.value;
-        this.setState(() => ({
-            linkDest
-        }));
-    }
-    onChangeLinkText = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const linkText = e.target.value;
-        this.setState(() => ({
-            linkText
-        }));
-    }
-    onChangeLinkType = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const isOutLink = e.target.checked;
-        console.log(isOutLink);
-        this.setState(() => ({
-            isOutLink
-        }));
-    }
-
-
-    markButton = (type: string, icon: string, data: any) => {
-        const isActive = this.hasMarkType(type);
-        return (
-            <EditorButton
-                onClick={this.onClickMark}
-                active={isActive}
-                icon={icon}
-                type={type}
-                data={data}
-            />
-        )
-    }
     nodeButton = (type: string, icon: string, data: any) => {
         let isActive = this.hasBlockType(type);
 
@@ -503,19 +317,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             />
         )
     }
-    inlineButton = (type: string, icon: string, data: any) => {
-        let isActive = this.hasInlineType(type);
-        return (
-            <EditorButton
-                active={isActive}
-                onClick={this.onClickInline}
-                type={type}
-                icon={icon}
-                data={data}
-            />
-        )
-    }
-    getMergedPlugins = ()=>{
+    getMergedPlugins = () => {
         return [...this.state.plugins, ...this.props.plugins];
     }
     render() {
@@ -534,25 +336,15 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             return (
                 <div>
                     <div id='editor__actions'>
-                        {this.state.plugins.map((plugin)=>{
-                            if(plugin.Button){
-                                return <plugin.Button/>;
-                            }else{
+                        {this.state.plugins.map((plugin) => {
+                            if (plugin.Button) {
+                                return <plugin.Button />;
+                            } else {
                                 return null;
                             }
                         })}
-                        <EditorButton
-                            onClick={this.addLink}
-                            active={this.hasInlineType('link')}
-                            type='link'
-                            icon={'link'}
-                            data={undefined}
-                        />
                         {BUTTON_NODE_TYPES.map((node) => {
                             return this.nodeButton(node.type, node.icon, node.data);
-                        })}
-                        {BUTTON_INLINE_TYPES.map((inline) => {
-                            return this.inlineButton(inline.type, inline.icon, inline.data);
                         })}
                     </div>
                     <Editor
@@ -564,24 +356,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                         className='wiki-editor'
                         schema={schema}
                     />
-                    <Modal
-                        isOpen={this.state.isModalOpen}
-                        onClose={this.closeModal}
-                    >
-                        <div className='wiki-link__form'>
-                            <input className='wiki-link__input' type="text" value={this.state.linkDest} onChange={this.onChangeLinkDest} />
-                            <div>
-                                Is out link? <input type="checkbox" checked={this.state.isOutLink} onChange={this.onChangeLinkType} />
-                            </div>
-
-                            {this.state.promptForText ?
-                                <input className='wiki-link__text__input' type="text" value={this.state.linkText} onChange={this.onChangeLinkText} />
-                                :
-                                null
-                            }
-                            <button className='wiki-link__form__action' onClick={this.addLink}>Accept</button>
-                        </div>
-                    </Modal>
                 </div>
 
             );
@@ -592,8 +366,8 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
 
 export const defaultPlugins: WikiEditorPlugin[] = [];
 
-export default connect((state,props)=>{
-    return{
+export default connect((state, props) => {
+    return {
         plugins: defaultPlugins
     }
 })(WikiEditor);

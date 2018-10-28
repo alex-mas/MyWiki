@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RenderNodeProps } from "slate-react";
 import { EditorPluginOptions, DEFAULT_NODE } from '../../wikiEditor';
-import EditorButton from '../../editorButton';
+import EditorButton from '../../components/editorButton';
 import { Value } from 'slate';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../../utilities/blocks';
 
