@@ -16,6 +16,7 @@ import { UnderlinedPlugin } from './plugins/marks/underlined';
 import { CodePlugin } from './plugins/marks/code';
 import { generateHeaderPlugins } from './plugins/blocks/header';
 import { generateAlignmentPlugins } from './plugins/blocks/align';
+import { generateListPlugins } from './plugins/blocks/lists';
 
 
 
@@ -65,16 +66,6 @@ export const BUTTON_NODE_TYPES: { type: string, icon: string, data: any }[] = [
     {
         type: 'block-quote',
         icon: 'format_quote',
-        data: undefined
-    },
-    {
-        type: 'bulleted-list',
-        icon: 'format_list_bulleted',
-        data: undefined
-    },
-    {
-        type: 'numbered-list',
-        icon: 'format_list_numbered',
         data: undefined
     },
     {
@@ -186,7 +177,8 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     UnderlinedPlugin(this.getPluginContext()),
                     CodePlugin(this.getPluginContext()),
                     ...generateHeaderPlugins(this.getPluginContext()),
-                    ...generateAlignmentPlugins(this.getPluginContext())
+                    ...generateAlignmentPlugins(this.getPluginContext()),
+                    ...generateListPlugins(this.getPluginContext())
                 ]
             }
         }
@@ -225,14 +217,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 return <blockquote {...attributes} className='wiki-block-quote'>
                     {children}
                 </blockquote>
-            case 'bulleted-list':
-                return <ul {...attributes} className='wiki-bulleted-list'>
-                    {children}
-                </ul>
-            case 'list-item':
-                return <li {...attributes} className='wiki-list-item'>{children}</li>
-            case 'numbered-list':
-                return <ol {...attributes} className='wiki-numbered-list'>{children}</ol>
             case 'image':
                 console.log('rendering image to slate');
                 return (
