@@ -15,6 +15,7 @@ import { ItalicPlugin } from './plugins/marks/italic';
 import { UnderlinedPlugin } from './plugins/marks/underlined';
 import { CodePlugin } from './plugins/marks/code';
 import { generateHeaderPlugins } from './plugins/blocks/header';
+import { generateAlignmentPlugins } from './plugins/blocks/align';
 
 
 
@@ -75,27 +76,6 @@ export const BUTTON_NODE_TYPES: { type: string, icon: string, data: any }[] = [
         type: 'numbered-list',
         icon: 'format_list_numbered',
         data: undefined
-    },
-    {
-        type: 'align',
-        icon: 'format_align_left',
-        data: {
-            align: 'left'
-        }
-    },
-    {
-        type: 'align',
-        icon: 'format_align_right',
-        data: {
-            align: 'right'
-        }
-    },
-    {
-        type: 'align',
-        icon: 'format_align_center',
-        data: {
-            align: 'center'
-        }
     },
     {
         type: 'image',
@@ -205,7 +185,8 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     ItalicPlugin(this.getPluginContext()),
                     UnderlinedPlugin(this.getPluginContext()),
                     CodePlugin(this.getPluginContext()),
-                    ...generateHeaderPlugins(this.getPluginContext())
+                    ...generateHeaderPlugins(this.getPluginContext()),
+                    ...generateAlignmentPlugins(this.getPluginContext())
                 ]
             }
         }
@@ -252,13 +233,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 return <li {...attributes} className='wiki-list-item'>{children}</li>
             case 'numbered-list':
                 return <ol {...attributes} className='wiki-numbered-list'>{children}</ol>
-            case 'align':
-                return (
-                    //@ts-ignore
-                    <div {...attributes} style={{ textAlign: node.data.get('align') }}>
-                        {children}
-                    </div>
-                );
             case 'image':
                 console.log('rendering image to slate');
                 return (
