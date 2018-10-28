@@ -17,6 +17,7 @@ import { CodePlugin } from './plugins/marks/code';
 import { generateHeaderPlugins } from './plugins/blocks/header';
 import { generateAlignmentPlugins } from './plugins/blocks/align';
 import { generateListPlugins } from './plugins/blocks/lists';
+import { BlockQuotePlugin } from './plugins/blocks/blockQuote';
 
 
 
@@ -63,11 +64,6 @@ export const DEFAULT_NODE = 'paragraph';
 
 
 export const BUTTON_NODE_TYPES: { type: string, icon: string, data: any }[] = [
-    {
-        type: 'block-quote',
-        icon: 'format_quote',
-        data: undefined
-    },
     {
         type: 'image',
         icon: 'insert_photo',
@@ -165,6 +161,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
     constructor(props: any) {
         super(props);
         if (props.content) {
+            const pluginContext = this.getPluginContext();
             this.state = {
                 isModalOpen: false,
                 promptForText: false,
@@ -172,13 +169,14 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 linkDest: undefined,
                 isOutLink: undefined,
                 plugins: [
-                    BoldPlugin(this.getPluginContext()),
-                    ItalicPlugin(this.getPluginContext()),
-                    UnderlinedPlugin(this.getPluginContext()),
-                    CodePlugin(this.getPluginContext()),
-                    ...generateHeaderPlugins(this.getPluginContext()),
-                    ...generateAlignmentPlugins(this.getPluginContext()),
-                    ...generateListPlugins(this.getPluginContext())
+                    BoldPlugin(pluginContext),
+                    ItalicPlugin(pluginContext),
+                    UnderlinedPlugin(pluginContext),
+                    CodePlugin(pluginContext),
+                    ...generateHeaderPlugins(pluginContext),
+                    ...generateAlignmentPlugins(pluginContext),
+                    ...generateListPlugins(pluginContext),
+                    BlockQuotePlugin(pluginContext)
                 ]
             }
         }
@@ -213,10 +211,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                         </WikiLink>
                     );
                 }
-            case 'block-quote':
-                return <blockquote {...attributes} className='wiki-block-quote'>
-                    {children}
-                </blockquote>
             case 'image':
                 console.log('rendering image to slate');
                 return (
