@@ -7,7 +7,7 @@ import { RenderBlock, hasBlockType, onClickBlockButton } from '../../utilities/b
 import { hasInlineType, wrapInline, unwrapInline } from '../../utilities/inlines';
 import Modal from '@axc/react-components/dist/layout/modal';
 import LinkButton from '../../components/linkButton';
-import WikiLink from '../../wikiLink';
+import WikiLink from '../../components/wikiLink';
 
 
 export const LinkPlugin = (options: EditorPluginOptions) => {

@@ -7,11 +7,11 @@ import { RenderBlock, hasBlockType, onClickBlockButton } from '../../utilities/b
 import { hasInlineType, wrapInline, unwrapInline } from '../../utilities/inlines';
 import Modal from '@axc/react-components/dist/layout/modal';
 import LinkButton from '../../components/linkButton';
-import WikiLink from '../../wikiLink';
-//@ts-ignore
-import { ResizableBox, Resizable } from 'react-resizable';
+import WikiLink from '../../components/wikiLink';
+import Resizable from 're-resizable';
 import { remote, Dialog } from 'electron';
 import * as path from 'path';
+import  Image from '../../components/image';
 
 
 
@@ -19,30 +19,10 @@ const dialog: Dialog = remote.dialog;
 
 export const ImagePlugin = (options: EditorPluginOptions) => {
 
-    const renderImage = (props: RenderNodeProps) => {
-        const { children, node, attributes } = props;
+
+    const renderImage = (props: RenderNodeProps) => { 
         return (
-            <div {...attributes}>
-                <ResizableBox
-                    //@ts-ignore
-                    width={Number(node.data.get('width'))}
-                    //@ts-ignore
-                    height={Number(node.data.get('height'))}
-                    lockAspectRatio={true}
-                >
-                    <span style={{ width: '100%', height: '100%' }} >
-                        <img
-                            //@ts-ignore
-                            src={node.data.get('src')}
-                            //@ts-ignore
-                            style={{ width: '100%', height: '100%' }}
-                        //style={{ width: node.data.get('width'), height: node.data.get('height') }}
-                        />
-                    </span>
-
-                </ResizableBox>
-
-            </div>
+            <Image {...props} pluginOptions={options}/>
         );
     }
 
@@ -70,7 +50,7 @@ export const ImagePlugin = (options: EditorPluginOptions) => {
                     .unwrapBlock('bulleted-list')
                     .unwrapBlock('numbered-list')
             } else {
-                if(!isActive){
+                if (!isActive) {
                     dialog.showOpenDialog(remote.getCurrentWindow(), {
                         title: 'choose image source',
                         filters: [{
@@ -93,9 +73,9 @@ export const ImagePlugin = (options: EditorPluginOptions) => {
                                 options.onChange(change);
                             }
                         });
-                }else{
+                } else {
                     const key = value.blocks.find(block => block.type === type).key;
-                    if(key){
+                    if (key) {
                         change.removeNodeByKey(key);
                     }
                 }

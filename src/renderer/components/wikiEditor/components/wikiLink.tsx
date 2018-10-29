@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { MemoryLink } from '@axc/react-components/dist/navigation/memoryRouter';
 import { RenderAttributes } from 'slate-react';
-import {doesArticleExist} from '../../selectors/articles';
+import {doesArticleExist} from '../../../selectors/articles';
 import {connect} from 'react-redux';
-import {SelectedWiki} from '../../store/reducers/selectedWiki';
-import { AppState } from '../../store/store';
+import {SelectedWiki} from '../../../store/reducers/selectedWiki';
+import { AppState } from '../../../store/store';
 
 
 

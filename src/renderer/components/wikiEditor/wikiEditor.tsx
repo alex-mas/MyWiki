@@ -3,7 +3,7 @@ import { Editor, RenderNodeProps, RenderMarkProps } from 'slate-react';
 import { Value, Change, Data, Schema, Block } from 'slate';
 import { connect } from 'react-redux';
 import * as fs from 'fs';
-import WikiLink from './wikiLink';
+import WikiLink from './components/wikiLink';
 import Modal from '@axc/react-components/dist/layout/modal';
 import EditorButton from './components/editorButton';
 import { remote, Dialog } from 'electron';
