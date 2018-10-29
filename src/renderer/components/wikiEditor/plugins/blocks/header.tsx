@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { RenderNodeProps } from "slate-react";
+import { RenderNodeProps, Editor } from "slate-react";
 import { EditorPluginOptions } from '../../wikiEditor';
 import EditorButton from '../../components/editorButton';
-import { Value } from 'slate';
+import { Value, BlockProperties } from 'slate';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../../utilities/blocks';
 
 
@@ -40,6 +40,22 @@ export const generateHeaderPlugins = (options: EditorPluginOptions) => {
                         type={type}
                     />
                 );
+            },
+            onKeyUp: (event: React.KeyboardEvent<any>, editor: Editor, next: Function)=>{
+                if(event.key === 'Enter'){
+                    debugger;
+                    const value = options.getContent();
+                    const { document } = value;
+                    if(!!value.blocks.some(block=>block.type === type)){
+                        event.preventDefault();
+                        const change = value.change();
+                        change.moveAnchorToEndOfBlock();
+                        change.insertBlock({
+                            type: 'paragraph'
+                        });
+                        options.onChange(change);
+                    }
+                }
             }
         });
     }
