@@ -13,7 +13,7 @@ export const RenderBlock = (type: string, fn: (props: RenderNodeProps) => React.
 
 
 export const hasBlockType = (content: Value, type: string) => {
-    return content.blocks.some(block => block.type === type)
+    return content.blocks.some(block => block.type === type);
 }
 
 export const onClickBlockButton = (getContent: () => Value, onChange: Function) => {

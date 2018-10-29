@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Editor, RenderNodeProps, RenderMarkProps } from 'slate-react';
-import { Value, Change, Data, Schema } from 'slate';
+import { Value, Change, Data, Schema, Block } from 'slate';
 import { connect } from 'react-redux';
 import * as fs from 'fs';
 import WikiLink from './wikiLink';
@@ -23,6 +23,7 @@ import generateAlignmentPlugins from './plugins/blocks/align';
 import generateListPlugins from './plugins/blocks/lists';
 import BlockQuotePlugin from './plugins/blocks/blockQuote';
 import LinkPlugin from './plugins/blocks/link';
+import { ImagePlugin } from './plugins/blocks/image';
 
 
 
@@ -68,15 +69,6 @@ export const DEFAULT_NODE = 'paragraph';
 
 
 export const BUTTON_NODE_TYPES: { type: string, icon: string, data: any }[] = [
-    {
-        type: 'image',
-        icon: 'insert_photo',
-        data: {
-            width: '150',
-            height: '150',
-            src: '../../../../../../../../Media/public domain images/knight-armor-helmet-weapons-161936.jpeg'
-        }
-    }
 ]
 
 
@@ -85,6 +77,7 @@ export const BUTTON_NODE_TYPES: { type: string, icon: string, data: any }[] = [
 export const BUTTON_INLINE_TYPES: any[] = [
 
 ];
+
 
 
 const schema: Schema = {
@@ -97,7 +90,22 @@ const schema: Schema = {
             const style = { textAlign }
             return <p style={style} {...attributes}>{children}</p>
         }
-    }
+    },
+    //@ts-ignore
+    normalize: (editor: any, { code, node, child }) => {
+        switch (code) {
+          case 'last_child_type_invalid': {
+            const paragraph = Block.create('paragraph')
+            return editor.insertNodeByKey(node.key, node.nodes.size, paragraph)
+          }
+        }
+      },
+
+    blocks: {
+      image: {
+        isVoid: true,
+      },
+    },
 }
 
 
@@ -150,7 +158,8 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     ...generateAlignmentPlugins(pluginContext),
                     ...generateListPlugins(pluginContext),
                     BlockQuotePlugin(pluginContext),
-                    LinkPlugin(pluginContext)
+                    LinkPlugin(pluginContext),
+                    ImagePlugin(pluginContext)
                 ]
             }
         }
@@ -168,155 +177,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
     isReadOnly = () => {
         return this.props.readOnly;
     }
-    renderNode = (props: RenderNodeProps) => {
-        const { attributes, children, node } = props;
-        //@ts-ignore
-        switch (node.type) {
-            case 'image':
-                console.log('rendering image to slate');
-                return (
-                    <div {...attributes}>
-                        <ResizableBox
-                            //@ts-ignore
-                            width={Number(node.data.get('width'))}
-                            //@ts-ignore
-                            height={Number(node.data.get('height'))}
-                            lockAspectRatio={true}
-                        >
-                            <span style={{ width: '100%', height: '100%' }} >
-                                <img
-                                    //@ts-ignore
-                                    src={node.data.get('src')}
-                                    //@ts-ignore
-                                    style={{ width: '100%', height: '100%' }}
-                                //style={{ width: node.data.get('width'), height: node.data.get('height') }}
-                                />
-                            </span>
-
-                        </ResizableBox>
-
-                    </div>
-                );
-        }
-    }
-    hasInlineType = (type: string) => {
-        return this.props.content.inlines.some(inline => inline.type === type);
-    }
-    hasMarkType = (type: string) => {
-        return this.props.content.activeMarks.some(mark => mark.type === type);
-    }
-
-    hasBlockType = (type: string) => {
-        return this.props.content.blocks.some(block => block.type === type)
-    }
-
-    onClickBlock = (event: React.MouseEvent<HTMLSpanElement>, type: string, data: any) => {
-        event.preventDefault()
-        const value = this.props.content;
-        const change = value.change();
-        const { document } = value;
-
-
-        const isType = value.blocks.some(block => {
-            //@ts-ignore
-            return !!document.getClosest(block.key, parent => parent.type == type)
-        });
-        const isList = this.hasBlockType('list-item');
-
-        // Handle everything but list buttons.
-        if (type != 'bulleted-list' && type != 'numbered-list') {
-            const isActive = this.hasBlockType(type)
-
-            if (isList) {
-                change
-                    .setBlocks(isActive ? DEFAULT_NODE : type)
-                    .unwrapBlock('bulleted-list')
-                    .unwrapBlock('numbered-list')
-            } else {
-                if (type === 'image') {
-                    dialog.showOpenDialog(remote.getCurrentWindow(), {
-                        title: 'choose image source',
-                        filters: [{
-                            name: 'images',
-                            extensions: ['jpg', 'jpeg', 'gif', 'png', 'apng', 'svg', 'bmp', '.webp']
-                        }],
-                        properties: ['openFile']
-                    },
-                        (filePaths: string[]) => {
-                            if (filePaths.length === 1) {
-                                const imagePath = path.relative(__dirname, filePaths[0]);
-                                console.log('Inserting image: ', imagePath, change);
-                                change.insertBlock({
-                                    type,
-                                    data: {
-                                        ...data,
-                                        src: imagePath
-                                    }
-                                });
-                                this.props.onChange(change);
-                            }
-                        });
-
-                } else {
-                    change.setBlocks(isActive ? DEFAULT_NODE : {
-                        type,
-                        data
-                    });
-                }
-            }
-        } else {
-            // Handle the extra wrapping required for list buttons.
-            if (isList && isType) {
-                change
-                    .setBlocks(DEFAULT_NODE)
-                    .unwrapBlock('bulleted-list')
-                    .unwrapBlock('numbered-list')
-            } else if (isList) {
-                change
-                    .unwrapBlock(
-                        type == 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
-                    )
-                    .wrapBlock(type)
-            } else {
-                change.setBlocks('list-item').wrapBlock(type);
-            }
-        }
-
-        this.props.onChange(change);
-    }
-    nodeButton = (type: string, icon: string, data: any) => {
-        let isActive = this.hasBlockType(type);
-
-        //@ts-ignore
-        if (['numbered-list', 'bulleted-list'].includes(type)) {
-            const value = this.props.content;
-            const block = value.blocks.first();
-            if (block) {
-                const parent = value.document.getParent(block.key);
-                //@ts-ignore
-                isActive = this.hasBlockType('list-item') && parent && parent.type === type;
-            }
-        }
-        if (type === 'align') {
-            const value = this.props.content;
-            const block = value.blocks.first();
-            if (block) {
-                const parent = value.document.getParent(block.key);
-                //@ts-ignore
-                isActive = this.hasBlockType('align') || (parent && parent.type === type && parent.data.get('align') === data.align);
-            }
-        }
-
-        return (
-            <EditorButton
-                active={isActive}
-                onClick={this.onClickBlock}
-                type={type}
-                icon={icon}
-                data={data}
-            />
-        )
-    }
     getMergedPlugins = () => {
         return [...this.state.plugins, ...this.props.plugins];
     }
@@ -328,7 +188,6 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     readOnly={this.props.readOnly}
                     value={this.props.content}
                     onChange={this.props.onChange}
-                    renderNode={this.renderNode}
                     className='wiki-editor'
                 />
             )
@@ -343,16 +202,12 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                                 return null;
                             }
                         })}
-                        {BUTTON_NODE_TYPES.map((node) => {
-                            return this.nodeButton(node.type, node.icon, node.data);
-                        })}
                     </div>
                     <Editor
                         plugins={this.state.plugins}
                         readOnly={this.props.readOnly}
                         value={this.props.content}
                         onChange={this.props.onChange}
-                        renderNode={this.renderNode}
                         className='wiki-editor'
                         schema={schema}
                     />
