@@ -49,6 +49,7 @@ export class Image extends React.Component<ImageProps, { width: number, height: 
                         //@ts-ignore
                         height: Number(node.data.get('height'))
                     }}
+                    maxWidth={window.innerWidth*0.7}
                     onResizeStop={this.onResizeImage}
                     enable={{
                         top: false,
