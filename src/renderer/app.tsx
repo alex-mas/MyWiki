@@ -4,7 +4,7 @@ import * as fs from 'fs';
 //@ts-ignore
 require('./styles/index.scss');
 //@ts-ignore
-require('@axc/react-components/dist/styles/axc-styles.css');
+require('@axc/react-components/styles/axc-styles.css');
 import { Provider } from 'react-redux';
 import configureStore from './store/store';
 import AppRouter from './router/router';

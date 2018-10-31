@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MemoryLink } from '@axc/react-components/dist/navigation/memoryRouter';
+import { MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import { RenderAttributes } from 'slate-react';
 import {doesArticleExist} from '../../../selectors/articles';
 import {connect} from 'react-redux';

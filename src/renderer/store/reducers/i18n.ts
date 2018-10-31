@@ -4,7 +4,7 @@ import defaultLocales from '../../../static/locales.json';
 
 export type I18N = ISO639Locales;
 
-const defaultState: I18N = defaultLocales;
+const defaultState: I18N = defaultLocales || {};
 
 export const I18NReducer: Reducer<I18N> = (state: I18N = defaultState, action: AnyAction) =>{
     switch(action.type){

@@ -3,7 +3,7 @@ import { EditorPluginOptions } from "../wikiEditor";
 import EditorButton from './editorButton';
 import { Value } from 'slate';
 import { hasInlineType, wrapInline,unwrapInline } from '../utilities/inlines';
-import Modal from '@axc/react-components/dist/layout/modal';
+import Modal from '@axc/react-components/layout/modal';
 import { hasBlockType } from '../utilities/blocks';
 
 

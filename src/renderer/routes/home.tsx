@@ -10,6 +10,7 @@ import MyEditor from '../components/wikiEditor/wikiEditor';
 import AppHeader from '../components/appHeader';
 import CreateWikiForm from '../components/createWikiForm';
 import { AppData } from '../store/reducers/appData';
+import { PromptSystem } from '@axc/react-components/interactive/prompt';
 
 
 export interface HomePageProps extends MemoryRouteProps {
@@ -43,20 +44,22 @@ export class HomePage extends React.Component<HomePageProps, HomePageState>{
                 <AppHeader />
                 <div className='body'>
                     <img className='wiki-background' src={this.props.appData.backgroundImage} alt="" />
-                    <ul className='wiki-list'>
-                        {this.props.wikis.map((wiki) => {
-                            return <Wiki key={wiki.id} wiki={wiki} />
-                        })}
-                        <div key='wiki-list__actions'className='wiki-list__actions'>
-                            <button
-                             
-                                className='wiki-button--primary'
-                                onClick={this.toggleWikiForm}
-                            >
-                                <i className='material-icons'>add</i>
-                            </button>
-                        </div>
-                    </ul>
+                    <PromptSystem>
+                        <ul className='wiki-list'>
+                            {this.props.wikis.map((wiki) => {
+                                return <Wiki key={wiki.id} wiki={wiki} />
+                            })}
+                            <div key='wiki-list__actions' className='wiki-list__actions'>
+                                <button
+
+                                    className='wiki-button--primary'
+                                    onClick={this.toggleWikiForm}
+                                >
+                                    <i className='material-icons'>add</i>
+                                </button>
+                            </div>
+                        </ul>
+                    </PromptSystem>
                     <Modal
                         isOpen={this.state.shouldRenderWikiForm}
                         onClose={this.toggleWikiForm}

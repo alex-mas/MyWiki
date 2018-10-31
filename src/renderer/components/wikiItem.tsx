@@ -5,6 +5,7 @@ import { WikiMetaData } from '../store/reducers/wikis';
 import { selectWiki, SelectWikiActionCreator, removeWiki, loadWiki, LoadWikiActionCreator } from '../actions/wikis';
 import { MemoryHistory, withHistoryContext } from '@axc/react-components/navigation/memoryRouter';
 import { ActionCreator } from 'redux';
+import {withPrompt} from '@axc/react-components/interactive/prompt';
 
 
 export interface WikiItemOwnProps {
@@ -18,8 +19,11 @@ export interface WikiItemDispatchProps {
     loadWiki: LoadWikiActionCreator
 }
 
+export interface WikiItemPromptProps {
+    prompt: (component: string | React.StatelessComponent<any>)=>Promise<string | undefined>
+}
 
-export type WikiItemProps = WikiItemOwnProps & WikiItemDispatchProps;
+export type WikiItemProps = WikiItemOwnProps & WikiItemDispatchProps & WikiItemPromptProps;
 
 
 class WikiItem extends React.Component<WikiItemProps, any>{
@@ -34,7 +38,11 @@ class WikiItem extends React.Component<WikiItemProps, any>{
 
     }
     removeWiki = () => {
-        this.props.removeWiki(this.props.wiki);
+        this.props.prompt('Do you really wish to remove this wiki?').then((response)=>{
+            if(response){
+                this.props.removeWiki(this.props.wiki);
+            }
+        });
     }
     render() {
         return (
@@ -63,9 +71,9 @@ class WikiItem extends React.Component<WikiItemProps, any>{
 }
 
 
-
-export default withHistoryContext(connect<{}, WikiItemDispatchProps, WikiItemOwnProps, any>(undefined, {
+//@ts-ignore
+export default withPrompt<any>(withHistoryContext(connect<{}, WikiItemDispatchProps, WikiItemOwnProps, any>(undefined, {
     selectWiki,
     removeWiki,
     loadWiki
-})(WikiItem));
+})(WikiItem)));
