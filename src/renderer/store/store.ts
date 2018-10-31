@@ -4,17 +4,19 @@ import { ThunkAction } from "redux-thunk";
 import thunk from 'redux-thunk';
 import errorHandler from './middleware/errorHandler';
 import wikis, { WikiMetaData } from './reducers/wikis';
-import userData, { UserData } from './reducers/userData';
+import appData, { AppData } from './reducers/appData';
 import selectedWiki, { SelectedWiki } from './reducers/selectedWiki';
 import plugins, { PluginState } from './reducers/plugins';
+import i18n, { I18N } from './reducers/i18n';
 
 export type ReduxAction = AnyAction | ThunkAction<any,AppState,any,any>;
 
 export interface AppState{
     wikis: WikiMetaData[],
-    userData: UserData,
+    appData: AppData,
     selectedWiki: SelectedWiki,
-    plugins: PluginState
+    plugins: PluginState,
+    i18n: I18N
 }
 
 //@ts-ignore
@@ -24,9 +26,10 @@ export default () => {
     const store: Store<AppState, AnyAction> = createStore(
         combineReducers<AppState, AnyAction>({
             wikis,
-            userData,
+            appData,
             selectedWiki,
-            plugins
+            plugins,
+            i18n
         }),
         composeEnhancers(applyMiddleware(thunk, errorHandler))
     );

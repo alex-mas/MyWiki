@@ -89,3 +89,20 @@ $font-size-sm:1.2rem;
 $font-size-s: 1rem;
 $font-size-xs: 0.8rem;
 
+
+
+//colors
+
+$white: white;
+
+$white-faded: rgba(255,255,255,0.9);
+
+
+
+$button-contained-color: lighten(black, 10%);
+
+$text-on-contained: $white;
+
+$button-flat-color: transparent;
+
+$text-on-flat: grey;

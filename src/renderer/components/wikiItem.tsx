@@ -28,9 +28,9 @@ class WikiItem extends React.Component<WikiItemProps, any>{
     }
     onOpen = () => {
         //@ts-ignore
-        this.props.loadWiki(this.props.wiki.id).then(()=>{
+        this.props.loadWiki(this.props.wiki.id).then(() => {
             this.props.history.pushState('/wiki/article/home');
-        }).catch((e: NodeJS.ErrnoException)=>console.warn('Error while loading wiki: ',e));
+        }).catch((e: NodeJS.ErrnoException) => console.warn('Error while loading wiki: ', e));
 
     }
     removeWiki = () => {
@@ -38,11 +38,26 @@ class WikiItem extends React.Component<WikiItemProps, any>{
     }
     render() {
         return (
-            <div className='wiki-item'>
-                {this.props.wiki.name}
-                <button className='page__action--secondary' onClick={this.onOpen}>Open</button>
-                <button className='page__action--flat' onClick={this.removeWiki}>Remove</button>
-            </div>
+            <li className='wiki-item'>
+                <div className='wiki-item__text'>
+                    <h3 className='wiki-item__title'>{this.props.wiki.name}</h3>
+                    <div className='wiki-item__description'>description</div>
+                </div>
+                <div className='wiki-item__actions'>
+                    <button
+                        className='wiki-item__action text-action--contained'
+                        onClick={this.onOpen}
+                    >
+                        Open
+                    </button>
+                    <button
+                        className='wiki-item__action text-action--flat'
+                        onClick={this.removeWiki}
+                    >
+                        Remove
+                    </button>
+                </div>
+            </li>
         );
     }
 }

@@ -1,0 +1,23 @@
+
+
+
+.wiki-button--primary{
+    background: $button-contained-color;
+    color: $text-on-contained;
+    border: none;
+    box-shadow: $elevation-2p;
+    i{
+        font-size: $font-size-m;
+    }
+    width: 5rem;
+    height: $size-ml;
+    &:hover{
+        background-color: lighten($button-contained-color, 10%);
+        box-shadow: $elevation-3p;
+    }
+    &:active{
+        background-color: lighten($button-contained-color, 20%);
+        box-shadow: $elevation-4p;
+        border-radius: 5%;
+    }
+}

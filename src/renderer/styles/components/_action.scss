@@ -1,0 +1,34 @@
+
+
+
+.text-action--contained{
+    background-color: $button-contained-color;
+    color: $text-on-contained;
+    border:none;
+    box-shadow:$elevation-2p;
+    &:hover{
+        background-color: lighten($button-contained-color, 10%);
+        box-shadow: $elevation-3p;
+    }
+    &:active{
+        background-color: lighten($button-contained-color, 20%);
+        box-shadow: $elevation-4p;
+        border-radius: 5%;
+    }
+
+}
+
+
+.text-action--flat{
+    background-color: $button-flat-color;
+    color: $text-on-flat;
+    border:none;
+    &:hover{
+        background-color: darken($button-flat-color,10%);
+    }
+    &:hover{
+        background-color: darken($button-flat-color,20%);
+        box-shadow: $elevation-2p;
+        border-radius: 5%;
+    }
+}
