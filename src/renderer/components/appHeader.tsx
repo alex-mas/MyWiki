@@ -2,7 +2,7 @@ import * as React from 'react';
 import Header from './header';
 
 import CreateWikiForm from './createWikiForm';
-import { withHistoryContext, MemoryHistory, MemoryLink} from '@axc/react-components/dist/navigation/memoryRouter';
+import { withHistoryContext, MemoryHistory, MemoryLink} from '@axc/react-components/navigation/memoryRouter';
 import HomeButton from './homeButton';
 
 

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Header from './header';
-import Modal from '@axc/react-components/dist/layout/modal';
+import Modal from '@axc/react-components/layout/modal';
 import CreateWikiForm from './createWikiForm';
-import { withHistoryContext, MemoryHistory, MemoryLink } from '@axc/react-components/dist/navigation/memoryRouter';
+import { withHistoryContext, MemoryHistory, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import HomeButton from './homeButton';
 import WikiSearchBar from './wikiSearchBar';
 

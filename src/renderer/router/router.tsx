@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Router, { MemoryRoute, withHistoryContext, MemoryRouteProps } from '@axc/react-components/dist/navigation/memoryRouter';
+import Router, { MemoryRoute, withHistoryContext, MemoryRouteProps } from '@axc/react-components/navigation/memoryRouter';
 
 import HomePage from '../routes/home';
 import WikiArticlePage from '../routes/wikiArticle';

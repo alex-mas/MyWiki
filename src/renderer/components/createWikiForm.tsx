@@ -7,7 +7,7 @@ import * as util from 'util';
 import * as path from 'path';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
 import { createWiki, CreateWikiActionCreator } from '../actions/wikis';
-import { MemoryHistory, withHistoryContext } from '@axc/react-components/dist/navigation/memoryRouter';
+import { MemoryHistory, withHistoryContext } from '@axc/react-components/navigation/memoryRouter';
 import { encode } from 'punycode';
 import { ImageInput } from './imageInput';
 

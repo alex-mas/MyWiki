@@ -1,5 +1,5 @@
 import { Reducer, AnyAction } from "redux";
-import I18String, {ISO639Locale} from '@axc/react-components/dist/display/i18string';
+import I18String, {ISO639Locale} from '@axc/react-components/display/i18string';
 
 export interface AppData{
     backgroundImage: string,
@@ -8,7 +8,7 @@ export interface AppData{
 
 
 const defaultState: AppData = {
-    backgroundImage: '../../../resources/images/landscape.jpg',
+    backgroundImage: 'resources/images/landscape.jpg',
     lang: ISO639Locale.en
 };
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MemoryLink } from '@axc/react-components/dist/navigation/memoryRouter';
+import { MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 
 export class HomeButton extends React.Component<any, any>{
     render() {
