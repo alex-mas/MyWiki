@@ -41,7 +41,7 @@ export class HomePage extends React.Component<HomePageProps, HomePageState>{
         return (
             <div className='wiki-route'>
                 <AppHeader />
-                <div className='body--noscroll'>
+                <div className='body'>
                     <img className='wiki-background' src={this.props.appData.background} alt="" />
                         <ul className='wiki-list'>
                             {this.props.wikis.map((wiki) => {

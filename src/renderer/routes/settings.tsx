@@ -64,7 +64,8 @@ export class SettingsPage extends React.Component<SettingsProps, SettingsState>{
             <div className='wiki-route'>
                 <AppHeader />
                 <div className='body'>
-                    <form onSubmit={this.onSubmit}>
+                    <img className='wiki-background' src={this.state.background} alt="" />
+                    <form className='settings-page' onSubmit={this.onSubmit}>
                         <select
                             value={this.state.locale}
                             onChange={this.onLocaleChange}
@@ -105,7 +106,8 @@ export class SettingsPage extends React.Component<SettingsProps, SettingsState>{
 
 export default withHistoryContext(connect((state: AppState,props: OwnProps)=>{
     return{
-        data: state.appData
+        data: state.appData,
+        
     }
 }, {
     setAppData,
