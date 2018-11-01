@@ -5,7 +5,8 @@ export interface WikiMetaData{
     path: string,
     name: string,
     id: string,
-    background: string
+    background: string,
+    description: string
 }
 
 export type WikisMetadataState = WikiMetaData[];

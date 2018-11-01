@@ -49,7 +49,7 @@ class WikiItem extends React.Component<WikiItemProps, any>{
             <li className='wiki-item'>
                 <div className='wiki-item__text'>
                     <h3 className='wiki-item__title'>{this.props.wiki.name}</h3>
-                    <div className='wiki-item__description'>description</div>
+                    <div className='wiki-item__description'>{this.props.wiki.description}</div>
                 </div>
                 <div className='wiki-item__actions'>
                     <button

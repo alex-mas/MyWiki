@@ -11,6 +11,7 @@
 .wiki-article__header__section{
     display: flex;
     justify-content: space-between;
+    margin: calc(#{$size-xs} / 2) 0;
 }
 
 .wiki-article__actions{

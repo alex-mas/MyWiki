@@ -7,6 +7,8 @@
     padding: $size-l $size-m;
     width: 25vw;
     min-width: 10rem;
+    height: fit-content;
+    box-shadow: $elevation-8p;
 }
 
 
@@ -14,7 +16,9 @@
     list-style: none;
     display:flex;
     justify-content: space-between;
-    padding: $font-size-xs 0;
+    padding: calc(#{$font-size-xs} / 1.5) 0;
+    margin: calc(#{$font-size-xs}/ 1.5) 0;
+    border-bottom: 0.5px solid grey;
 }
 
 .wiki-item__text{
@@ -36,11 +40,16 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+
+    button{
+        height: $size-sm;
+    }
 }
 
 
 
 .wiki-list__actions{
+    padding-top: $size-sm;
     display: flex;
     justify-content: space-around
 }

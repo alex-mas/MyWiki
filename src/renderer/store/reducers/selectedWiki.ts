@@ -15,7 +15,8 @@ const defaultState: SelectedWiki = {
     name: '',
     id: '',
     articles: [],
-    background:  '../../../resources/images/radiant.png'
+    background:  '../../../resources/images/radiant.png',
+    description: ''
 };
 
 export const SelectedWikiReducer: Reducer<SelectedWiki> = (state: SelectedWiki = defaultState, action: AnyAction) => {

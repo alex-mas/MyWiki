@@ -4,12 +4,9 @@ const fs = require('fs');
 const mainEntryPoint = './src/main/main.ts';
 const rendererEntryPoint = './src/renderer/app.tsx';
 const outputFolder = './dist/src';
-const staticFolder = './dist/src/static';
 
-if (!fs.existsSync(staticFolder)){
-  fs.mkdirSync(staticFolder);
-}
-fs.copyFileSync('./src/static/index.html', staticFolder+'/index.html');
+
+fs.copyFileSync('./src/static/index.html', outputFolder+'/index.html');
 
 const rendererConfig = {
   //entry point of application

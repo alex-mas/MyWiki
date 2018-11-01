@@ -8,8 +8,7 @@
     "files": [
       "dist/src/**/*",
       "package.json",
-      "resources/*",
-      "resources/icons/icon.ico"
+      "resources/*"
     ],
     "directories": {
       "buildResources": "resources"

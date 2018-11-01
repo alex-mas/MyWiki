@@ -14,21 +14,26 @@ type WikiAction = Action & { wiki: WikiMetaData };
 
 export type CreateWikiAction = WikiAction;
 
-export type CreateWikiActionCreator = (name: string, background: string) => ThunkAction<any, AppState, void, CreateWikiAction | ErrorAction>;
+export type UserWikiData = Pick<WikiMetaData, Exclude<keyof WikiMetaData, 'id' | 'path'>>;
 
-export const createWiki: CreateWikiActionCreator = (name: string, background: string) => {
+export type CreateWikiActionCreator = (wiki: UserWikiData) => ThunkAction<any, AppState, void, CreateWikiAction | ErrorAction>;
+
+
+export const createWiki: CreateWikiActionCreator = (wiki: UserWikiData) => {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const wikiId = uuid();
-            const wikiPath = `./wikis/${name}(${wikiId})`;
+            const wikiPath = `./wikis/${wiki.name}(${wikiId})`;
             if (!fs.existsSync('./wikis')) {
                 fs.mkdirSync('./wikis');
             }
+     
             const wikiData: WikiMetaData = {
                 path: wikiPath,
-                name,
+                name: wiki.name,
                 id: wikiId,
-                background
+                background: wiki.background,
+                description: wiki.description
             }
             fs.mkdirSync(wikiPath);
             fs.mkdirSync(path.join(wikiPath, 'articles'));

@@ -52,9 +52,13 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
         return (
             <div className='wiki-route'>
                 <img className='wiki-background' src={this.props.selectedWiki.background} alt="" />
-                <WikiHeader/>
+                <WikiHeader />
                 <div className='body--article'>
-                    <h1 className='wiki-article__title'>{this.props.routeParams.articleName}</h1>
+                    <div className='wiki-article__header'>
+                        <div className='wiki-article__header__section'>
+                            <h1 className='wiki-article__title'>Search: {this.props.routeParams.articleName}</h1>
+                        </div>
+                    </div>
                     <div className='search-results'>
                         {this.props.searchResults.map((result) => {
                             return (

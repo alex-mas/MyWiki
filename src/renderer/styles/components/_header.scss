@@ -5,15 +5,15 @@
     top: 0;
     display: flex;
     justify-content: space-between;
-    height: 6vh;
+    height: 5rem;
     background: white;
     z-index: 2;
-    box-shadow: $elevation-8p;
-    
+    padding: 0 1rem;
+    box-shadow: $elevation-12p;
 }
 
 .wiki-header__actions{
-    padding-top: 0.6rem;
+    padding-top: calc(2.5rem - 17px);
 }
 
 .wiki-header__action{
@@ -35,7 +35,7 @@
 
 
 .wiki-header__search-bar{
-    padding-top: 1vh;
+    padding-top: calc(2.5rem - 16px);
     font-size: $font-size-s;
     input{
         line-height: 2;
@@ -49,5 +49,25 @@
         width: 15rem;
         line-height: 1.5;
         border-bottom: 0.5px solid grey;
+    }
+}
+
+
+.wiki-header__home-btn{
+    height: $size-xl;
+    width: $size-xl;
+    margin: 1rem;
+}
+
+.wiki-header__home-btn__image {
+    height: 100%;
+    width: 100%;
+    &:hover{
+        border-radius: 50%;
+        box-shadow: $elevation-2p;
+    }
+    &:active{
+        border-radius: 50%;
+        box-shadow: $elevation-4p;
     }
 }

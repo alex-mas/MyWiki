@@ -12,3 +12,11 @@
 .editor-btn--disabled{
 
 }
+
+.editor__actions{
+    position: sticky;
+    top:6rem;
+    width: 100%;
+    background-color: rgba(255,255,255,0.95);
+    z-index: 2;
+}

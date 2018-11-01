@@ -148,7 +148,6 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
                             <div className='wiki-article__header__section'>
                                 <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
                                 <div className='wiki-article__actions'>
-                                    <MemoryLink to={`/wiki/create/`}><i className='material-icons'>add</i></MemoryLink>
                                     {article !== 'home' ? <button onClick={this.deleteArticle}><i className='material-icons'>delete_forever</i></button> : null}
                                     <MemoryLink to={`/wiki/edit/${article}`}><i className='material-icons'>create</i></MemoryLink>
                                 </div>

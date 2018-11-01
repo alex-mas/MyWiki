@@ -6,13 +6,9 @@ export class HomeButton extends React.Component<any, any>{
         return (
             <MemoryLink
                 to='/'
-                className='wiki-header__action'
+                className='wiki-header__home-btn'
             >
-                <i
-                    className='material-icons wiki-header__icon'
-                >
-                    home
-                </i>
+                <img className='wiki-header__home-btn__image' src='resources/images/appIcon.png'/>
             </MemoryLink>
         )
 

@@ -2,9 +2,10 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as fs from 'fs';
 //@ts-ignore
-require('./styles/index.scss');
-//@ts-ignore
 require('@axc/react-components/styles/axc-styles.css');
+//@ts-ignore
+require('./styles/index.scss');
+
 import { Provider } from 'react-redux';
 import configureStore from './store/store';
 import AppRouter from './router/router';
@@ -42,7 +43,11 @@ window.onload = () => {
             files.forEach((file) => {
                 try {
                     const data = fs.readFileSync(`./wikis/${file}/myWiki.config.json`, 'utf8');
-                    wikisFs.push(JSON.parse(data));
+                    const wiki: WikiMetaData = JSON.parse(data);
+                    if(!wiki.description){
+                        wiki.description = '';
+                    }
+                    wikisFs.push(wiki);
                 } catch (e) {
                     console.warn('Error while parsing wiki meta data', e);
                 }
