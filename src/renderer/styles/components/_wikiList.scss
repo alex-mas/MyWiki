@@ -9,6 +9,8 @@
     min-width: 10rem;
     height: fit-content;
     box-shadow: $elevation-8p;
+    animation-name: slideUp;
+    animation-duration: 1s;
 }
 
 
@@ -52,4 +54,18 @@
     padding-top: $size-sm;
     display: flex;
     justify-content: space-around
+}
+
+
+@keyframes slideUp{
+ 0%{
+    tranparency: 0;
+    margin: 20vh 0;
+    margin-bottom: 0vh;
+    margin-top: 100vh;
+ }
+ 100%{
+    transparency: 1;
+    margin: 20vh 0;
+ }
 }

@@ -10,8 +10,6 @@ import MyEditor from '../components/wikiEditor/wikiEditor';
 import AppHeader from '../components/appHeader';
 import CreateWikiForm from '../components/createWikiForm';
 import { AppData } from '../store/reducers/appData';
-import { PromptSystem } from '@axc/react-components/interactive/prompt';
-
 
 
 export interface HomePageProps extends MemoryRouteProps {
@@ -43,9 +41,8 @@ export class HomePage extends React.Component<HomePageProps, HomePageState>{
         return (
             <div className='wiki-route'>
                 <AppHeader />
-                <div className='body'>
+                <div className='body--noscroll'>
                     <img className='wiki-background' src={this.props.appData.background} alt="" />
-                    <PromptSystem>
                         <ul className='wiki-list'>
                             {this.props.wikis.map((wiki) => {
                                 return <Wiki key={wiki.id} wiki={wiki} />
@@ -59,8 +56,7 @@ export class HomePage extends React.Component<HomePageProps, HomePageState>{
                                     <i className='material-icons'>add</i>
                                 </button>
                             </div>
-                        </ul>
-                    </PromptSystem>
+                        </ul>  
                     <Modal
                         isOpen={this.state.shouldRenderWikiForm}
                         onClose={this.toggleWikiForm}

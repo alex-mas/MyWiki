@@ -21,6 +21,11 @@
     box-shadow: $elevation-12p;
 }
 
+
+.body--noscroll{
+    @extend .body;
+    overflow-y: hidden;
+}
 .body__title{
     text-align: center;
 }

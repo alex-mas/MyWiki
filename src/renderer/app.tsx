@@ -14,6 +14,7 @@ import { WikiMetaData } from './store/reducers/wikis';
 import { fsError } from './actions/errors';
 import { parsePlugins } from './actions/plugins';
 import I18String, { I18nSystem as _I18nSystem, I18nSystemProps } from '@axc/react-components/display/i18string';
+import { PromptSystem } from '@axc/react-components/interactive/prompt';
 
 
 
@@ -24,7 +25,7 @@ export const store = configureStore();
 
 
 const I18nSystem = connect((state: AppState, props) => {
-    console.log('Re-setting props to I18nSystem',state,props);
+    console.log('Re-setting props to I18nSystem', state, props);
     return {
         localeData: {
             locale: state.appData.locale,
@@ -36,9 +37,11 @@ const I18nSystem = connect((state: AppState, props) => {
 
 const App = (
     <Provider store={store}>
-        <I18nSystem>
-            <AppRouter />
-        </I18nSystem>
+        <PromptSystem>
+            <I18nSystem>
+                <AppRouter />
+            </I18nSystem>
+        </PromptSystem>
     </Provider>
 );
 
