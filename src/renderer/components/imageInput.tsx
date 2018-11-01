@@ -6,7 +6,7 @@ const dialog: Dialog = remote.dialog;
 
 export interface ImageInputProps {
     onChange(newValue: string): any,
-    prompt: string,
+    prompt?: string,
     value?: string,
     windowTitle: string
     placeholder?: string,

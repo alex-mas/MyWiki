@@ -6,7 +6,7 @@ import { selectWiki, SelectWikiActionCreator, removeWiki, loadWiki, LoadWikiActi
 import { MemoryHistory, withHistoryContext } from '@axc/react-components/navigation/memoryRouter';
 import { ActionCreator } from 'redux';
 import {withPrompt} from '@axc/react-components/interactive/prompt';
-
+import I18String from '@axc/react-components/display/i18string';
 
 export interface WikiItemOwnProps {
     wiki: WikiMetaData,
@@ -56,13 +56,13 @@ class WikiItem extends React.Component<WikiItemProps, any>{
                         className='wiki-item__action text-action--contained'
                         onClick={this.onOpen}
                     >
-                        Open
+                        <I18String text='open'/>
                     </button>
                     <button
                         className='wiki-item__action text-action--flat'
                         onClick={this.removeWiki}
                     >
-                        Remove
+                        <I18String text='remove' format='capitalizeFirst'/>
                     </button>
                 </div>
             </li>

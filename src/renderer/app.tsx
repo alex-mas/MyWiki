@@ -6,13 +6,14 @@ require('@axc/react-components/styles/axc-styles.css');
 //@ts-ignore
 require('./styles/index.scss');
 
-import { Provider } from 'react-redux';
-import configureStore from './store/store';
+import { Provider, connect } from 'react-redux';
+import configureStore, { AppState } from './store/store';
 import AppRouter from './router/router';
 import { loadWikis } from './actions/wikis';
 import { WikiMetaData } from './store/reducers/wikis';
 import { fsError } from './actions/errors';
 import { parsePlugins } from './actions/plugins';
+import I18String, { I18nSystem as _I18nSystem, I18nSystemProps } from '@axc/react-components/display/i18string';
 
 
 
@@ -21,10 +22,24 @@ const appRoot = document.getElementById('app');
 export const store = configureStore();
 
 
+
+const I18nSystem = connect((state: AppState, props) => {
+    console.log('Re-setting props to I18nSystem',state,props);
+    return {
+        localeData: {
+            locale: state.appData.locale,
+            locales: state.i18n
+        }
+    }
+})(_I18nSystem);
+
+
 const App = (
-        <Provider store={store}>
+    <Provider store={store}>
+        <I18nSystem>
             <AppRouter />
-        </Provider>
+        </I18nSystem>
+    </Provider>
 );
 
 ReactDOM.render(App, appRoot);
@@ -44,7 +59,7 @@ window.onload = () => {
                 try {
                     const data = fs.readFileSync(`./wikis/${file}/myWiki.config.json`, 'utf8');
                     const wiki: WikiMetaData = JSON.parse(data);
-                    if(!wiki.description){
+                    if (!wiki.description) {
                         wiki.description = '';
                     }
                     wikisFs.push(wiki);
@@ -72,3 +87,6 @@ window.onbeforeunload = () => {
 
 //@ts-ignore
 store.dispatch(parsePlugins());
+
+
+

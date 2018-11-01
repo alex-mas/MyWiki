@@ -1,9 +1,13 @@
 {
     "es":{
-
+        "open": "abrir",
+        "remove": "eliminar",
+        "Do you really wish to remove this wiki?": "Estas seguro que quieres eliminar esta wiki?"
     },
-    "cat":{
-
+    "ca":{
+        "open": "obrir",
+        "remove": "eliminar",
+        "Do you really wish to remove this wiki?": "Estas segur que vols eliminar aquesta wiki?"
     },
     "fr":{
 

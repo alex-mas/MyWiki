@@ -15,7 +15,8 @@ import generateAlignmentPlugins from './plugins/blocks/align';
 import generateListPlugins from './plugins/blocks/lists';
 import BlockQuotePlugin from './plugins/blocks/blockQuote';
 import LinkPlugin from './plugins/blocks/link';
-import { ImagePlugin } from './plugins/blocks/image';
+import ImagePlugin from './plugins/blocks/image';
+import TabulationPlugin from './plugins/keyboard/tabulation';
 
 
 
@@ -86,17 +87,17 @@ const schema: Schema = {
     //@ts-ignore
     normalize: (editor: any, { code, node, child }) => {
         switch (code) {
-          case 'last_child_type_invalid': {
-            const paragraph = Block.create('paragraph')
-            return editor.insertNodeByKey(node.key, node.nodes.size, paragraph)
-          }
+            case 'last_child_type_invalid': {
+                const paragraph = Block.create('paragraph')
+                return editor.insertNodeByKey(node.key, node.nodes.size, paragraph)
+            }
         }
-      },
+    },
 
     blocks: {
-      image: {
-        isVoid: true,
-      },
+        image: {
+            isVoid: true,
+        },
     },
 }
 
@@ -151,7 +152,9 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     ...generateListPlugins(pluginContext),
                     BlockQuotePlugin(pluginContext),
                     LinkPlugin(pluginContext),
-                    ImagePlugin(pluginContext)
+                    ImagePlugin(pluginContext),
+                    TabulationPlugin(pluginContext)
+
                 ]
             }
         }

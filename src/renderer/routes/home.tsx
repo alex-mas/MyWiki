@@ -13,6 +13,7 @@ import { AppData } from '../store/reducers/appData';
 import { PromptSystem } from '@axc/react-components/interactive/prompt';
 
 
+
 export interface HomePageProps extends MemoryRouteProps {
     wikis: WikiMetaData[],
     appData: AppData
@@ -43,7 +44,7 @@ export class HomePage extends React.Component<HomePageProps, HomePageState>{
             <div className='wiki-route'>
                 <AppHeader />
                 <div className='body'>
-                    <img className='wiki-background' src={this.props.appData.backgroundImage} alt="" />
+                    <img className='wiki-background' src={this.props.appData.background} alt="" />
                     <PromptSystem>
                         <ul className='wiki-list'>
                             {this.props.wikis.map((wiki) => {
