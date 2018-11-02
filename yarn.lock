@@ -6,7 +6,7 @@
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-4.0.2.tgz#6abbdc22f33cab742053777a26db2e25ca527179"
 
-"@axc/react-components@^0.1.2":
+"@axc/react-components@^0.1.7":
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@axc/react-components/-/react-components-0.1.7.tgz#4fb805fd8a05e0846c399f64ee63f6c067b22dc4"
   dependencies:

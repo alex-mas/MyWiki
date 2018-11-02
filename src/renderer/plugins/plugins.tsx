@@ -2,7 +2,7 @@ import * as React from 'react';
 
 
 export interface PluginAPI {
-
+    
 }
 
 export const PluginContext: React.Context<PluginAPI> = React.createContext({});

@@ -5,18 +5,27 @@ import CreateWikiForm from './createWikiForm';
 import { withHistoryContext, MemoryHistory, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import HomeButton from './homeButton';
 import WikiSearchBar from './wikiSearchBar';
+import WikiMenu from './wikiMenu';
 
 export interface WikiHeaderProps {
 
 }
 
 export interface WikiHeaderState {
-
+    isMenuOpen: boolean
 }
 
-class WikiHeader extends React.Component<WikiHeaderProps, any>{
+class WikiHeader extends React.Component<WikiHeaderProps, WikiHeaderState>{
     constructor(props: WikiHeaderProps) {
         super(props);
+        this.state = {
+            isMenuOpen: false
+        }
+    }
+    onToggleHeaderMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+        this.setState((prevState) => ({
+            isMenuOpen: !prevState.isMenuOpen
+        }));
     }
     render() {
         return (
@@ -32,14 +41,16 @@ class WikiHeader extends React.Component<WikiHeaderProps, any>{
                             add
                         </i>
                     </MemoryLink>
-                    <MemoryLink
+                    <button
+                        type='button'
                         className='wiki-header__action'
-                        to={`/wiki/plugins`}
+                        onClick={this.onToggleHeaderMenu}
                     >
                         <i className='material-icons'>
-                            extension
+                            menu
                         </i>
-                    </MemoryLink>
+                    </button>
+                    <WikiMenu isOpen={this.state.isMenuOpen} />
                 </div>
             </Header>
         )
