@@ -16,6 +16,11 @@ export const AppDataReducer: Reducer<AppData> = (state: AppData = defaultState, 
     switch(action.type){
         case 'SET_APP_DATA':
             return action.data;
+        case 'UPDATE_APP_DATA':
+            return {
+                ...state,
+                ...action.data
+            };
         case 'RESET_APP_DATA':
             return defaultState;
         default:

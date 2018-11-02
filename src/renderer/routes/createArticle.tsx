@@ -15,6 +15,7 @@ import TagForm from '../components/tagForm';
 import { SelectedWiki } from '../store/reducers/selectedWiki';
 import { ImageInput } from '../components/imageInput';
 import WikiHeader from '../components/wikiHeader';
+import  I18String  from '@axc/react-components/display/i18string';
 
 export interface CreateArticlePageDispatchProps {
     createArticle: CreateArticleActionCreator,
@@ -104,7 +105,7 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
                             <h1 className='wiki-article__title'>
-                                Creating: {this.props.routeParams.article ?
+                                <I18String text='creating' format='capitalizeFirst'/>: {this.props.routeParams.article ?
                                     this.state.name
                                     :
                                     <input

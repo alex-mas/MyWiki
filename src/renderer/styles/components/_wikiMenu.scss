@@ -10,6 +10,7 @@
     overflow-y: scroll;
     animation-name: wikiDropDown;
     animation-duration: 1s;
+    animation-timing-function: ease-out;
 }
 
 .wiki-menu__list{
@@ -26,17 +27,31 @@
 
 .wiki-menu__link{
     color: black;
+    display: flex;
     text-decoration: none;
+    justify-content: space-between;
+    &:hover{
+        background: darken($white, 10%);
+    }
+    &:active{
+        color: lighten(black, 15%);
+    }
+}
+
+.wiki-menu__section{
+    padding: $size-xxs calc(#{$size-xxs} / 2);
+    border-bottom: 0.5px solid grey;
 }
 
 
+.wiki-menu__section--last{
+    @extend .wiki-menu__section;
+    border-bottom: none;
+}
 
 @keyframes wikiDropDown{
     0%{
         height: 0vh;
-    }
-    90%{
-        height: 22vh;
     }
     100%{
         height: 20vh;

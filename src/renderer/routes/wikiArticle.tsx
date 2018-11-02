@@ -17,6 +17,7 @@ import { WikiMetaData } from '../store/reducers/wikis';
 import { SelectedWiki } from '../store/reducers/selectedWiki';
 import WikiHeader from '../components/wikiHeader';
 import HomeButton from '../components/homeButton';
+import I18String from '@axc/react-components/display/i18string';
 const { dialog } = require('electron').remote
 
 
@@ -111,7 +112,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
                 <div className='body--article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
-                            <h1 className='wiki-article__title'>Article not found</h1>
+                            <h1 className='wiki-article__title'> <I18String text='article not found' format='capitalizeFirst'/></h1>
                             <div className='wiki-article__actions'>
                                 <MemoryLink to={`/wiki/create/${this.props.routeParams.article}`}><i className="material-icons">add</i></MemoryLink>
                             </div>

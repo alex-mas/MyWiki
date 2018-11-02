@@ -12,6 +12,17 @@ export const setAppData: AppDataActionCreator = (newData:AppData)=>{
     }
 }
 
+
+export type UpdateAppData = Action<string> & { data: Partial<AppData>};
+
+export type UpdateAppDataCreator = ActionCreator<UpdateAppData>
+export const updateAppData: UpdateAppDataCreator = (newData:Partial<AppData>)=>{
+    return{
+        type:'UPDATE_APP_DATA',
+        data: newData
+    }
+}
+
 export const resetAppData: ActionCreator<void> = ()=>{
     return{
         type: 'RESET_APP_DATA'

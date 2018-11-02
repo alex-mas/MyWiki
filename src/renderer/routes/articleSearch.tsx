@@ -13,6 +13,7 @@ import { MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import { getRelevantArticles } from '../selectors/articles';
 import { SelectedWiki } from '../store/reducers/selectedWiki';
 import WikiHeader from '../components/wikiHeader';
+import I18String  from '@axc/react-components/display/i18string';
 
 
 
@@ -43,8 +44,9 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
     renderNotFoundMessage = () => {
         return (
             <div className='search-results'>
-                <h2 className='wiki-article__subtitle'>There are no articles relevant to the search</h2>
-                <MemoryLink to='/wiki/article/home'>Go home</MemoryLink>
+            
+                <h2 className='wiki-article__subtitle'><I18String text='there are no results relevant to the search' format='capitalizeFirst'/></h2>
+                <MemoryLink to='/wiki/article/home'><I18String text='go home' format='capitalizeFirst'/></MemoryLink>
             </div>
         )
     }
@@ -56,7 +58,7 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
                 <div className='body--article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
-                            <h1 className='wiki-article__title'>Search: {this.props.routeParams.articleName}</h1>
+                            <h1 className='wiki-article__title'><I18String text='search' format='capitalizeFirst'/>: {this.props.routeParams.articleName}</h1>
                         </div>
                     </div>
                     <div className='search-results'>
