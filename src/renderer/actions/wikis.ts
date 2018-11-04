@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
-import { error, fsError, ErrorAction, ErrorActionCodes } from "./errors";
+import { errorAction, fsError, ErrorAction, ErrorActionCodes } from "./errors";
 import { deleteFolderRecursively } from '../utilities/fsutils';
 import { Article, ArticleMetaData, getArticleMetaData } from "./article";
 
@@ -99,7 +99,7 @@ export const selectWiki: SelectWikiActionCreator = (id: string) => {
                     wiki
                 }));
             } else {
-                reject(dispatch(error(`Wiki id (${id}) provided doesn't mach with any of the wikis tracked by the app`, ErrorActionCodes.WRONG_PARAMS)));
+                reject(dispatch(errorAction(`Wiki id (${id}) provided doesn't mach with any of the wikis tracked by the app`, ErrorActionCodes.WRONG_PARAMS)));
             }
         })
 

@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
-import { error, fsError, ErrorAction, ErrorActionCodes } from "./errors";
+import { fsError, ErrorAction, ErrorActionCodes } from "./errors";
 import { isPluginLoaded } from "../selectors/plugins";
 import {Action} from 'redux';
 import { isPluginMetaDataValid } from "../validators/plugins";

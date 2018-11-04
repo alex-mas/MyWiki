@@ -22,6 +22,7 @@ export const SelectedWikiReducer: Reducer<WikiMetaData> = (state: WikiMetaData =
                 ...action.wiki
             };
         case 'SAVE_ARTICLE':
+            console.log('Saving article: ',state, action.article);
             return {
                 ...state,
                 articles: state.articles.map((article)=>{

@@ -19,7 +19,7 @@ export const isErrorAction = (obj: AnyAction): obj is ErrorAction=>{
     return obj.type === 'ERROR';
 }
 
-export const error: ErrorActionCreator = (message: string, code: number)=>{
+export const errorAction: ErrorActionCreator = (message: string, code: number)=>{
     return {
         type: 'ERROR',
         code,
@@ -30,13 +30,13 @@ export const error: ErrorActionCreator = (message: string, code: number)=>{
 export type FsErrorActionCreator = (message:string)=> ErrorAction;
 
 export const fsError: FsErrorActionCreator = (message: string)=>{
-    return error(message, ErrorActionCodes.FS);
+    return errorAction(message, ErrorActionCodes.FS);
 }
 
 
 export default {
     isErrorAction,
     fsError,
-    error,
+    errorAction,
     ErrorActionCodes
 }
