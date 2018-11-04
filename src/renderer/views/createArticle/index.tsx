@@ -1,20 +1,19 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as React from 'react';
-import { RouteProps } from '../router/router';
-import { AppState } from '../store/store';
+import { RouteProps } from '../../router/router';
+import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
-import { WikiMetaData } from '../store/reducers/wikis';
-import WikiEditor, { defaultEditorContents } from '../components/wikiEditor/wikiEditor';
+import { WikiMetaData } from '../../store/reducers/wikis';
+import WikiEditor, { defaultEditorContents } from '../../components/wikiEditor/wikiEditor';
 import { MemoryRouteProps } from '@axc/react-components/navigation/memoryRouter';
 import { Change, Value } from 'slate';
-import { CreateArticleActionCreator, createArticle } from '../actions/article';
-import { fsError, FsErrorActionCreator } from '../actions/errors';
-import Header from '../components/header';
-import TagForm from '../components/tagForm';
-import { SelectedWiki } from '../store/reducers/selectedWiki';
-import { ImageInput } from '../components/imageInput';
-import WikiHeader from '../components/wikiHeader';
+import { CreateArticleActionCreator, createArticle } from '../../actions/article';
+import { fsError, FsErrorActionCreator } from '../../actions/errors';
+import Header from '../../components/header';
+import TagForm from '../../components/tagForm';
+import { ImageInput } from '../../components/imageInput';
+import WikiHeader from '../../components/wikiHeader';
 import  I18String  from '@axc/react-components/display/i18string';
 
 export interface CreateArticlePageDispatchProps {
@@ -24,7 +23,7 @@ export interface CreateArticlePageDispatchProps {
 
 
 export interface CreateArticlePageStateProps {
-    selectedWiki: SelectedWiki
+    selectedWiki: WikiMetaData
 }
 
 export interface CreateArticlePageOwnProps extends MemoryRouteProps {
@@ -82,9 +81,11 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
             name: this.state.name,
             content: this.state.editorContent.toJSON(),
             tags: this.state.tags,
-            background: this.state.background
+            background: this.state.background,
+            keywords: []
             //@ts-ignore
         }).then(() => {
+            console.log('created article');
             this.props.history.pushState(`/wiki/article/${this.state.name}`);
         });
     }

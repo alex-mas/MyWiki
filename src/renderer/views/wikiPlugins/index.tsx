@@ -1,8 +1,8 @@
 import * as React from 'react';
-import WikiHeader from '../components/wikiHeader';
+import WikiHeader from '../../components/wikiHeader';
 import {connect} from 'react-redux';
-import { AppState } from '../store/store';
-import { PluginState } from '../store/reducers/plugins';
+import { AppState } from '../../store/store';
+import { PluginState } from '../../store/reducers/plugins';
 
 
 export class WikiPluginsPage extends React.Component<{plugins: PluginState}, any>{

@@ -1,9 +1,9 @@
 const path = require('path');
 const url = require('url');
 const fs = require('fs');
-import * as Electron from 'electron';
-
-const {app, Menu, BrowserWindow} = require('electron');
+const child_process = require('child_process');
+import * as Electron from 'electron'
+const {app, Menu, BrowserWindow, ipcMain, WebContents} = require('electron');
 
 
 
@@ -41,6 +41,7 @@ app.on("ready", () => {
         mainWindow.webContents.openDevTools();
     }
 });
+
 
 app.on("window-all-closed", () => {
     app.quit();

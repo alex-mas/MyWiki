@@ -1,24 +1,25 @@
 import * as React from 'react';
 import * as fs from 'fs';
 import * as path from 'path';
-import { RouteProps } from '../router/router';
-import { AppState } from '../store/store';
+import { RouteProps } from '../../router/router';
+import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
-import WikiEditor, { defaultEditorContents } from '../components/wikiEditor/wikiEditor';
+import WikiEditor, { defaultEditorContents } from '../../components/wikiEditor/wikiEditor';
 import * as ReactMarkdown from 'react-markdown';
 import { Change, Value } from 'slate';
-import { fsError, FsErrorActionCreator } from '../actions/errors';
-import Header from '../components/header';
-import { loadArticle, LoadArticleActionCreator, Article, DeleteArticleActionCreator, deleteArticle } from '../actions/article';
-import WikiSearchBar from '../components/wikiSearchBar';
-import { getArticle } from '../selectors/articles';
-import { WikiMetaData } from '../store/reducers/wikis';
-import { SelectedWiki } from '../store/reducers/selectedWiki';
-import WikiHeader from '../components/wikiHeader';
-import HomeButton from '../components/homeButton';
+import { fsError, FsErrorActionCreator } from '../../actions/errors';
+import Header from '../../components/header';
+import { loadArticle, LoadArticleActionCreator, Article, DeleteArticleActionCreator, deleteArticle, ArticleMetaData } from '../../actions/article';
+import WikiSearchBar from '../../components/wikiSearchBar';
+import { getArticle } from '../../selectors/articles';
+import { WikiMetaData } from '../../store/reducers/wikis';
+import WikiHeader from '../../components/wikiHeader';
+import HomeButton from '../../components/homeButton';
 import I18String from '@axc/react-components/display/i18string';
+import WikiView from '../../components/wikiView';
 const { dialog } = require('electron').remote
+
 
 
 
@@ -32,8 +33,8 @@ export interface WikiArticlePageOwnProps extends MemoryRouteProps {
 }
 
 export interface WikiArticlePageReduxProps {
-    selectedWiki: SelectedWiki,
-    article: Article
+    selectedWiki: WikiMetaData,
+    article: ArticleMetaData
 }
 
 
@@ -87,7 +88,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
     }
     deleteArticle = () => {
 
-        const dialogOptions = { title:`Delete ${this.props.routeParams.article}`,type: 'warning', buttons: ['Cancel', 'Yes'], message: 'Are you sure you want to delete the article?' }
+        const dialogOptions = { title: `Delete ${this.props.routeParams.article}`, type: 'warning', buttons: ['Cancel', 'Yes'], message: 'Are you sure you want to delete the article?' }
 
         dialog.showMessageBox(dialogOptions, (response) => {
             if (response) {
@@ -112,7 +113,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
                 <div className='body--article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
-                            <h1 className='wiki-article__title'> <I18String text='article not found' format='capitalizeFirst'/></h1>
+                            <h1 className='wiki-article__title'> <I18String text='article not found' format='capitalizeFirst' /></h1>
                             <div className='wiki-article__actions'>
                                 <MemoryLink to={`/wiki/create/${this.props.routeParams.article}`}><i className="material-icons">add</i></MemoryLink>
                             </div>
@@ -141,9 +142,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         const article = this.props.routeParams.article;
         if (this.state.fileExists) {
             return (
-                <div className='wiki-route'>
-                    <img className='wiki-background' src={this.getBackground()} alt="" />
-                    <WikiHeader/>
+                <WikiView>
                     <div className='body--article'>
                         <div className='wiki-article__header'>
                             <div className='wiki-article__header__section'>
@@ -154,7 +153,6 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
                                 </div>
                             </div>
                         </div>
-
                         <div
                             className='wiki-article__body'
                         >
@@ -165,7 +163,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
                             />
                         </div>
                     </div>
-                </div>
+                </WikiView>
             )
         } else {
             return this.renderArticleNotFound();

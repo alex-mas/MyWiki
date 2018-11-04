@@ -1,22 +1,22 @@
 import * as React from 'react';
 import * as fs from 'fs';
 import * as path from 'path';
-import { RouteProps } from '../router/router';
-import { AppState } from '../store/store';
+import { RouteProps } from '../../router/router';
+import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
-import WikiEditor, { defaultEditorContents } from '../components/wikiEditor/wikiEditor';
+import WikiEditor, { defaultEditorContents } from '../../components/wikiEditor/wikiEditor';
 import * as ReactMarkdown from 'react-markdown';
 import { ValueJSON, Change, Value } from 'slate';
-import { fsError, FsErrorActionCreator } from '../actions/errors';
-import Header from '../components/header';
-import AppHeader from '../components/appHeader';
-import { loadArticle, LoadArticleAction, LoadArticleActionCreator, Article, saveArticle, SaveArticleActionCreator } from '../actions/article';
-import TagForm from '../components/tagForm';
-import { getArticle } from '../selectors/articles';
-import { SelectedWiki } from '../store/reducers/selectedWiki';
-import { ImageInput } from '../components/imageInput';
-import WikiHeader from '../components/wikiHeader';
+import { fsError, FsErrorActionCreator } from '../../actions/errors';
+import Header from '../../components/header';
+import AppHeader from '../../components/appHeader';
+import { loadArticle,LoadArticleActionCreator, Article, saveArticle, SaveArticleActionCreator, ArticleMetaData } from '../../actions/article';
+import TagForm from '../../components/tagForm';
+import { getArticle } from '../../selectors/articles';
+import { ImageInput } from '../../components/imageInput';
+import WikiHeader from '../../components/wikiHeader';
+import { WikiMetaData } from '../../store/reducers/wikis';
 
 
 
@@ -30,8 +30,8 @@ export interface WikiEditPageOwnProps extends MemoryRouteProps {
 }
 
 export interface WikiEditPageReduxProps {
-    selectedWiki: SelectedWiki,
-    article: Article
+    selectedWiki: WikiMetaData,
+    article: ArticleMetaData
 }
 
 
@@ -51,7 +51,7 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
         super(props);
         this.state = {
             editorContent: Value.fromJSON(JSON.parse('{}')),
-            tags: [],
+            tags: this.props.article.tags,
             areTagsBeingManaged: false,
             background: this.props.article.background
         }
@@ -83,7 +83,8 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
             name: this.props.routeParams.article,
             tags: this.state.tags,
             content: this.state.editorContent.toJSON(),
-            background: this.state.background
+            background: this.state.background,
+            keywords: []
             //@ts-ignore
         }).then(() => {
             this.props.history.pushState(`/wiki/article/${this.props.routeParams.article}`);
@@ -127,7 +128,6 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
             <div className='wiki-route'>
                 <img className='wiki-background' src={this.getBackground()} alt="" />
                 <WikiHeader />
-
                 <div className='body--article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>

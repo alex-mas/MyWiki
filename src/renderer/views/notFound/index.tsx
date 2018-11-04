@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
-import WikiHeader from '../components/wikiHeader';
+import WikiHeader from '../../components/wikiHeader';
 import I18String  from '@axc/react-components/display/i18string';
 
 

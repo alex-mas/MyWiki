@@ -3,8 +3,8 @@ import { MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import { RenderAttributes } from 'slate-react';
 import {doesArticleExist} from '../../../selectors/articles';
 import {connect} from 'react-redux';
-import {SelectedWiki} from '../../../store/reducers/selectedWiki';
 import { AppState } from '../../../store/store';
+import { WikiMetaData } from '../../../store/reducers/wikis';
 
 
 
@@ -21,7 +21,7 @@ export interface WikiLinkOwnProps {
 
 
 export interface WikiLinkStateProps{ 
-    selectedWiki: SelectedWiki
+    selectedWiki: WikiMetaData
 }
 
 export type WikiLinkProps = WikiLinkOwnProps & WikiLinkStateProps;

@@ -4,13 +4,9 @@ import { ArticleMetaData, Article } from "../../actions/article";
 
 
 
-export interface SelectedWiki extends WikiMetaData {
-    articles: Article[],
-    background: string
-}
 
 
-const defaultState: SelectedWiki = {
+const defaultState: WikiMetaData = {
     path: '',
     name: '',
     id: '',
@@ -19,17 +15,12 @@ const defaultState: SelectedWiki = {
     description: ''
 };
 
-export const SelectedWikiReducer: Reducer<SelectedWiki> = (state: SelectedWiki = defaultState, action: AnyAction) => {
+export const SelectedWikiReducer: Reducer<WikiMetaData> = (state: WikiMetaData = defaultState, action: AnyAction) => {
     switch (action.type) {
         case 'SELECT_WIKI':
             return {
                 ...action.wiki
             };
-        case 'LOAD_WIKI':
-            return {
-                ...action.wiki,
-                articles: action.articles
-            }
         case 'SAVE_ARTICLE':
             return {
                 ...state,

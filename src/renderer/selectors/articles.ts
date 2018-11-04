@@ -1,11 +1,12 @@
-import { SelectedWiki } from "../store/reducers/selectedWiki";
+
+import { WikiMetaData } from "../store/reducers/wikis";
 
 
 /**
  * reduces the array of articles to an array of article names
  * 
  */
-export const getArticleNames = (selectedWiki: SelectedWiki): string[]=>{
+export const getArticleNames = (selectedWiki: WikiMetaData): string[]=>{
     return selectedWiki.articles.map((article)=>{
         return article.name;
     });
@@ -18,7 +19,7 @@ export const getArticleNames = (selectedWiki: SelectedWiki): string[]=>{
  * 
  * 
  */
-export const getRelevantArticles= (search:string, selectedWiki: SelectedWiki): string[]=>{
+export const getRelevantArticles= (search:string, selectedWiki: WikiMetaData): string[]=>{
     const regularMatches = selectedWiki.articles.filter((article)=>{
         if(article.name.includes(search)){
             return true;
@@ -33,11 +34,11 @@ export const getRelevantArticles= (search:string, selectedWiki: SelectedWiki): s
 }
 
 
-export const getArticle = (name:string, selectedWiki: SelectedWiki)=>{
+export const getArticle = (name:string, selectedWiki: WikiMetaData)=>{
     return selectedWiki.articles.find((article)=>article.name === name);
 }
 
-export const doesArticleExist = (name:string, selectedWiki: SelectedWiki)=>{
+export const doesArticleExist = (name:string, selectedWiki: WikiMetaData)=>{
     //cast results to a boolean
     return !!getArticle(name, selectedWiki);
 }

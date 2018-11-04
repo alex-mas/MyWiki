@@ -7,14 +7,14 @@ import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
 import { error, fsError, ErrorAction, ErrorActionCodes } from "./errors";
 import { deleteFolderRecursively } from '../utilities/fsutils';
-import { Article, ArticleMetaData } from "./article";
+import { Article, ArticleMetaData, getArticleMetaData } from "./article";
 
 
 type WikiAction = Action & { wiki: WikiMetaData };
 
 export type CreateWikiAction = WikiAction;
 
-export type UserWikiData = Pick<WikiMetaData, Exclude<keyof WikiMetaData, 'id' | 'path'>>;
+export type UserWikiData = Pick<WikiMetaData, Exclude<keyof WikiMetaData, 'id' | 'path' | 'articles'>>;
 
 export type CreateWikiActionCreator = (wiki: UserWikiData) => ThunkAction<any, AppState, void, CreateWikiAction | ErrorAction>;
 
@@ -23,17 +23,18 @@ export const createWiki: CreateWikiActionCreator = (wiki: UserWikiData) => {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const wikiId = uuid();
-            const wikiPath = `./wikis/${wiki.name}(${wikiId})`;
+            const wikiPath = `./wikis/${wikiId}`;
             if (!fs.existsSync('./wikis')) {
                 fs.mkdirSync('./wikis');
             }
-     
+
             const wikiData: WikiMetaData = {
                 path: wikiPath,
                 name: wiki.name,
                 id: wikiId,
                 background: wiki.background,
-                description: wiki.description
+                description: wiki.description,
+                articles: []
             }
             fs.mkdirSync(wikiPath);
             fs.mkdirSync(path.join(wikiPath, 'articles'));
@@ -63,20 +64,22 @@ export type RemoveWikiActionCreator = ActionCreator<ThunkAction<any, AppState, v
 
 export const removeWiki: RemoveWikiActionCreator = (wiki: WikiMetaData) => {
     return (dispatch, getState) => {
-        try {
-            fs.readdir('./wikis', (err, wikis) => {
-                wikis.forEach((wikiFolder) => {
-                    if (wikiFolder === `${wiki.name}(${wiki.id})`) {
-                        deleteFolderRecursively(path.join('./wikis', `${wiki.name}(${wiki.id})`));
-                    }
+        return new Promise((resolve,reject)=>{
+            try {
+                fs.readdir('./wikis', (err, wikis) => {
+                    wikis.forEach((wikiFolder) => {
+                        if (wikiFolder === wiki.id) {
+                            deleteFolderRecursively(path.join('./wikis', `${wiki.id}`));
+                        }
+                    });
                 });
-            });
-        } catch (e) {
-            return dispatch(fsError('error removing wiki folder'));
-        }
-        return dispatch({
-            type: 'REMOVE_WIKI',
-            wiki
+            } catch (e) {
+                reject(dispatch(fsError('error removing wiki folder')));
+            }
+            resolve(dispatch({
+                type: 'REMOVE_WIKI',
+                wiki
+            }));
         });
     }
 }
@@ -87,23 +90,25 @@ export type SelectWikiActionCreator = ActionCreator<ThunkAction<any, AppState, v
 
 export const selectWiki: SelectWikiActionCreator = (id: string) => {
     return (dispatch, getState) => {
-        const state = getState();
-        const wiki = state.wikis.find((wiki) => wiki.id === id);
-        if (wiki) {
-            dispatch({
-                type: 'SELECT_WIKI',
-                wiki
-            });
-        } else {
-            dispatch(error(`Wiki id (${id}) provided doesn't mach with any of the wikis tracked by the app`, ErrorActionCodes.WRONG_PARAMS));
-        }
+        return new Promise((resolve,reject)=>{
+            const state = getState();
+            const wiki = state.wikis.find((wiki) => wiki.id === id);
+            if (wiki) {
+                resolve(dispatch({
+                    type: 'SELECT_WIKI',
+                    wiki
+                }));
+            } else {
+                reject(dispatch(error(`Wiki id (${id}) provided doesn't mach with any of the wikis tracked by the app`, ErrorActionCodes.WRONG_PARAMS)));
+            }
+        })
+
     }
 }
 
 
 export interface LoadWikiAction extends Action {
-    wiki: WikiMetaData,
-    articles: Article[]
+    wiki: WikiMetaData
 }
 export type LoadWikiActionCreator = (id: string) => ThunkAction<Promise<string>, AppState, void, LoadWikiAction | ErrorAction>;
 
@@ -111,29 +116,34 @@ export const loadWiki: LoadWikiActionCreator = (id: string) => {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const state = getState();
-            const wiki = state.wikis.find((wiki) => wiki.id === id);
-            const articles: Article[] = [];
-            fs.readdir(`./wikis/${wiki.name}(${wiki.id})/articles`, (err, articleFiles: string[]) => {
+            const wiki = JSON.parse(fs.readFileSync(`./wikis/${id}/myWiki.config.json`, 'utf8'));
+            const articles: ArticleMetaData[] = [];
+            fs.readdir(`./wikis/${id}/articles`, (err, articleFiles: string[]) => {
                 if (err) {
                     dispatch(fsError('error while reading articles folder'));
                     reject(err);
                 } else {
                     try {
-                        articleFiles.forEach((article) => {
-                            const articleData: Article = JSON.parse(
-                                fs.readFileSync(`./wikis/${wiki.name}(${wiki.id})/articles/${article}`, 'utf8')
+                        articleFiles.forEach((articleName) => {
+                            const article: Article = JSON.parse(
+                                fs.readFileSync(`./wikis/${id}/articles/${articleName}`, 'utf8')
                             );
+                            const articleData = getArticleMetaData(article);
                             articles.push(articleData);
                         });
                         console.log('load wiki payload: ', {
                             type: 'LOAD_WIKI',
-                            wiki,
-                            articles
+                            wiki: {
+                                ...wiki,
+                                articles
+                            }
                         });
                         dispatch({
                             type: 'LOAD_WIKI',
-                            wiki,
-                            articles
+                            wiki: {
+                                ...wiki,
+                                articles
+                            }
                         });
                         resolve('success loading wiki');
                     } catch (e) {

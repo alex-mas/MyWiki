@@ -32,7 +32,7 @@ class WikiItem extends React.Component<WikiItemProps, any>{
     }
     onOpen = () => {
         //@ts-ignore
-        this.props.loadWiki(this.props.wiki.id).then(() => {
+        this.props.selectWiki(this.props.wiki.id).then(() => {
             this.props.history.pushState('/wiki/article/home');
         }).catch((e: NodeJS.ErrnoException) => console.warn('Error while loading wiki: ', e));
 

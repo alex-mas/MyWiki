@@ -92,7 +92,6 @@ export const parsePlugins: ParsePluginActionCreator = () =>{
                     //@ts-ignore
                     .then((data)=>resolve(data))
                     .catch((e)=>reject(e));
-
                 }
             })
         });

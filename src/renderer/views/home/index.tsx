@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { RouteProps } from '../router/router';
-import { AppState } from '../store/store';
+import { RouteProps } from '../../router/router';
+import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
-import { WikiMetaData } from '../store/reducers/wikis';
-import Wiki from '../components/wikiItem';
+import { WikiMetaData } from '../../store/reducers/wikis';
+import Wiki from '../../components/wikiItem';
 import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import Modal from '@axc/react-components/layout/modal';
-import MyEditor from '../components/wikiEditor/wikiEditor';
-import AppHeader from '../components/appHeader';
-import CreateWikiForm from '../components/createWikiForm';
-import { AppData } from '../store/reducers/appData';
+import MyEditor from '../../components/wikiEditor/wikiEditor';
+import AppHeader from '../../components/appHeader';
+import CreateWikiForm from '../../components/createWikiForm';
+import { AppData } from '../../store/reducers/appData';
 
 
 export interface HomePageProps extends MemoryRouteProps {
