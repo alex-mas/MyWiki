@@ -12,6 +12,7 @@ import { deleteFolderRecursively } from '../utilities/fsutils';
 import { ValueJSON, Value } from "slate";
 import { ipcRenderer } from "electron";
 import * as child_process from 'child_process';
+//@ts-ignore
 import Plain from 'slate-plain-serializer';
 
 

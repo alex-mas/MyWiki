@@ -1,5 +1,6 @@
 import {Plugin, PluginMetaData} from "../store/reducers/plugins";
 import * as fs from 'fs';
+import * as fsp from '../../utils/promisify-fs';
 import * as path from 'path';
 import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
@@ -20,8 +21,8 @@ const _loadPlugin = (plugin: Plugin)=>{
 
 export const loadPlugin = (pluginMetaData: PluginMetaData)=>{
     return(dispatch:any, getState: any)=>{
-        const state = getState();
-        return new Promise((resolve,reject)=>{
+        return new Promise(async (resolve,reject)=>{
+            const state = getState();
             if(isPluginLoaded(pluginMetaData.id, state.plugins)){
                 //dispatch error, plugin cant be loaded twice
             }else{
@@ -38,7 +39,7 @@ export const loadPlugin = (pluginMetaData: PluginMetaData)=>{
 
 export const loadPlugins = ()=>{
     return(dispatch:any, getState:any)=>{
-        return new Promise((resolve,reject)=>{
+        return new Promise(async(resolve,reject)=>{
            
         });
     }
@@ -53,10 +54,10 @@ export const unloadPlugin = (id: string)=>{
 }
 
 
-export const parsePlugin = (pluginMetaData: any) =>{
+export const parsePlugin = (pluginMetaData: PluginMetaData) =>{
     return{
         type: 'PARSE_PLUGIN',
-        plugin: JSON.parse(pluginMetaData)
+        plugin: pluginMetaData
     }
 }
 
@@ -65,37 +66,35 @@ export const parsePlugin = (pluginMetaData: any) =>{
 export interface ParsePluginAction extends Action {
     plugin: PluginMetaData
 }
-export type ParsePluginActionCreator = () => ThunkAction<Promise<ParsePluginAction[]| ErrorAction>, AppState, void, ParsePluginAction | ErrorAction>;
+export type ParsePluginActionCreator = () => ThunkAction<Promise<PluginMetaData[]| ErrorAction>, AppState, void, ParsePluginAction | ErrorAction>;
 
 
 
 export const parsePlugins: ParsePluginActionCreator = () =>{
     return(dispatch,getState)=>{
-        return new Promise((resolve,reject)=>{
-            fs.readdir("./plugins",(error, plugins)=>{
-                if(error){
-                    reject(dispatch(fsError("Error reading plugin directory")));
-                }else{
-                    Promise.all(plugins.map((plugin)=>{
-                        return new Promise((resolve, reject)=>{
-                            fs.readFile(`./plugins/${plugin}/plugin.config.json`, 'utf8',(error, pluginMetaData)=>{
-                                const data: PluginMetaData = JSON.parse(pluginMetaData);
-                                data.loaded = false;
-                                if(error){
-                                    reject(dispatch(fsError(`Error while parsing ${plugin} metadata`)));
-                                }else{
-                                    resolve(dispatch(parsePlugin(pluginMetaData)));
-                                }
-                            });
-                        })
-                    }))
-                    //@ts-ignore
-                    .then((data)=>resolve(data))
-                    .catch((e)=>reject(e));
-                }
-            })
-        });
+        return (async (): Promise<PluginMetaData[]| ErrorAction>=>{
+            try{
+                const plugins = await fsp.readdir('./plugins');
+                const pluginData= await Promise.all(plugins.map(async(plugin)=>{
+                    try{
+                        const fileContents = await fsp.readFile(`./plugins/${plugin}/plugin.config.json`, 'utf8');
+                        const data: PluginMetaData = JSON.parse(fileContents);
+                        data.loaded = false;
+                        dispatch(parsePlugin(data));
+                        return data;
+                    }catch(e){
+                        dispatch(fsError(`Error while parsing ${plugin} metadata`));
+                        throw e;
+                    }
+                }));
+                return pluginData;
+            }catch(e){
+                return dispatch(fsError("Error reading plugin directory"));
+            }
+        })();
     };
 }
+
+
 
 

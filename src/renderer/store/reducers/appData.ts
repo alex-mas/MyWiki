@@ -14,6 +14,11 @@ const defaultState: AppData = {
 
 export const AppDataReducer: Reducer<AppData> = (state: AppData = defaultState, action: AnyAction) =>{
     switch(action.type){
+        case 'SET_LOCALE':
+            return {
+                ...state,
+                locale: action.locale
+            };
         case 'SET_APP_DATA':
             return action.data;
         case 'UPDATE_APP_DATA':

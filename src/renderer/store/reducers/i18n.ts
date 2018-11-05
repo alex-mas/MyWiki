@@ -5,9 +5,9 @@ import * as defaultLocales from '../../../static/locales.json';
 import _cloneDeep from 'lodash.clonedeep';
 const cloneDeep: <T>(any:T)=>T = _cloneDeep;
 
-export type I18N = ISO639Locales;
+export type I18N = LocaleLayout;
 
-const defaultState: I18N = defaultLocales;
+const defaultState: I18N = {};
 
 export const I18NReducer: Reducer<I18N> = (state: I18N = defaultState, action: AnyAction) =>{
     switch(action.type){
@@ -17,6 +17,8 @@ export const I18NReducer: Reducer<I18N> = (state: I18N = defaultState, action: A
                 //bootstrap traductions into state;
                 return newState;
             }
+        case 'SET_LOCALE':
+            return action.localeData;
         default:
             return state;
     }

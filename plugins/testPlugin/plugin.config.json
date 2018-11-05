@@ -1,7 +1,7 @@
 {
-    "id": "test id",
-    "name": "testPlugin",
-    "main": "dist/main.js",
-    "description": "a plugin to test the system",
-    "version": "0.0.1"
+	"id": "test id",
+	"name": "testPlugin",
+	"main": "dist/main.js",
+	"description": "a plugin to test the system",
+	"version": "0.0.1"
 }

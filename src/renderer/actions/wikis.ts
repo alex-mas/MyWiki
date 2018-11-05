@@ -2,6 +2,7 @@ import { ActionCreator, Dispatch, Action } from "redux";
 import { WikiMetaData } from "../store/reducers/wikis";
 import * as uuid from 'uuid/v4';
 import * as fs from 'fs';
+import * as fsp from '../../utils/promisify-fs';
 import * as path from 'path';
 import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
@@ -21,39 +22,37 @@ export type CreateWikiActionCreator = (wiki: UserWikiData) => ThunkAction<any, A
 
 export const createWiki: CreateWikiActionCreator = (wiki: UserWikiData) => {
     return (dispatch, getState) => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async(resolve, reject) => {
             const wikiId = uuid();
             const wikiPath = `./wikis/${wikiId}`;
-            if (!fs.existsSync('./wikis')) {
-                fs.mkdirSync('./wikis');
-            }
-
-            const wikiData: WikiMetaData = {
-                path: wikiPath,
-                name: wiki.name,
-                id: wikiId,
-                background: wiki.background,
-                description: wiki.description,
-                articles: []
-            }
-            fs.mkdirSync(wikiPath);
-            fs.mkdirSync(path.join(wikiPath, 'articles'));
-            console.log(path.join(wikiPath, 'myWikiConfig.json'));
-            fs.writeFile(path.join(wikiPath, 'myWiki.config.json'), JSON.stringify(wikiData), 'utf8', (error) => {
-                if (error) {
-                    console.log(error);
-                    const errMsg = fsError(`Error creating the configuration file for ${name} wiki`);
-                    dispatch(errMsg);
-                    reject(errMsg);
-                } else {
-                    dispatch({
-                        type: 'CREATE_WIKI',
-                        wiki: wikiData
-                    });
-                    //fs.writeFileSync(path.join(wikiPath, 'home.md'), fs.readFileSync(path.join('./', 'src/static/wikiHome.md')),'utf8');
-                    //fs.writeFileSync(path.join(wikiPath, 'articles', 'test.md'), fs.readFileSync(path.join('./','src/static/testArticle.md')),'utf8');
+            try{
+                await fsp.mkdir('./wikis').catch((e)=>console.log(e));
+                const wikiData: WikiMetaData = {
+                    path: wikiPath,
+                    name: wiki.name,
+                    id: wikiId,
+                    background: wiki.background,
+                    description: wiki.description,
+                    articles: []
                 }
-            });
+                await fsp.mkdir(wikiPath);
+                await fsp.mkdir(path.join(wikiPath, 'articles'));
+                await fsp.writeFile(
+                    path.join(wikiPath, 'myWiki.config.json'), 
+                    JSON.stringify(wikiData), 
+                    'utf8'
+                ); 
+                dispatch({
+                    type: 'CREATE_WIKI',
+                    wiki: wikiData
+                });
+
+            }catch(error){
+                console.log(error);
+                const errMsg = fsError(`Error creating the configuration file for ${name} wiki`);
+                dispatch(errMsg);
+                reject(errMsg);
+            }
         });
     }
 
@@ -64,22 +63,23 @@ export type RemoveWikiActionCreator = ActionCreator<ThunkAction<any, AppState, v
 
 export const removeWiki: RemoveWikiActionCreator = (wiki: WikiMetaData) => {
     return (dispatch, getState) => {
-        return new Promise((resolve,reject)=>{
+        return new Promise(async(resolve,reject)=>{
             try {
-                fs.readdir('./wikis', (err, wikis) => {
-                    wikis.forEach((wikiFolder) => {
-                        if (wikiFolder === wiki.id) {
-                            deleteFolderRecursively(path.join('./wikis', `${wiki.id}`));
-                        }
-                    });
+                const wikis = await fsp.readdir('./wikis');
+                wikis.forEach((wikiFolder) => {
+                    if (wikiFolder === wiki.id) {
+                        deleteFolderRecursively(path.join('./wikis', `${wiki.id}`));
+                    }
                 });
             } catch (e) {
                 reject(dispatch(fsError('error removing wiki folder')));
+            }finally{
+                resolve(dispatch({
+                    type: 'REMOVE_WIKI',
+                    wiki
+                }));
             }
-            resolve(dispatch({
-                type: 'REMOVE_WIKI',
-                wiki
-            }));
+   
         });
     }
 }
@@ -114,7 +114,16 @@ export type LoadWikiActionCreator = (id: string) => ThunkAction<Promise<string>,
 
 export const loadWiki: LoadWikiActionCreator = (id: string) => {
     return (dispatch, getState) => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
+            /*try{
+                const state = getState();
+                const wiki = JSON.parse(await fsp.readFile(`./wikis/${id}/myWiki.config.json`, 'utf8'));
+                const articleFiles = await fsp.readdir(`./wikis/${id}/articles`);
+        
+                const articles = articleFiles.map();
+            }catch(e){
+
+            }*/
             const state = getState();
             const wiki = JSON.parse(fs.readFileSync(`./wikis/${id}/myWiki.config.json`, 'utf8'));
             const articles: ArticleMetaData[] = [];

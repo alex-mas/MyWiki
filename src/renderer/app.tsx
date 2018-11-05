@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as fs from 'fs';
+import * as fsp from '../utils/promisify-fs';
 //@ts-ignore
 require('@axc/react-components/styles/axc-styles.css');
 //@ts-ignore
@@ -48,45 +49,37 @@ const App = (
 
 ReactDOM.render(App, appRoot);
 
+//TODO: Convert into actions and do window.onEvent = action
 
-window.onload = () => {
-    console.log('loading state from local storage');
+window.onload =  async () => {
     const wikis: WikiMetaData[] | undefined = JSON.parse(localStorage.getItem('myWikis'));
-    fs.readdir('./wikis', (err, files) => {
-        if (err) {
-            console.warn(err);
-            store.dispatch(fsError('Error loading meta-data from filesystem'));
-        } else {
-            console.log('About to parse contained wikis: ', files);
-            files.forEach((file) => {
-                try {
-                    //@ts-ignore
-                    store.dispatch(loadWiki(file));
-                } catch (e) {
-                    console.warn('Error while parsing wiki meta data', e);
-                }
-
-            });
-        }
-    });
+    try{
+        const files = await fsp.readdir('./wikis');
+        files.forEach(async (file) => {
+            try {
+                //@ts-ignore
+                store.dispatch(loadWiki(file));
+            } catch (e) {
+                store.dispatch(fsError('Error while parsing wiki meta data'));
+            }
+        });
+    }catch(e){
+        store.dispatch(fsError('Error loading wiki meta-data'));
 }
 
 window.onbeforeunload = () => {
     const wikis = store.getState().wikis;
-    wikis.forEach((wiki, index) => {
+    wikis.forEach(async (wiki, index) => {
         if (wiki) {
-            fs.writeFile(`./wikis/${wiki.id}/myWiki.config.json`, JSON.stringify(wiki), 'utf8', (err) => {
-                if (err) {
-                    store.dispatch(fsError('Error saving wiki configuration files'));
-                }
-            });
+            try{
+                fsp.writeFile(`./wikis/${wiki.id}/myWiki.config.json`, JSON.stringify(wiki), 'utf8');
+            }catch(e){
+                store.dispatch(fsError('Error saving wiki configuration files'));
+            }
         }
     });
 }
 
 
 //@ts-ignore
-store.dispatch(parsePlugins());
-
-
-
+store.dispatch(parsePlugins())
