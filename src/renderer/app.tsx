@@ -51,9 +51,9 @@ ReactDOM.render(App, appRoot);
 
 //TODO: Convert into actions and do window.onEvent = action
 
-window.onload =  async () => {
+window.onload = async () => {
     const wikis: WikiMetaData[] | undefined = JSON.parse(localStorage.getItem('myWikis'));
-    try{
+    try {
         const files = await fsp.readdir('./wikis');
         files.forEach(async (file) => {
             try {
@@ -63,17 +63,18 @@ window.onload =  async () => {
                 store.dispatch(fsError('Error while parsing wiki meta data'));
             }
         });
-    }catch(e){
+    } catch (e) {
         store.dispatch(fsError('Error loading wiki meta-data'));
+    }
 }
 
 window.onbeforeunload = () => {
     const wikis = store.getState().wikis;
     wikis.forEach(async (wiki, index) => {
         if (wiki) {
-            try{
+            try {
                 fsp.writeFile(`./wikis/${wiki.id}/myWiki.config.json`, JSON.stringify(wiki), 'utf8');
-            }catch(e){
+            } catch (e) {
                 store.dispatch(fsError('Error saving wiki configuration files'));
             }
         }
@@ -82,4 +83,4 @@ window.onbeforeunload = () => {
 
 
 //@ts-ignore
-store.dispatch(parsePlugins())
+store.dispatch(parsePlugins());

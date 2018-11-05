@@ -1,0 +1,16 @@
+{
+    "open": "abrir",
+    "remove": "eliminar",
+    "Do you really wish to remove this wiki?": "Estas seguro que quieres eliminar esta wiki?",
+    "home": "inicio",
+    "go home": "ir al inicio",
+    "settings": "configuración",
+    "plugins": "extensiones",
+    "articles": "artículos",
+    "creating": "creando",
+    "there are no results relevant to the search": "no hay resultados para la busqueda",
+    "search": "busqueda",
+    "page not found": "página no encontrada",
+    "article not found": "articulo no encontrado",
+    "the page you requested couldn't be located": "la página solicitada no se ha podido localizar"
+}

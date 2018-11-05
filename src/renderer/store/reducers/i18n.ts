@@ -1,6 +1,5 @@
 import { Reducer, AnyAction } from "redux";
 import I18String, {ISO639Locale, ISO639Locales, LocaleLayout} from '@axc/react-components/display/i18string';
-import * as defaultLocales from '../../../static/locales.json';
 //@ts-ignore
 import _cloneDeep from 'lodash.clonedeep';
 const cloneDeep: <T>(any:T)=>T = _cloneDeep;

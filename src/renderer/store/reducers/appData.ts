@@ -7,12 +7,12 @@ export interface AppData{
 }
 
 
-const defaultState: AppData = {
+export const defaultAppData: AppData = {
     background: 'resources/images/landscape.jpg',
     locale: ISO639Locale.ca
 };
 
-export const AppDataReducer: Reducer<AppData> = (state: AppData = defaultState, action: AnyAction) =>{
+export const AppDataReducer: Reducer<AppData> = (state: AppData = defaultAppData, action: AnyAction) =>{
     switch(action.type){
         case 'SET_LOCALE':
             return {
@@ -27,7 +27,7 @@ export const AppDataReducer: Reducer<AppData> = (state: AppData = defaultState, 
                 ...action.data
             };
         case 'RESET_APP_DATA':
-            return defaultState;
+            return defaultAppData;
         default:
             return state;
     }

@@ -7,8 +7,9 @@ import { withHistoryContext, MemoryHistory } from '@axc/react-components/navigat
 import { connect } from 'react-redux';
 import { AppData } from '../store/reducers/appData';
 import { AppState } from '../store/store';
-import { setAppData, resetAppData, AppDataActionCreator, updateAppData, UpdateAppDataCreator } from '../actions/appData';
+import {resetAppData, setLocale, SetLocaleActionCreator, setAppBackground, SetAppBgActionCreator } from '../actions/appData';
 import { ActionCreator } from 'redux';
+
 
 
 interface OwnProps {
@@ -17,9 +18,9 @@ interface OwnProps {
 }
 interface ReduxProps {
     data: AppData,
-    setAppData: AppDataActionCreator,
     resetAppData: ActionCreator<void>,
-    updateAppData: UpdateAppDataCreator
+    setLocale: SetLocaleActionCreator,
+    setAppBackground: SetAppBgActionCreator
 }
 
 type SettingsProps = OwnProps & ReduxProps;
@@ -35,12 +36,12 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
     }
     onLocaleChange = (event: React.FormEvent<HTMLSelectElement>) => {
         const locale = event.currentTarget.value;
-        this.props.updateAppData({
+        this.props.setLocale({
             locale
         });
     }
     onBackgroundChange = (background: string) => {
-        this.props.updateAppData({
+        this.props.setAppBackground({
             background
         });
     }
@@ -101,8 +102,8 @@ export default connect(
         }
     },
     {
-        setAppData,
+        setLocale,
         resetAppData,
-        updateAppData
+        setAppBackground
     }
 )(SettingsForm);
