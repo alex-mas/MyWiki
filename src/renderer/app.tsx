@@ -29,9 +29,9 @@ export const store = configureStore();
 const I18nSystem = connect((state: AppState, props) => {
     console.log('Re-setting props to I18nSystem', state, props);
     return {
-        localeData: {
+        context: {
             locale: state.appData.locale,
-            locales: state.i18n
+            localeData: state.i18n
         }
     }
 })(_I18nSystem);

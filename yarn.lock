@@ -7,8 +7,8 @@
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-4.0.2.tgz#6abbdc22f33cab742053777a26db2e25ca527179"
 
 "@axc/react-components@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@axc/react-components/-/react-components-0.1.7.tgz#4fb805fd8a05e0846c399f64ee63f6c067b22dc4"
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@axc/react-components/-/react-components-0.1.8.tgz#24605ec6b0a6d04816abd4b0abaafebd7936bf9c"
   dependencies:
     "@fortawesome/fontawesome" "^1.1.8"
     "@fortawesome/fontawesome-free-regular" "^5.0.13"
@@ -38,9 +38,9 @@
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.1.7.tgz#4336c4b06d0b5608ff1215464b66fcf9f4795284"
 
-"@fortawesome/fontawesome-common-types@^0.2.7":
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.7.tgz#fe76803922db0eb4393675199c2e0c3bad52629c"
+"@fortawesome/fontawesome-common-types@^0.2.8":
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.8.tgz#8cacd1efd1aa956e1ef173f0abcf2ce1b7a0c66f"
 
 "@fortawesome/fontawesome-free-regular@^5.0.13":
   version "5.0.13"
@@ -55,10 +55,10 @@
     "@fortawesome/fontawesome-common-types" "^0.1.7"
 
 "@fortawesome/fontawesome-svg-core@^1.2.2":
-  version "1.2.7"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.7.tgz#064aefa1c8e4b055fbc6de0b6fbd3ff5ecf564ea"
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.8.tgz#b802b7f3d5b9d9d92ae92c18e865df468dcdf561"
   dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.2.7"
+    "@fortawesome/fontawesome-common-types" "^0.2.8"
 
 "@fortawesome/fontawesome@^1.1.8":
   version "1.1.8"

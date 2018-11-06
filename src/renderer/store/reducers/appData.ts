@@ -9,7 +9,7 @@ export interface AppData{
 
 export const defaultAppData: AppData = {
     background: 'resources/images/landscape.jpg',
-    locale: ISO639Locale.ca
+    locale: ISO639Locale.en
 };
 
 export const AppDataReducer: Reducer<AppData> = (state: AppData = defaultAppData, action: AnyAction) =>{

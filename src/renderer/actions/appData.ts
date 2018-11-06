@@ -5,25 +5,32 @@ import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
 import { ErrorAction, fsError } from "./errors";
 import * as fsp from '../../utils/promisify-fs';
+import { ActionWithPayload, ACreator} from "./utils";
 
 
-export type AppDataAction = Action<string> & { data: AppData};
+export const SET_APP_DATA = 'SET_APP_DATA';
+export const UPDATE_APP_DATA = 'UPDATE_APP_DATA';
+export const RESET_APP_DATA = 'RESET_APP_DATA';
+export const SET_LOCALE = 'SET_LOCALE';
+export const SET_APP_BACKGROUND = 'SET_APP_BACKGROUND';
 
-export type AppDataActionCreator = ActionCreator<AppDataAction>
-export const setAppData: AppDataActionCreator = (newData:AppData)=>{
-    return{
-        type:'SET_APP_DATA',
+export type AppDataAction = ActionWithPayload<{data: AppData}>;
+
+export type AppDataActionCreator = ACreator<[AppData],AppDataAction>
+export const setAppData: AppDataActionCreator = (newData: AppData) => {
+    return {
+        type: SET_APP_DATA,
         data: newData
     }
 }
 
 
-export type UpdateAppData = Action<string> & { data: Partial<AppData>};
+export type UpdateAppData = Action<string> & { data: Partial<AppData> };
 
 export type UpdateAppDataCreator = ActionCreator<UpdateAppData>
-export const updateAppData: UpdateAppDataCreator = (newData:Partial<AppData>)=>{
-    return{
-        type:'UPDATE_APP_DATA',
+export const updateAppData: UpdateAppDataCreator = (newData: Partial<AppData>) => {
+    return {
+        type: UPDATE_APP_DATA,
         data: newData
     }
 }
@@ -31,56 +38,57 @@ export const updateAppData: UpdateAppDataCreator = (newData:Partial<AppData>)=>{
 
 export type ResetAppDataAction = Action<'RESET_APP_DATA'>;
 
-export type ResetAppDataActionCreator = ActionCreator<ThunkAction<void,AppState, void, ErrorAction | SetLocaleAction | ResetAppDataAction>>;
+export type ResetAppDataActionCreator = ActionCreator<ThunkAction<void, AppState, void, ErrorAction | SetLocaleAction | ResetAppDataAction>>;
 
-export const resetAppData: ResetAppDataActionCreator = ()=>{
-    return(dispatch, getState)=>{
+export const resetAppData: ResetAppDataActionCreator = () => {
+    return (dispatch, getState) => {
         dispatch(setLocale(defaultAppData.locale));
         dispatch({
-            type: 'RESET_APP_DATA'
+            type: RESET_APP_DATA
         });
     }
 }
 
 
 
-export interface SetLocaleAction extends Action<string>{
+export interface SetLocaleAction extends Action<string> {
     locale: string,
     localeData: LocaleLayout
 }
-export type SetLocaleActionCreator = ActionCreator<ThunkAction<Promise<any>,AppState, void, ErrorAction | SetLocaleAction>>;
+export type SetLocaleActionCreator = ActionCreator<ThunkAction<Promise<any>, AppState, void, ErrorAction | SetLocaleAction>>;
 
-const _setLocale = (locale: ISO639Locale, localeData: LocaleLayout)=>{
-    return{
-        type: 'SET_LOCALE',
+const _setLocale = (locale: ISO639Locale, localeData: LocaleLayout) => {
+    return {
+        type: SET_LOCALE,
         locale,
         localeData
     }
 }
-export const setLocale: SetLocaleActionCreator = (locale: ISO639Locale)=>{
-    return (dispatch, getState) =>{
-        return (async ()=>{
-            if(locale === 'en'){
-                return dispatch(_setLocale(locale,{}));
+export const setLocale: SetLocaleActionCreator = (locale: ISO639Locale) => {
+    return (dispatch, getState) => {
+        return (async () => {
+            if (locale === 'en') {
+                return dispatch(_setLocale(locale, {}));
             }
-            try{
+            try {
                 const fileContents = await fsp.readFile(`./resources/locales/locale.${locale}.json`, 'utf8');
                 const localeData = JSON.parse(fileContents);
-                return dispatch(_setLocale(locale,localeData));
-            }catch(e){
+                return dispatch(_setLocale(locale, localeData));
+            } catch (e) {
                 console.warn(e);
+                dispatch(_setLocale(ISO639Locale.en, {}));
                 return dispatch(fsError('error fetching locale data'));
             }
         })();
     }
 }
 
-export type SetAppBgAction = Action & {background: string};
+export type SetAppBgAction = Action & { background: string };
 export type SetAppBgActionCreator = ActionCreator<SetAppBgAction>;
 
-export const setAppBackground: SetAppBgActionCreator = (background: string)=>{
-    return{
-        type: 'SET_APP_BACKGROUND',
+export const setAppBackground: SetAppBgActionCreator = (background: string) => {
+    return {
+        type: SET_APP_BACKGROUND,
         background
     };
 }

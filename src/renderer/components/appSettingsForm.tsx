@@ -36,14 +36,12 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
     }
     onLocaleChange = (event: React.FormEvent<HTMLSelectElement>) => {
         const locale = event.currentTarget.value;
-        this.props.setLocale({
-            locale
-        });
+        this.props.setLocale(locale
+        );
     }
     onBackgroundChange = (background: string) => {
-        this.props.setAppBackground({
-            background
-        });
+        this.props.setAppBackground( background
+        );
     }
     onResetValues = (event: React.MouseEvent<HTMLButtonElement>) => {
         this.props.resetAppData();
