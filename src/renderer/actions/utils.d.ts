@@ -30,6 +30,9 @@ export type ActionWithPayload<P> = Action<string> & P;
  * 
  * 
  */
-export type AsyncACreator<P extends any[],R,A extends Action> = (...args: P) =>ThunkAction<R,AppState, void, ErrorAction | A>
+export type AsyncACreator<P extends any[],A extends Action,R = undefined> = (...args: P) =>ThunkAction<R extends undefined | void | null ? undefined |void : Promise<R>,AppState, void, ErrorAction | A>
 
 export type ACreator<P extends any[],A extends Action> = (...args: P) =>A;
+
+
+

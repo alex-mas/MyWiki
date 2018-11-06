@@ -7,7 +7,7 @@ import { withHistoryContext, MemoryHistory } from '@axc/react-components/navigat
 import { connect } from 'react-redux';
 import { AppData } from '../store/reducers/appData';
 import { AppState } from '../store/store';
-import {resetAppData, setLocale, SetLocaleActionCreator, setAppBackground, SetAppBgActionCreator } from '../actions/appData';
+import {resetAppData, setLocale, setAppBackground } from '../actions/appData';
 import { ActionCreator } from 'redux';
 
 
@@ -18,9 +18,9 @@ interface OwnProps {
 }
 interface ReduxProps {
     data: AppData,
-    resetAppData: ActionCreator<void>,
-    setLocale: SetLocaleActionCreator,
-    setAppBackground: SetAppBgActionCreator
+    resetAppData:  typeof resetAppData,
+    setLocale: typeof setLocale,
+    setAppBackground: typeof setAppBackground
 }
 
 type SettingsProps = OwnProps & ReduxProps;

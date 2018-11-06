@@ -5,7 +5,7 @@ import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
 import { ErrorAction, fsError } from "./errors";
 import * as fsp from '../../utils/promisify-fs';
-import { ActionWithPayload, ACreator} from "./utils";
+import { ActionWithPayload, ACreator, AsyncACreator} from "./utils";
 
 
 export const SET_APP_DATA = 'SET_APP_DATA';
@@ -14,31 +14,28 @@ export const RESET_APP_DATA = 'RESET_APP_DATA';
 export const SET_LOCALE = 'SET_LOCALE';
 export const SET_APP_BACKGROUND = 'SET_APP_BACKGROUND';
 
+
 export type AppDataAction = ActionWithPayload<{data: AppData}>;
+export type AppDataActionCreator = AsyncACreator<[AppData],AppDataAction>
 
-export type AppDataActionCreator = ACreator<[AppData],AppDataAction>
-export const setAppData: AppDataActionCreator = (newData: AppData) => {
-    return {
-        type: SET_APP_DATA,
-        data: newData
+
+
+
+
+export const setAppData: AppDataActionCreator = (newData) => {
+    return(dispatch, getState)=>{
+        dispatch(setLocale(newData.locale));
+        dispatch({
+            type: SET_APP_DATA,
+            data: newData
+        });
     }
+
 }
 
+export type ResetAppDataAction = Action<string>;
+export type ResetAppDataActionCreator = AsyncACreator<any, ResetAppDataAction>
 
-export type UpdateAppData = Action<string> & { data: Partial<AppData> };
-
-export type UpdateAppDataCreator = ActionCreator<UpdateAppData>
-export const updateAppData: UpdateAppDataCreator = (newData: Partial<AppData>) => {
-    return {
-        type: UPDATE_APP_DATA,
-        data: newData
-    }
-}
-
-
-export type ResetAppDataAction = Action<'RESET_APP_DATA'>;
-
-export type ResetAppDataActionCreator = ActionCreator<ThunkAction<void, AppState, void, ErrorAction | SetLocaleAction | ResetAppDataAction>>;
 
 export const resetAppData: ResetAppDataActionCreator = () => {
     return (dispatch, getState) => {
@@ -51,10 +48,11 @@ export const resetAppData: ResetAppDataActionCreator = () => {
 
 
 
-export interface SetLocaleAction extends Action<string> {
+
+export type SetLocaleAction = ActionWithPayload<{
     locale: string,
     localeData: LocaleLayout
-}
+}>;
 export type SetLocaleActionCreator = ActionCreator<ThunkAction<Promise<any>, AppState, void, ErrorAction | SetLocaleAction>>;
 
 const _setLocale = (locale: ISO639Locale, localeData: LocaleLayout) => {
@@ -83,8 +81,8 @@ export const setLocale: SetLocaleActionCreator = (locale: ISO639Locale) => {
     }
 }
 
-export type SetAppBgAction = Action & { background: string };
-export type SetAppBgActionCreator = ActionCreator<SetAppBgAction>;
+export type SetAppBgAction = ActionWithPayload<{ background: string }>;
+export type SetAppBgActionCreator = ACreator<[string],SetAppBgAction>;
 
 export const setAppBackground: SetAppBgActionCreator = (background: string) => {
     return {

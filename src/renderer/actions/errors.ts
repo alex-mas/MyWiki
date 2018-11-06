@@ -1,14 +1,17 @@
 import { AnyAction, ActionCreator } from "redux";
 
+export const ERROR = 'ERROR';
+export type ERROR = 'ERROR';
+
 export type ErrorActionCreator = (message: string, code: number)=>ErrorAction;
 
 export interface ErrorAction {
-    type: 'ERROR',
+    type: ERROR,
     code: number,
     message: string
 };
 
-export enum ErrorActionCodes{
+export enum ErrorActionCode{
     UNSPECIFIEED = 0,
     FS = 1,
     NETWORK = 2,
@@ -16,12 +19,12 @@ export enum ErrorActionCodes{
 }
 
 export const isErrorAction = (obj: AnyAction): obj is ErrorAction=>{
-    return obj.type === 'ERROR';
+    return obj.type === ERROR;
 }
 
 export const errorAction: ErrorActionCreator = (message: string, code: number)=>{
     return {
-        type: 'ERROR',
+        type: ERROR,
         code,
         message
     }
@@ -30,7 +33,7 @@ export const errorAction: ErrorActionCreator = (message: string, code: number)=>
 export type FsErrorActionCreator = (message:string)=> ErrorAction;
 
 export const fsError: FsErrorActionCreator = (message: string)=>{
-    return errorAction(message, ErrorActionCodes.FS);
+    return errorAction(message, ErrorActionCode.FS);
 }
 
 
@@ -38,5 +41,5 @@ export default {
     isErrorAction,
     fsError,
     errorAction,
-    ErrorActionCodes
+    ErrorActionCode
 }

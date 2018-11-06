@@ -1,4 +1,5 @@
 import { Reducer, AnyAction } from "redux";
+import { PARSE_PLUGIN } from "../../actions/plugins";
 
 
 export interface Plugin {
@@ -21,7 +22,7 @@ const defaultPluginState: PluginState = []
 
 export const pluginReducer: Reducer<PluginState> = (state: PluginState = defaultPluginState, action: AnyAction) => {
     switch (action.type) {
-        case "PARSE_PLUGIN":
+        case PARSE_PLUGIN:
             return [...state, action.plugin]
         default:
             return state;

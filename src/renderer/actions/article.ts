@@ -7,13 +7,21 @@ import * as fsp from '../../utils/promisify-fs';
 import * as path from 'path';
 import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
-import { errorAction, fsError, ErrorAction, ErrorActionCodes } from "./errors";
+import { errorAction, fsError, ErrorAction, ErrorActionCode } from "./errors";
 import { deleteFolderRecursively } from '../utilities/fsutils';
 import { ValueJSON, Value } from "slate";
 import { ipcRenderer } from "electron";
 import * as child_process from 'child_process';
 
 import Plain from 'slate-plain-serializer';
+import { ActionWithPayload, AsyncACreator, ACreator } from "./utils";
+
+
+export const LOAD_ARTICLE = 'LOAD_ARTICLE';
+export const DELETE_ARTICLE = 'DELETE_ARTICLE';
+export const SAVE_ARTICLE = 'SAVE_ARTICLE';
+export const CREATE_ARTICLE = 'CREATE_ARTICLE';
+
 
 
 export interface ArticleMetaData {
@@ -31,6 +39,14 @@ export interface Article {
 }
 
 
+export type ArticleAction = ActionWithPayload<{
+    article: ArticleMetaData
+}>
+
+export type ArticleACreator = ACreator<[ArticleMetaData],ArticleAction>;
+
+
+
 export const getArticlePath = (wiki: WikiMetaData, articleName: string) => {
     return path.join('./wikis', wiki.id, 'articles', `${articleName}.json`);
 }
@@ -40,6 +56,8 @@ export const getArticleKeywords = (article: Article): Promise<string[]> => {
         resolve([]);
     });
 }
+
+
 
 export const getArticleMetaData = (article: Article): ArticleMetaData => {
     return {
@@ -52,25 +70,20 @@ export const getArticleMetaData = (article: Article): ArticleMetaData => {
 
 
 
-export interface ArticleAction extends Action {
-    article: ArticleMetaData
-}
-
-export type CreateArticleAction = ArticleAction;
-
-export type CreateArticleActionCreator = (article: Article) => ThunkAction<any, AppState, void, CreateArticleAction | ErrorAction>;
 
 
-const _createArticle: ActionCreator<ArticleAction> = (article: ArticleMetaData) => {
+export type CreateArticleActionCreator = AsyncACreator<[Article],any,ArticleAction>;
+
+const _createArticle: ArticleACreator = (article: ArticleMetaData) => {
     return {
-        type: 'CREATE_ARTICLE',
+        type: CREATE_ARTICLE,
         article
     }
 }
 
-export const createArticle: CreateArticleActionCreator = (article: Article) => {
+export const createArticle: CreateArticleActionCreator = (article) => {
     return (dispatch, getState) => {
-        return new Promise(async (resolve, reject) => {
+        return new Promise(async () => {
             const state = getState();
             const wiki = state.selectedWiki;
             try {
@@ -86,14 +99,13 @@ export const createArticle: CreateArticleActionCreator = (article: Article) => {
                     {flag:'wx', encoding: 'utf8'}
                 );
                 dispatch(_createArticle(getArticleMetaData(enhancedArticle)));
-                resolve(enhancedArticle);
+                return enhancedArticle;
 
             } catch (e) {
-                //TODO: 
                 const errMsg = `Error trying to create article ${article.name}, 
                 check that the article doesn't exist already, 
                 else it might be a problem with the application\n ${e}`;
-                dispatch(fsError(errMsg));
+                return dispatch(fsError(errMsg));
             }
         });
     }
@@ -102,13 +114,13 @@ export const createArticle: CreateArticleActionCreator = (article: Article) => {
 
 
 
-export type LoadArticleActionCreator = (name: string) => ThunkAction<Promise<Article>, AppState, void, ArticleAction | ErrorAction>;
+export type LoadArticleActionCreator = AsyncACreator<[string], ArticleAction, Article>;
 
 
 
-const _loadArticle: ActionCreator<ArticleAction> = (article: ArticleMetaData) => {
+const _loadArticle: ArticleACreator = (article: ArticleMetaData) => {
     return {
-        type: 'LOAD_ARTICLE',
+        type: LOAD_ARTICLE,
         article
     };
 }
@@ -118,7 +130,7 @@ const _loadArticle: ActionCreator<ArticleAction> = (article: ArticleMetaData) =>
 export const loadArticle: LoadArticleActionCreator = (name: string) => {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
-            const selectedWiki = getState().selectedWiki;
+            const wiki = getState().selectedWiki;
             const article: Article = {
                 content: {},
                 tags: [],
@@ -127,7 +139,7 @@ export const loadArticle: LoadArticleActionCreator = (name: string) => {
                 keywords: []
             }
             let articleData;
-            let filePath: string = getArticlePath(selectedWiki, name);
+            let filePath: string = getArticlePath(wiki, name);
             try{
                 const data = await fsp.readFile(filePath, 'utf8');
                 articleData = JSON.parse(data);
@@ -154,16 +166,14 @@ export const loadArticle: LoadArticleActionCreator = (name: string) => {
 }
 
 
-export interface SaveArticleAction extends Action {
-    article: ArticleMetaData
-}
-
-export type SaveArticleActionCreator = (article: Article) => ThunkAction<Promise<Article>, AppState, void, SaveArticleAction | ErrorAction>;
 
 
-const _saveArticle: ActionCreator<ArticleAction> = (article: ArticleMetaData) => {
+export type SaveArticleActionCreator = AsyncACreator<[Article],ArticleAction>;
+
+
+const _saveArticle: ArticleACreator = (article: ArticleMetaData) => {
     return {
-        type: 'SAVE_ARTICLE',
+        type: SAVE_ARTICLE,
         article
     };
 }
@@ -197,11 +207,9 @@ export const saveArticle: SaveArticleActionCreator = (article: Article) => {
 
 
 
-export interface DeleteArticleAction extends Action {
-    name: string
-}
+export type DeleteArticleAction = ActionWithPayload<{name: string}>;
 
-export type DeleteArticleActionCreator = (name: string) => ThunkAction<any, AppState, void, DeleteArticleAction | ErrorAction>;
+export type DeleteArticleActionCreator = AsyncACreator<[string],DeleteArticleAction>;
 
 export const deleteArticle: DeleteArticleActionCreator = (name: string) => {
     return (dispatch, getState) => {
@@ -211,7 +219,7 @@ export const deleteArticle: DeleteArticleActionCreator = (name: string) => {
             try{
                 await fsp.unlink(filePath);
                 resolve(dispatch({
-                    type: 'DELETE_ARTICLE',
+                    type: DELETE_ARTICLE,
                     name
                 }));
             }catch(e){

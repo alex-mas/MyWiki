@@ -4,22 +4,30 @@ import * as fsp from '../../utils/promisify-fs';
 import * as path from 'path';
 import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
-import { fsError, ErrorAction, ErrorActionCodes } from "./errors";
+import { fsError, ErrorAction, ErrorActionCode} from "./errors";
 import { isPluginLoaded } from "../selectors/plugins";
 import {Action} from 'redux';
 import { isPluginMetaDataValid } from "../validators/plugins";
 import { settle } from "../utilities/promise";
+import { ActionWithPayload, AsyncACreator } from "./utils";
+
+export const LOAD_PLUGIN = 'LOAD_PLUGIN';
+export const PARSE_PLUGIN = 'PARSE_PLUGIN';
+export const UNLOAD_PLUGIN = 'UNLOAD_PLUGIN';
 
 
-const _loadPlugin = (plugin: Plugin)=>{
+export type LoadPluginAction = ActionWithPayload<{plugin: PluginMetaData}>;
+export type LoadPluginActionCreator = AsyncACreator<[PluginMetaData],LoadPluginAction>;
+
+const _loadPlugin = (plugin: PluginMetaData)=>{
     return{
-        type: "LOAD_PLUGIN",
+        type: LOAD_PLUGIN,
         plugin
     }
 }
 
 
-export const loadPlugin = (pluginMetaData: PluginMetaData)=>{
+export const loadPlugin: LoadPluginActionCreator = (pluginMetaData)=>{
     return(dispatch:any, getState: any)=>{
         return new Promise(async (resolve,reject)=>{
             const state = getState();
@@ -29,6 +37,7 @@ export const loadPlugin = (pluginMetaData: PluginMetaData)=>{
                 //validate meta data -> if its correct load it, else dispatch error
                 if(isPluginMetaDataValid(pluginMetaData)){
                     const plugin = eval(`require(plugins/${pluginMetaData.name}/${pluginMetaData.main})`);
+                    dispatch(_loadPlugin(pluginMetaData));
                     plugin();
                 }
                 
@@ -48,7 +57,7 @@ export const loadPlugins = ()=>{
 
 export const unloadPlugin = (id: string)=>{
     return{
-        type: "UNLOAD_PLUGIN",
+        type: UNLOAD_PLUGIN,
         id
     }
 }
@@ -56,7 +65,7 @@ export const unloadPlugin = (id: string)=>{
 
 export const parsePlugin = (pluginMetaData: PluginMetaData) =>{
     return{
-        type: 'PARSE_PLUGIN',
+        type: PARSE_PLUGIN,
         plugin: pluginMetaData
     }
 }
