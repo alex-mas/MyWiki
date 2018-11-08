@@ -56,7 +56,6 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         }
         //@ts-ignore
         this.props.loadArticle(this.props.routeParams.article).then((article: Article) => {
-            console.log('Article returned from load article: ', article);
             this.setState(() => ({
                 content: article.content ? Value.fromJSON(article.content) : defaultEditorContents,
                 fileExists: article.content ? true : false
@@ -69,8 +68,6 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         })
     }
     componentDidUpdate(prevProps: WikiArticlePageProps, prevState: any) {
-        console.log('Previous:', prevProps, prevState);
-        console.log('Actual: ', this.props, this.state);
         if (this.props.routeParams.article !== prevProps.routeParams.article) {
             //@ts-ignore
             this.props.loadArticle(this.props.routeParams.article).then((article: Article) => {
@@ -138,7 +135,6 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         return background;
     }
     render() {
-        console.log('re-rendered article');
         const article = this.props.routeParams.article;
         if (this.state.fileExists) {
             return (

@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "@axc/react-components": "^0.1.7",
+    "@axc/thread-manager": "^0.1.0",
     "@slate-editor/alignment-plugin": "^5.0.0",
     "@types/draft-js": "^0.10.25",
     "@types/showdown": "^1.7.5",
@@ -71,6 +72,8 @@
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "reset-css": "^4.0.1",
+    "retext": "^6.0.0",
+    "retext-keywords": "^4.0.2",
     "showdown": "^1.8.6",
     "slate": "^0.41.2",
     "slate-plain-serializer": "^0.6.22",

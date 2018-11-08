@@ -33,7 +33,6 @@ export class WikiSearchBar extends React.Component<WSBProps, WSBState>{
         }
     }
     getSuggestions = (value: string) => {
-        console.log(this.state.value, this.props.articleNames);
         return this.props.articleNames.filter((article) => article.includes(value));
     }
     onChange = (value: string) => {
@@ -48,11 +47,9 @@ export class WikiSearchBar extends React.Component<WSBProps, WSBState>{
         const value = this.validateInput(val);
         const matchingArticles = this.props.articleNames.filter((article) => article.includes(value));
         if (matchingArticles.length === 1 && matchingArticles[0] === value) {
-            console.log(`/wiki/article/${value}`)
             this.props.history.pushState(`/wiki/article/${value}`);
         } else {
-            console.log(`/wiki/articleSearch/${value}`)
-            this.props.history.pushState(`/wiki/articleSearch/${value}`);
+            this.props.history.pushState(`/wiki/search/${value}`);
         }
     }
     render() {
@@ -70,7 +67,6 @@ export class WikiSearchBar extends React.Component<WSBProps, WSBState>{
 }
 
 export default withHistoryContext(connect<WSBDStateProps, WSBDispatchProps, WSBOwnProps, AppState>((state, props) => {
-    console.log(state.selectedWiki, getArticleNames(state.selectedWiki));
     return {
         articleNames: getArticleNames(state.selectedWiki)
     }

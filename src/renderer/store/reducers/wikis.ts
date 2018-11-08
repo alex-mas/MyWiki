@@ -16,6 +16,7 @@ export type WikisMetadataState = WikiMetaData[];
 
 const defaultState: WikisMetadataState = [];
 
+
 export const WikisMetadataReducer: Reducer<WikisMetadataState> = (state: WikisMetadataState = defaultState, action: AnyAction) => {
     switch (action.type) {
         case CREATE_WIKI:

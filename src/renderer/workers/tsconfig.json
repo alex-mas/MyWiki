@@ -1,13 +1,19 @@
 {
     "compilerOptions": {
-        "outDir": "./dist/src",
+        "outDir": "./dist/src/workers",
         "sourceMap": true,
         "noImplicitAny": true,
         "strict": true,
+        "strictNullChecks": false,
+        "lib":[
+            "es2017",
+            "webworker"
+        ],
         "module": "commonjs",
         "target": "es2017",
         "jsx": "react",
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true
     },
     "include": [
         "./**/*"

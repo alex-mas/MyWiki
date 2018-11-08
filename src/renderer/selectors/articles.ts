@@ -12,6 +12,10 @@ export const getArticleNames = (selectedWiki: WikiMetaData): string[]=>{
     });
 };
 
+//TODO: add further parsing
+const parseSearch = (rawSerach: string)=>{
+    return rawSerach.toLocaleLowerCase();
+}
 
 /**
  * 
@@ -20,10 +24,13 @@ export const getArticleNames = (selectedWiki: WikiMetaData): string[]=>{
  * 
  */
 export const getRelevantArticles= (search:string, selectedWiki: WikiMetaData): string[]=>{
+    const parsedSearch = parseSearch(search);
     const regularMatches = selectedWiki.articles.filter((article)=>{
-        if(article.name.includes(search)){
-            return true;
-        }else if(article.tags.indexOf(search) > -1){
+        if(
+            article.name.toLocaleLowerCase().includes(search) ||
+            article.tags.indexOf(search) > -1 ||
+            article.keywords.indexOf(search) > -1
+        ){
             return true;
         }else{
             return false;
