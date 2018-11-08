@@ -12,7 +12,7 @@ import { deleteFolderRecursively } from '../utilities/fsutils';
 import { ValueJSON, Value } from "slate";
 import { ipcRenderer } from "electron";
 import * as child_process from 'child_process';
-
+//@ts-ignore
 import Plain from 'slate-plain-serializer';
 import { ActionWithPayload, AsyncACreator, ACreator } from "./utils";
 import { mlThreads } from "../app";
@@ -120,31 +120,6 @@ export const createArticle: CreateArticleActionCreator = (article) => {
            dispatch(fsError(errMsg));
            throw e;
         }
-        /*return new Promise(async (resolve, reject) => {
-            const state = getState();
-            const wiki = state.selectedWiki;
-            try {
-                const keywords = await getArticleKeywords(article);
-                const enhancedArticle: Article = {
-                    ...article,
-                    keywords
-                }
-                await fsp.writeFile(
-                    getArticlePath(wiki, article.name),
-                    JSON.stringify(enhancedArticle),
-                    //fails if it exists
-                    {flag:'wx', encoding: 'utf8'}
-                );
-                dispatch(_createArticle(getArticleMetaData(enhancedArticle)));
-                return enhancedArticle;
-
-            } catch (e) {
-                const errMsg = `Error trying to create article ${article.name}, 
-                check that the article doesn't exist already, 
-                else it might be a problem with the application\n ${e}`;
-                return dispatch(fsError(errMsg));
-            }
-        });*/
     }
 }
 

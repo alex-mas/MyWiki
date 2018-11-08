@@ -63,21 +63,19 @@ const _setLocale = (locale: ISO639Locale, localeData: LocaleLayout) => {
     }
 }
 export const setLocale: SetLocaleActionCreator = (locale: ISO639Locale) => {
-    return (dispatch, getState) => {
-        return (async () => {
-            if (locale === 'en') {
-                return dispatch(_setLocale(locale, {}));
-            }
-            try {
-                const fileContents = await fsp.readFile(`./resources/locales/locale.${locale}.json`, 'utf8');
-                const localeData = JSON.parse(fileContents);
-                return dispatch(_setLocale(locale, localeData));
-            } catch (e) {
-                console.warn(e);
-                dispatch(_setLocale(ISO639Locale.en, {}));
-                return dispatch(fsError('error fetching locale data'));
-            }
-        })();
+    return async(dispatch, getState) => {
+        if (locale === 'en') {
+            return dispatch(_setLocale(locale, {}));
+        }
+        try {
+            const fileContents = await fsp.readFile(`./resources/locales/locale.${locale}.json`, 'utf8');
+            const localeData = JSON.parse(fileContents);
+            return dispatch(_setLocale(locale, localeData));
+        } catch (e) {
+            console.warn(e);
+            dispatch(_setLocale(ISO639Locale.en, {}));
+            return dispatch(fsError('error fetching locale data'));
+        }
     }
 }
 

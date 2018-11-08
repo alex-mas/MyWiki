@@ -28,21 +28,19 @@ const _loadPlugin = (plugin: PluginMetaData)=>{
 
 
 export const loadPlugin: LoadPluginActionCreator = (pluginMetaData)=>{
-    return(dispatch:any, getState: any)=>{
-        return new Promise(async (resolve,reject)=>{
-            const state = getState();
-            if(isPluginLoaded(pluginMetaData.id, state.plugins)){
-                //dispatch error, plugin cant be loaded twice
-            }else{
-                //validate meta data -> if its correct load it, else dispatch error
-                if(isPluginMetaDataValid(pluginMetaData)){
-                    const plugin = eval(`require(plugins/${pluginMetaData.name}/${pluginMetaData.main})`);
-                    dispatch(_loadPlugin(pluginMetaData));
-                    plugin();
-                }
-                
+    return async(dispatch:any, getState: any)=>{
+        const state = getState();
+        if(isPluginLoaded(pluginMetaData.id, state.plugins)){
+            //dispatch error, plugin cant be loaded twice
+        }else{
+            //validate meta data -> if its correct load it, else dispatch error
+            if(isPluginMetaDataValid(pluginMetaData)){
+                const plugin = eval(`require(plugins/${pluginMetaData.name}/${pluginMetaData.main})`);
+                plugin();
+                return dispatch(_loadPlugin(pluginMetaData));
             }
-        });
+            
+        }
     }
 }
 
@@ -80,27 +78,25 @@ export type ParsePluginActionCreator = () => ThunkAction<Promise<PluginMetaData[
 
 
 export const parsePlugins: ParsePluginActionCreator = () =>{
-    return(dispatch,getState)=>{
-        return (async (): Promise<PluginMetaData[]| ErrorAction>=>{
-            try{
-                const plugins = await fsp.readdir('./plugins');
-                const pluginData= await Promise.all(plugins.map(async(plugin)=>{
-                    try{
-                        const fileContents = await fsp.readFile(`./plugins/${plugin}/plugin.config.json`, 'utf8');
-                        const data: PluginMetaData = JSON.parse(fileContents);
-                        data.loaded = false;
-                        dispatch(parsePlugin(data));
-                        return data;
-                    }catch(e){
-                        dispatch(fsError(`Error while parsing ${plugin} metadata`));
-                        throw e;
-                    }
-                }));
-                return pluginData;
-            }catch(e){
-                return dispatch(fsError("Error reading plugin directory"));
-            }
-        })();
+    return async(dispatch,getState)=>{
+        try{
+            const plugins = await fsp.readdir('./plugins');
+            const pluginData= await Promise.all(plugins.map(async(plugin)=>{
+                try{
+                    const fileContents = await fsp.readFile(`./plugins/${plugin}/plugin.config.json`, 'utf8');
+                    const data: PluginMetaData = JSON.parse(fileContents);
+                    data.loaded = false;
+                    dispatch(parsePlugin(data));
+                    return data;
+                }catch(e){
+                    dispatch(fsError(`Error while parsing ${plugin} metadata`));
+                    throw e;
+                }
+            }));
+            return pluginData;
+        }catch(e){
+            return dispatch(fsError("Error reading plugin directory"));
+        }
     };
 }
 

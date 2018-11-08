@@ -4,8 +4,8 @@ const {promisify} = require('util');
 const mainEntryPoint = './src/main/main.ts';
 const rendererEntryPoint = './src/renderer/app.tsx';
 const workerEntryFolder = './src/renderer/workers';
-const workerOutputFolder = './dist/src/workers';
-const outputFolder = './dist/src';
+const workerOutputFolder = './dist/workers';
+const outputFolder = './dist/';
 
 const readdir = promisify(fs.readdir);
 

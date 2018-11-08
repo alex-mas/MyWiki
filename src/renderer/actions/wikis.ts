@@ -38,36 +38,34 @@ const _createWiki = (wiki: WikiMetaData) => {
 
 
 export const createWiki: CreateWikiActionCreator = (wiki: UserWikiData) => {
-    return (dispatch, getState) => {
-        return new Promise(async (resolve, reject) => {
-            const wikiId = uuid();
-            const wikiPath = `./wikis/${wikiId}`;
-            try {
-                await fsp.mkdir('./wikis').catch((e) => console.log(e));
-                const wikiData: WikiMetaData = {
-                    path: wikiPath,
-                    name: wiki.name,
-                    id: wikiId,
-                    background: wiki.background,
-                    description: wiki.description,
-                    articles: []
-                }
-                await fsp.mkdir(wikiPath);
-                await fsp.mkdir(path.join(wikiPath, 'articles'));
-                await fsp.writeFile(
-                    path.join(wikiPath, 'myWiki.config.json'),
-                    JSON.stringify(wikiData),
-                    'utf8'
-                );
-                dispatch(_createWiki(wikiData));
-
-            } catch (error) {
-                console.log(error);
-                const errMsg = fsError(`Error creating the configuration file for ${name} wiki`);
-                dispatch(errMsg);
-                reject(errMsg);
+    return async(dispatch, getState) => {
+        const wikiId = uuid();
+        const wikiPath = `./wikis/${wikiId}`;
+        try {
+            await fsp.mkdir('./wikis').catch((e) => console.log(e));
+            const wikiData: WikiMetaData = {
+                path: wikiPath,
+                name: wiki.name,
+                id: wikiId,
+                background: wiki.background,
+                description: wiki.description,
+                articles: []
             }
-        });
+            await fsp.mkdir(wikiPath);
+            await fsp.mkdir(path.join(wikiPath, 'articles'));
+            await fsp.writeFile(
+                path.join(wikiPath, 'myWiki.config.json'),
+                JSON.stringify(wikiData),
+                'utf8'
+            );
+            return dispatch(_createWiki(wikiData));
+
+        } catch (error) {
+            console.log(error);
+            const errMsg = fsError(`Error creating the configuration file for ${name} wiki`);
+            dispatch(errMsg);
+            throw error;
+        }
     }
 
 }
@@ -76,25 +74,23 @@ export type RemoveWikiAction = WikiAction;
 export type RemoveWikiActionCreator = ActionCreator<ThunkAction<any, AppState, void, RemoveWikiAction | ErrorAction>>;
 
 export const removeWiki: RemoveWikiActionCreator = (wiki: WikiMetaData) => {
-    return (dispatch, getState) => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const wikis = await fsp.readdir('./wikis');
-                wikis.forEach((wikiFolder) => {
-                    if (wikiFolder === wiki.id) {
-                        deleteFolderRecursively(path.join('./wikis', `${wiki.id}`));
-                    }
-                });
-            } catch (e) {
-                reject(dispatch(fsError('error removing wiki folder')));
-            } finally {
-                resolve(dispatch({
-                    type: REMOVE_WIKI,
-                    wiki
-                }));
-            }
-
-        });
+    return async(dispatch, getState) => {
+        try {
+            const wikis = await fsp.readdir('./wikis');
+            wikis.forEach((wikiFolder) => {
+                if (wikiFolder === wiki.id) {
+                    deleteFolderRecursively(path.join('./wikis', `${wiki.id}`));
+                }
+            });
+        } catch (e) {
+            dispatch(fsError('error removing wiki folder'));
+            throw e;
+        } finally {
+            return dispatch({
+                type: REMOVE_WIKI,
+                wiki
+            });
+        }
     }
 }
 
@@ -103,7 +99,7 @@ export type SelectWikiAction = WikiAction;
 export type SelectWikiActionCreator = ActionCreator<ThunkAction<any, AppState, void, SelectWikiAction | ErrorAction>>;
 
 export const selectWiki: SelectWikiActionCreator = (id: string) => {
-    return (dispatch, getState) => {
+    return async(dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const state = getState();
             const wiki = state.wikis.find((wiki) => wiki.id === id);
@@ -127,32 +123,30 @@ export type LoadWikiAction = ActionWithPayload<{
 export type LoadWikiActionCreator = AsyncACreator<[string], LoadWikiAction>;
 
 export const loadWiki: LoadWikiActionCreator = (id: string) => {
-    return (dispatch, getState) => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const wiki = JSON.parse(await fsp.readFile(`./wikis/${id}/myWiki.config.json`, 'utf8'));
-                const articleFiles = await fsp.readdir(`./wikis/${id}/articles`);
-                const articles = await Promise.all(articleFiles.map(async (articleFile) => {
-                    const articleContents = await fsp.readFile(`./wikis/${id}/articles/${articleFile}`, 'utf8');
-                    return JSON.parse(articleContents);
-                }))
-                .catch((e)=>{
-                    dispatch(fsError('error while reading aeticles'));
-                    reject(e);
-                });
-                dispatch({
-                    type: LOAD_WIKI,
-                    wiki: {
-                        ...wiki,
-                        articles
-                    }
-                });
-                resolve('success loading wiki');
-            } catch (err) {
-                dispatch(fsError('error while reading articles folder'));
-                reject(err);
-            }
-        });
+    return async (dispatch, getState) => {
+        try {
+            const wiki = JSON.parse(await fsp.readFile(`./wikis/${id}/myWiki.config.json`, 'utf8'));
+            const articleFiles = await fsp.readdir(`./wikis/${id}/articles`);
+            const articles = await Promise.all(articleFiles.map(async (articleFile) => {
+                const articleContents = await fsp.readFile(`./wikis/${id}/articles/${articleFile}`, 'utf8');
+                return JSON.parse(articleContents);
+            }))
+            .catch((e)=>{
+                dispatch(fsError('error while reading aeticles'));
+                throw e;
+            });
+
+            return dispatch({
+                type: LOAD_WIKI,
+                wiki: {
+                    ...wiki,
+                    articles
+                }
+            });
+        } catch (err) {
+            dispatch(fsError('error while reading articles folder'));
+            throw err;
+        }
     }
 }
 
