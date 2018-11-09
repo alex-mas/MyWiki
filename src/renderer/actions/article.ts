@@ -15,13 +15,16 @@ import * as child_process from 'child_process';
 //@ts-ignore
 import Plain from 'slate-plain-serializer';
 import { ActionWithPayload, AsyncACreator, ACreator } from "./utils";
-import { mlThreads } from "../app";
+import { mlThreads, store } from "../app";
+import { generateArticleKeywords } from "./ml";
 
 
 export const LOAD_ARTICLE = 'LOAD_ARTICLE';
 export const DELETE_ARTICLE = 'DELETE_ARTICLE';
 export const SAVE_ARTICLE = 'SAVE_ARTICLE';
 export const CREATE_ARTICLE = 'CREATE_ARTICLE';
+export const SET_ARTICLE_METADATA = 'SET_ARTICLE_METADATA';
+
 
 
 
@@ -52,23 +55,6 @@ export const getArticlePath = (wiki: WikiMetaData, articleName: string) => {
     return path.join('./wikis', wiki.id, 'articles', `${articleName}.json`);
 }
 
-export const getArticleKeywords = (article: Article): Promise<string[]> => {
-    return new Promise((resolve, reject) => {
-        const eListener = (message: MessageEvent)=>{
-            console.log('Recieved event from the main thread', message);
-            if(message.data){
-                resolve(message.data);
-            }else{
-                resolve([]);
-            }
-        }
-        mlThreads.distribute(
-            'GET_KEYWORDS', 
-            Plain.serialize(Value.fromJSON(article.content)),
-            eListener
-        );
-    });
-}
 
 
 
@@ -83,6 +69,11 @@ export const getArticleMetaData = (article: Article): ArticleMetaData => {
 
 
 
+export const setArticleMetaData = (metaData: ArticleMetaData)=>{
+    return async(dispatch: any, getState: any)=>{
+        
+    }
+}
 
 
 export type CreateArticleActionCreator = AsyncACreator<[Article],ArticleAction, ArticleAction>;
@@ -99,18 +90,14 @@ export const createArticle: CreateArticleActionCreator = (article) => {
         const state = getState();
         const wiki = state.selectedWiki;
         try {
-            const keywords = await getArticleKeywords(article);
-            const enhancedArticle: Article = {
-                ...article,
-                keywords
-            }
+            generateArticleKeywords(article);
             await fsp.writeFile(
                 getArticlePath(wiki, article.name),
-                JSON.stringify(enhancedArticle),
+                JSON.stringify(article),
                 //fails if it exists
                 {flag:'wx', encoding: 'utf8'}
             );
-            return dispatch(_createArticle(getArticleMetaData(enhancedArticle)));
+            return dispatch(_createArticle(getArticleMetaData(article)));
 
         } catch (e) {
             const errMsg = `Error trying to create article ${article.name}, 
@@ -192,18 +179,14 @@ export const saveArticle: SaveArticleActionCreator = (article: Article) => {
     return async(dispatch, getState) => {
         const selectedWiki = getState().selectedWiki;
         try{
-            const keywords = await getArticleKeywords(article);
-            const enhancedArticle = {
-                ...article,
-                keywords
-            };
+            generateArticleKeywords(article);
             await fsp.writeFile(
                 getArticlePath(selectedWiki, article.name),
-                JSON.stringify(enhancedArticle),
+                JSON.stringify(article),
                 'utf8'
             );
-            dispatch(_saveArticle(getArticleMetaData(enhancedArticle)));
-            return enhancedArticle;
+            dispatch(_saveArticle(getArticleMetaData(article)));
+            return article;
         }catch(e){
             dispatch(fsError(`Error trying to edit article ${article.name}, please try running the app as administrator. If that doesn't work contact the developer`));
             throw e;

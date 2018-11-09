@@ -18,18 +18,26 @@ const extractKeywords = (document: string) => {
 }
 
 
+const generatedKeywords = (name: string, keywords: string[])=>{
+    return{
+        type: 'GENERATED_KEYWORDS',
+        name,
+        keywords
+    }
+}
+
 onmessage = (event) => {
     console.log('Event recieved at the worker', event);
-    switch (event.data.event) {
+    const action = event.data;
+    switch (action.type) {
         case 'GET_KEYWORDS':
-            return extractKeywords(event.data.payload)
+            return extractKeywords(action.payload.contents)
                 .then((keywords) => {
                     console.log('success on ml worker, keywords extracted from text are: ', keywords);
-                    postMessage(keywords);
+                    postMessage(generatedKeywords(action.payload.name, keywords));
                 })
                 .catch((err) => {
-                    console.warn('error on ml worker', err);
-                    postMessage([]);
-                })
+                    throw err;
+                });
     }
 }

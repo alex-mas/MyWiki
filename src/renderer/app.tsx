@@ -17,15 +17,22 @@ import { parsePlugins } from './actions/plugins';
 import I18String, { I18nSystem as _I18nSystem, I18nSystemProps } from '@axc/react-components/display/i18string';
 import { PromptSystem } from '@axc/react-components/interactive/prompt';
 import { AnyAction } from 'redux';
-//@ts-ignore
-import * as ThreadManager from '@axc/thread-manager';
+
+import { ThreadManager, WorkDistributionStrategy } from '@axc/thread-manager';
 
 
 const appRoot = document.getElementById('app');
 
 export const store = configureStore();
 
-export const mlThreads = new ThreadManager('./workers/ml.js', {ammountOfWorkers: 1, distributionMethod: 'round_robin'});
+export const mlThreads = new ThreadManager(
+    './workers/ml.js',
+    {
+        amountOfWorkers: 1,
+        distributionStrategy: WorkDistributionStrategy.ROUND_ROBIN
+    }
+);
+
 
 const I18nSystem = connect((state: AppState, props) => {
     return {
