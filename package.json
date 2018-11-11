@@ -58,7 +58,6 @@
   "dependencies": {
     "@axc/react-components": "^0.1.7",
     "@axc/thread-manager": "^0.1.0",
-
     "express": "^4.16.3",
     "image-size": "^0.6.3",
     "immutable": "^3.8.2",

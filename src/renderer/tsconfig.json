@@ -3,7 +3,7 @@
         "outDir": "./dist/src",
         "sourceMap": true,
         "noImplicitAny": true,
-        "strict": false,
+        "strict": true,
         "strictNullChecks": false,
         "module": "commonjs",
         "target": "es2017",
