@@ -21,7 +21,7 @@
   "scripts": {
     "webpack:dev": "node_modules/.bin/webpack --config webpack/webpack.config.dev.js --debug",
     "webpack:prod": "node_modules/.bin/webpack --config webpack/webpack.config.dev.js --mode=production",
-    "start": "npm run webpack:dev && electron dist/src/main.js",
+    "start": "npm run webpack:dev && electron dist/app/main.js",
     "build": " npm run webpack:prod && electron-builder",
     "start-nobuild": "electron dist/src/main.js",
     "test": "echo \"Error: no test specified\" && exit 1",

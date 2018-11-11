@@ -1,21 +1,11 @@
 
-import { ActionCreator, Dispatch, Action, AnyAction } from "redux";
 import { WikiMetaData } from "../store/reducers/wikis";
 import * as uuid from 'uuid/v4';
-import * as fs from 'fs';
 import * as fsp from '../../utils/promisify-fs';
 import * as path from 'path';
-import { ThunkAction } from "redux-thunk";
-import { AppState } from "../store/store";
 import { errorAction, fsError, ErrorAction, ErrorActionCode } from "./errors";
-import { deleteFolderRecursively } from '../utilities/fsutils';
 import { ValueJSON, Value } from "slate";
-import { ipcRenderer } from "electron";
-import * as child_process from 'child_process';
-//@ts-ignore
-import Plain from 'slate-plain-serializer';
 import { ActionWithPayload, AsyncACreator, ACreator } from "./utils";
-import { mlThreads, store } from "../app";
 import { generateArticleKeywords } from "./ml";
 
 
@@ -89,6 +79,7 @@ export const createArticle: CreateArticleActionCreator = (article) => {
     return async (dispatch, getState) => {
         const state = getState();
         const wiki = state.selectedWiki;
+        console.log('Article about to be created: ',article);
         try {
             generateArticleKeywords(article);
             await fsp.writeFile(

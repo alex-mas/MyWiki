@@ -11,7 +11,7 @@ import { WikiMetaData } from '../store/reducers/wikis';
 
 
 interface WikiViewOwnProps {
-    getBackground?: ()=>string
+    background: string
 }
 
 interface WikiViewReduxProps {
@@ -33,8 +33,8 @@ export class WikiView extends React.Component<WikiViewProps, WikiViewState>{
     getBackground = () => {
         let background;
         //let the caller provide a customized background
-        if(this.props.getBackground){
-            background = this.props.getBackground();
+        if(this.props.background){
+            background = this.props.background;
         }else if(this.props.selectedWiki.background){
             background = this.props.selectedWiki.background;
         }else{

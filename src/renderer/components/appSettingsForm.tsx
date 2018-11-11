@@ -34,10 +34,9 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
     constructor(props: SettingsProps) {
         super(props);
     }
-    onLocaleChange = (event: React.FormEvent<HTMLSelectElement>) => {
-        const locale = event.currentTarget.value;
-        this.props.setLocale(locale
-        );
+    onLocaleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const locale = event.target.value;
+        this.props.setLocale(locale as ISO639Locale);
     }
     onBackgroundChange = (background: string) => {
         this.props.setAppBackground( background
@@ -55,6 +54,7 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
             return (
                 <form className='settings-form'>
                     <select
+                        className='form-input'
                         value={this.props.data.locale}
                         onChange={this.onLocaleChange}
                     >
@@ -65,19 +65,22 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
                         })}
                     </select>
                     <ImageInput
+                        className='form-input'
                         windowTitle='select App background image'
                         value={this.props.data.background}
                         onChange={this.onBackgroundChange}
                     >
                         Background Image
-                </ImageInput>
+                    </ImageInput>
                     <button
+                        className='form-action'
                         type='button'
                         onClick={this.onConfirmChanges}
                     >
                         Confirm
                  </button>
                     <button
+                        className='form-action'
                         type='button'
                         onClick={this.onResetValues}
                     >

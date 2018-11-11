@@ -1,4 +1,15 @@
+@keyframes windowFadein{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
 
+#html-root{
+    animation: windowFadein 0.5s;
+}
 
 body {
     margin: 0; padding: 0;

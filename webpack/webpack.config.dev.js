@@ -4,12 +4,13 @@ const {promisify} = require('util');
 const mainEntryPoint = './src/main/main.ts';
 const rendererEntryPoint = './src/renderer/app.tsx';
 const workerEntryFolder = './src/renderer/workers';
-const workerOutputFolder = './dist/workers';
-const outputFolder = './dist/';
+const workerOutputFolder = './dist/app/workers';
+const outputFolder = './dist/app/';
 
 const readdir = promisify(fs.readdir);
 
 fs.copyFileSync('./src/static/index.html', outputFolder+'/index.html');
+fs.copyFileSync('./src/static/loader.html', outputFolder+'/loader.html')
 
 
 const getWorkerFiles = ()=>{

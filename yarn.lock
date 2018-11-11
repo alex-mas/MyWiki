@@ -7,8 +7,8 @@
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-4.0.2.tgz#6abbdc22f33cab742053777a26db2e25ca527179"
 
 "@axc/react-components@^0.1.7":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@axc/react-components/-/react-components-0.1.8.tgz#24605ec6b0a6d04816abd4b0abaafebd7936bf9c"
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@axc/react-components/-/react-components-0.1.9.tgz#d87765706c5d148ac2cdbfac80ff0157500bbc64"
   dependencies:
     "@fortawesome/fontawesome" "^1.1.8"
     "@fortawesome/fontawesome-free-regular" "^5.0.13"
@@ -21,8 +21,8 @@
     uuid "^3.3.2"
 
 "@axc/thread-manager@^0.1.0":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@axc/thread-manager/-/thread-manager-0.1.4.tgz#5a3fe65530695985036d861fa77661f6762dedd4"
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@axc/thread-manager/-/thread-manager-0.1.7.tgz#14beced298dbad926419864bca2a320901ec3c56"
 
 "@babel/code-frame@^7.0.0-beta.35":
   version "7.0.0"

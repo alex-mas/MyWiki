@@ -10,7 +10,6 @@ const extractKeywords = (document: string) => {
             .use(retextKeywords)
             .process(document, (err: Error, file: any) => {
                 if (err) { reject(err); }
-                console.log(file);
                 const keywords: string[] = file.data.keywords.map((keyword: any) => keyword.stem);
                 resolve(keywords);
             });
@@ -31,10 +30,10 @@ onmessage = (event) => {
     const action = event.data;
     switch (action.type) {
         case 'GET_KEYWORDS':
-            return extractKeywords(action.payload.contents)
+            return extractKeywords(action.contents)
                 .then((keywords) => {
                     console.log('success on ml worker, keywords extracted from text are: ', keywords);
-                    postMessage(generatedKeywords(action.payload.name, keywords));
+                    postMessage(generatedKeywords(action.name, keywords));
                 })
                 .catch((err) => {
                     throw err;

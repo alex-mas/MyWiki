@@ -18,6 +18,10 @@ export const SELECT_WIKI = 'SELECT_WIKI';
 export const LOAD_WIKI = 'LOAD_WIKI';
 export const LOAD_WIKIS = 'LOAD_WIKIS';
 export const RESET_WIKI = 'RESET_WIKI';
+export const  SET_WIKI_BACKGROUND = 'SET_WIKI_BACKGROUND';
+export const SET_WIKI_NAME = 'SET_WIKI_NAME';
+export const SET_WIKI_DESCRIPTION = 'SET_WIKI_DESCRIPTION';
+export const SET_WIKI_DATA = 'SET_WIKI_DATA';
 
 
 type WikiAction = Action & { wiki: WikiMetaData };
@@ -129,13 +133,16 @@ export const loadWiki: LoadWikiActionCreator = (id: string) => {
             const articleFiles = await fsp.readdir(`./wikis/${id}/articles`);
             const articles = await Promise.all(articleFiles.map(async (articleFile) => {
                 const articleContents = await fsp.readFile(`./wikis/${id}/articles/${articleFile}`, 'utf8');
-                return JSON.parse(articleContents);
+                const article: Article = JSON.parse(articleContents);
+                delete article.content;
+                debugger;
+                return article as ArticleMetaData;
             }))
             .catch((e)=>{
-                dispatch(fsError('error while reading aeticles'));
+                dispatch(fsError('error while reading articles'));
                 throw e;
             });
-
+            debugger;
             return dispatch({
                 type: LOAD_WIKI,
                 wiki: {
@@ -158,6 +165,40 @@ export const loadWikis: LoadWikisActionCreator = (wikis: WikiMetaData[]) => {
     return {
         type: LOAD_WIKIS,
         wikis
+    }
+}
+
+export type SetWikiBgAction =ActionWithPayload<{background:string}>;
+export type SetWikiBgActionCreator =ACreator<[string,string], SetWikiBgAction>
+export const setWikiBackground: SetWikiBgActionCreator = (id: string,background: string)=>{
+    return {
+        type: SET_WIKI_BACKGROUND,
+        id,
+        background
+    }
+}
+
+
+
+export type SetWikiNameAction =ActionWithPayload<{name:string}>;
+export type SetWikiNameActionCreator =ACreator<[string,string], SetWikiNameAction>
+export const setWikiName: SetWikiNameActionCreator = (id: string, name: string)=>{
+    return {
+        type: SET_WIKI_NAME,
+        id,
+        name
+    }
+}
+
+
+export type SetWikiDescriptionAction =ActionWithPayload<{description: string}>;
+export type SetWikiDescriptionActionCreator =ACreator<[string,string], SetWikiDescriptionAction>
+export const setWikiDescription: SetWikiDescriptionActionCreator = (id: string, description: string)=>{
+    return {
+        type: SET_WIKI_DESCRIPTION,
+        id,
+        description
+      
     }
 }
 

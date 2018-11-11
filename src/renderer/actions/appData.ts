@@ -15,12 +15,10 @@ export const SET_LOCALE = 'SET_LOCALE';
 export const SET_APP_BACKGROUND = 'SET_APP_BACKGROUND';
 
 
+
+
 export type AppDataAction = ActionWithPayload<{data: AppData}>;
 export type AppDataActionCreator = AsyncACreator<[AppData],AppDataAction>
-
-
-
-
 
 export const setAppData: AppDataActionCreator = (newData) => {
     return(dispatch, getState)=>{
@@ -30,8 +28,8 @@ export const setAppData: AppDataActionCreator = (newData) => {
             data: newData
         });
     }
-
 }
+
 
 export type ResetAppDataAction = Action<string>;
 export type ResetAppDataActionCreator = AsyncACreator<any, ResetAppDataAction>
@@ -53,7 +51,7 @@ export type SetLocaleAction = ActionWithPayload<{
     locale: string,
     localeData: LocaleLayout
 }>;
-export type SetLocaleActionCreator = ActionCreator<ThunkAction<Promise<any>, AppState, void, ErrorAction | SetLocaleAction>>;
+export type SetLocaleActionCreator = AsyncACreator<[ISO639Locale],SetLocaleAction, SetLocaleAction>
 
 const _setLocale = (locale: ISO639Locale, localeData: LocaleLayout) => {
     return {
@@ -74,7 +72,8 @@ export const setLocale: SetLocaleActionCreator = (locale: ISO639Locale) => {
         } catch (e) {
             console.warn(e);
             dispatch(_setLocale(ISO639Locale.en, {}));
-            return dispatch(fsError('error fetching locale data'));
+            dispatch(fsError('error fetching locale data'));
+            throw e;
         }
     }
 }

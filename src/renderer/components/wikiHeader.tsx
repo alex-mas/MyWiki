@@ -12,7 +12,7 @@ export interface WikiHeaderProps {
 }
 
 export interface WikiHeaderState {
-    isMenuOpen: boolean
+    isMenuOpen: boolean,
 }
 
 class WikiHeader extends React.Component<WikiHeaderProps, WikiHeaderState>{
@@ -50,7 +50,9 @@ class WikiHeader extends React.Component<WikiHeaderProps, WikiHeaderState>{
                             menu
                         </i>
                     </button>
-                    <WikiMenu isOpen={this.state.isMenuOpen} />
+                    <WikiMenu
+                        isOpen={this.state.isMenuOpen}
+                    />
                 </div>
             </Header>
         )

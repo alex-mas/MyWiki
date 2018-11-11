@@ -1,20 +1,28 @@
 import { Reducer, AnyAction } from "redux";
-import I18String, {ISO639Locale} from '@axc/react-components/display/i18string';
+import I18String, { ISO639Locale } from '@axc/react-components/display/i18string';
 import { SET_LOCALE, SET_APP_DATA, UPDATE_APP_DATA, RESET_APP_DATA } from "../../actions/appData";
+import { SELECT_WIKI, selectWiki } from "../../actions/wikis";
 
-export interface AppData{
+export interface AppData {
     background: string,
-    locale: ISO639Locale
+    locale: ISO639Locale,
+    selectedWiki: string
 }
 
 
 export const defaultAppData: AppData = {
     background: 'resources/images/landscape.jpg',
-    locale: ISO639Locale.en
+    locale: ISO639Locale.en,
+    selectedWiki: undefined
 };
 
-export const AppDataReducer: Reducer<AppData> = (state: AppData = defaultAppData, action: AnyAction) =>{
-    switch(action.type){
+export const AppDataReducer: Reducer<AppData> = (state: AppData = defaultAppData, action: AnyAction) => {
+    switch (action.type) {
+        case SELECT_WIKI:
+            return {
+                ...state,
+                selectedWiki: action.wiki
+            };
         case SET_LOCALE:
             return {
                 ...state,

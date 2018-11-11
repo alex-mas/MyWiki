@@ -138,7 +138,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         const article = this.props.routeParams.article;
         if (this.state.fileExists) {
             return (
-                <WikiView getBackground={this.getBackground}>
+                <WikiView background={this.getBackground()}>
                     <div className='body--article'>
                         <div className='wiki-article__header'>
                             <div className='wiki-article__header__section'>

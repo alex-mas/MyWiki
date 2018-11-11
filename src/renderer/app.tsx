@@ -7,8 +7,11 @@ require('@axc/react-components/styles/axc-styles.css');
 //@ts-ignore
 require('./styles/index.scss');
 
+
+
 import { Provider, connect } from 'react-redux';
 import configureStore, { AppState } from './store/store';
+
 import AppRouter from './router/router';
 import { loadWikis, loadWiki } from './actions/wikis';
 import { WikiMetaData } from './store/reducers/wikis';
@@ -17,14 +20,12 @@ import { parsePlugins } from './actions/plugins';
 import I18String, { I18nSystem as _I18nSystem, I18nSystemProps } from '@axc/react-components/display/i18string';
 import { PromptSystem } from '@axc/react-components/interactive/prompt';
 import { AnyAction } from 'redux';
-
 import { ThreadManager, WorkDistributionStrategy } from '@axc/thread-manager';
+import { onRecieveArticleKeywords } from './actions/ml';
 
 
-const appRoot = document.getElementById('app');
 
 export const store = configureStore();
-
 export const mlThreads = new ThreadManager(
     './workers/ml.js',
     {
@@ -32,6 +33,16 @@ export const mlThreads = new ThreadManager(
         distributionStrategy: WorkDistributionStrategy.ROUND_ROBIN
     }
 );
+
+
+const appRoot = document.getElementById('app');
+
+
+
+//TODO: get rid of initializing mlThreads middleware here
+
+mlThreads.use(onRecieveArticleKeywords);
+
 
 
 const I18nSystem = connect((state: AppState, props) => {
@@ -91,3 +102,9 @@ window.onbeforeunload = () => {
 
 //@ts-ignore
 store.dispatch(parsePlugins());
+
+
+export default{
+    store,
+    mlThreads
+}
