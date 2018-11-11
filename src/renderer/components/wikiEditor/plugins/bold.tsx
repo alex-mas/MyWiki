@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { RenderMarkProps } from "slate-react";
-import { EditorPluginOptions } from '../../wikiEditor';
-import EditorButton from '../../components/editorButton';
-import { hasMarkType, RenderMark, onClickMarkButton} from '../../utilities/marks';
+import { EditorPluginOptions } from '../wikiEditor';
+import EditorButton from '../components/editorButton';
+import { hasMarkType, RenderMark, onClickMarkButton} from '../utilities/marks';
 import { Value } from 'slate';
 
 

@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { RenderNodeProps } from "slate-react";
-import { EditorPluginOptions, DEFAULT_NODE } from '../../wikiEditor';
-import EditorButton from '../../components/editorButton';
+import { EditorPluginOptions, DEFAULT_NODE } from '../wikiEditor';
+import EditorButton from '../components/editorButton';
 import { Value } from 'slate';
-import { RenderBlock, hasBlockType, onClickBlockButton } from '../../utilities/blocks';
-import { hasInlineType, wrapInline, unwrapInline } from '../../utilities/inlines';
+import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
+import { hasInlineType, wrapInline, unwrapInline } from '../utilities/inlines';
 import Modal from '@axc/react-components/layout/modal';
-import LinkButton from '../../components/linkButton';
-import WikiLink from '../../components/wikiLink';
+import LinkButton from '../components/linkButton';
+import WikiLink from '../components/wikiLink';
 import Resizable from 're-resizable';
 import { remote, Dialog } from 'electron';
 import * as path from 'path';
-import  Image from '../../components/image';
+import  Image from '../components/image';
 
 
 

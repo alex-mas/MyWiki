@@ -61,7 +61,7 @@ export class Image extends React.Component<ImageProps, { width: number, height: 
                         bottomLeft: isResizable,
                         topLeft: isResizable
                     }}
-                    lockAspectRatio={true}
+                
                 >
                     <img
                         //@ts-ignore

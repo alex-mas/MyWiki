@@ -6,17 +6,17 @@ import { remote, Dialog } from 'electron';
 
 
 //plugins
-import BoldPlugin from './plugins/marks/bold';
-import ItalicPlugin from './plugins/marks/italic';
-import UnderlinedPlugin from './plugins/marks/underlined';
-import CodePlugin from './plugins/marks/code';
-import generateHeaderPlugins from './plugins/blocks/header';
-import generateAlignmentPlugins from './plugins/blocks/align';
-import generateListPlugins from './plugins/blocks/lists';
-import BlockQuotePlugin from './plugins/blocks/blockQuote';
-import LinkPlugin from './plugins/blocks/link';
-import ImagePlugin from './plugins/blocks/image';
-import TabulationPlugin from './plugins/keyboard/tabulation';
+import BoldPlugin from './plugins/bold';
+import ItalicPlugin from './plugins/italic';
+import UnderlinedPlugin from './plugins/underlined';
+import CodePlugin from './plugins/code';
+import generateHeaderPlugins from './plugins/header';
+import generateAlignmentPlugins from './plugins/align';
+import generateListPlugins from './plugins/lists';
+import BlockQuotePlugin from './plugins/blockQuote';
+import LinkPlugin from './plugins/link';
+import ImagePlugin from './plugins/image';
+import TabulationPlugin from './plugins/tabulation';
 
 
 
