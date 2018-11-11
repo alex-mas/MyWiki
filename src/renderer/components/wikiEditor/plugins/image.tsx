@@ -1,32 +1,32 @@
 import * as React from 'react';
 import { RenderNodeProps } from "slate-react";
-import { EditorPluginOptions, DEFAULT_NODE } from '../wikiEditor';
+import { EditorPluginContext, DEFAULT_NODE } from '../wikiEditor';
 import EditorButton from '../components/editorButton';
 import { Value } from 'slate';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
 import { remote, Dialog } from 'electron';
 import * as path from 'path';
-import  Image from '../components/image';
+import Image from '../components/image';
 import * as imageSize from 'image-size';
 
 
 
 const dialog: Dialog = remote.dialog;
 
-export const ImagePlugin = (options: EditorPluginOptions) => {
+export const ImagePlugin = (context: EditorPluginContext) => {
 
 
-    const renderImage = (props: RenderNodeProps) => { 
+    const renderImage = (props: RenderNodeProps) => {
         return (
-            <Image {...props} pluginOptions={options}/>
+            <Image {...props} pluginContext={context} />
         );
     }
 
 
     const onClickImageButton = (event: React.MouseEvent<HTMLSpanElement>, type: string, data: any) => {
         event.preventDefault()
-        const value = options.getContent();
-        const change = value.change();
+        const value = context.getContent();
+        const editor = context.getEditor();
         const { document } = value;
 
 
@@ -41,7 +41,7 @@ export const ImagePlugin = (options: EditorPluginOptions) => {
             const isActive = hasBlockType(value, type);
 
             if (isList) {
-                change
+                editor
                     .setBlocks(isActive ? DEFAULT_NODE : type)
                     .unwrapBlock('bulleted-list')
                     .unwrapBlock('numbered-list')
@@ -58,29 +58,29 @@ export const ImagePlugin = (options: EditorPluginOptions) => {
                         (filePaths: string[]) => {
                             if (filePaths.length === 1) {
                                 const imagePath = path.relative(__dirname, filePaths[0]);
-                                console.log('Inserting image: ', imagePath, change);
+                                console.log('Inserting image: ', imagePath, editor);
                                 const size = imageSize(imagePath);
-                                const imageRatio = size.width/size.height;
-                    
-                                change.insertBlock({
+                                const imageRatio = size.width / size.height;
+
+                                editor.insertBlock({
                                     type,
                                     data: {
                                         ...data,
                                         src: imagePath,
                                         height: '500',
-                                        width: String(imageRatio*500)
+                                        width: String(imageRatio * 500)
                                     }
                                 });
-                                change.insertBlock({
+                                editor.insertBlock({
                                     type: 'paragraph'
                                 });
-                                options.onChange(change);
+
                             }
                         });
                 } else {
                     const key = value.blocks.find(block => block.type === type).key;
                     if (key) {
-                        change.removeNodeByKey(key);
+                        editor.removeNodeByKey(key);
                     }
                 }
 
@@ -88,27 +88,27 @@ export const ImagePlugin = (options: EditorPluginOptions) => {
         } else {
             // Handle the extra wrapping required for list buttons.
             if (isList && isType) {
-                change
+                editor
                     .setBlocks(DEFAULT_NODE)
                     .unwrapBlock('bulleted-list')
                     .unwrapBlock('numbered-list')
             } else if (isList) {
-                change
+                editor
                     .unwrapBlock(
                         type == 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
                     )
                     .wrapBlock(type)
             } else {
-                change.setBlocks('list-item').wrapBlock(type);
+                editor.setBlocks('list-item').wrapBlock(type);
             }
         }
-        options.onChange(change);
     }
 
     return {
+        id: 'image_plugin',
         renderNode: RenderBlock('image', renderImage),
         Button() {
-            const isActive = hasBlockType(options.getContent(), 'image');
+            const isActive = hasBlockType(context.getContent(), 'image');
             return (
                 <EditorButton
                     onClick={onClickImageButton}

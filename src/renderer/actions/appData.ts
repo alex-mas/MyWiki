@@ -13,6 +13,8 @@ export const UPDATE_APP_DATA = 'UPDATE_APP_DATA';
 export const RESET_APP_DATA = 'RESET_APP_DATA';
 export const SET_LOCALE = 'SET_LOCALE';
 export const SET_APP_BACKGROUND = 'SET_APP_BACKGROUND';
+export const SET_APP_AUTO_SAVE = 'SHOULD_AUTO_SAVE';
+export const SET_APP_AUTO_SAVE_INTERVAL = 'SHOULD_AUTO_SAVE_INTERVAL';
 
 
 
@@ -87,6 +89,29 @@ export const setAppBackground: SetAppBgActionCreator = (background: string) => {
         background
     };
 }
+
+
+export type SetAppAutoSaveAction = ActionWithPayload<{ shouldAutoSave: boolean }>;
+export type SetAppAutoSaveCreator = ACreator<[boolean],SetAppAutoSaveAction>;
+
+export const setAppAutoSave: SetAppAutoSaveCreator = (shouldAutoSave:boolean ) => {
+    return {
+        type: SET_APP_AUTO_SAVE,
+        shouldAutoSave
+    };
+}
+
+export type SetAppAutoSaveIntervalAction = ActionWithPayload<{ autoSaveInterval: number }>;
+export type SetAppAutoSaveIntervalCreator = ACreator<[number],SetAppAutoSaveIntervalAction>;
+
+export const setAppAutoSaveInterval: SetAppAutoSaveIntervalCreator = (autoSaveInterval:number ) => {
+    return {
+        type: SET_APP_AUTO_SAVE_INTERVAL,
+        autoSaveInterval
+    };
+}
+
+
 
 
 export default {

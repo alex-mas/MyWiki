@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { RenderNodeProps } from "slate-react";
-import { EditorPluginOptions } from '../wikiEditor';
+import { EditorPluginContext } from '../wikiEditor';
 import EditorButton from '../components/editorButton';
 import { Value } from 'slate';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
 
 
 
-export const BlockQuotePlugin = (options: EditorPluginOptions) => {
+export const BlockQuotePlugin = (context: EditorPluginContext) => {
 
     const renderBlockQuote = (props: RenderNodeProps) => {
         const { children, node, attributes } = props;
@@ -17,13 +17,14 @@ export const BlockQuotePlugin = (options: EditorPluginOptions) => {
             </blockquote>
         );
     }
-    const onClickButton = onClickBlockButton(options.getContent, options.onChange);
+    const onClickButton = onClickBlockButton(context);
 
     const type = 'block quote';
     return {
+        id: 'block_quote_plugin',
         renderNode: RenderBlock(type, renderBlockQuote),
         Button() {
-            const isActive = hasBlockType(options.getContent(), type);
+            const isActive = hasBlockType(context.getContent(), type);
             return (
                 <EditorButton
                     onClick={onClickButton}

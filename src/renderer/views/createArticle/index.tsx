@@ -7,7 +7,7 @@ import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetaData } from '../../store/reducers/wikis';
 import WikiEditor, { defaultEditorContents } from '../../components/wikiEditor/wikiEditor';
 import { MemoryRouteProps } from '@axc/react-components/navigation/memoryRouter';
-import { Change, Value } from 'slate';
+import { Value } from 'slate';
 import { CreateArticleActionCreator, createArticle } from '../../actions/article';
 import { fsError, FsErrorActionCreator } from '../../actions/errors';
 import Header from '../../components/header';
@@ -55,7 +55,7 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
         const appTitle = document.getElementById('pageTitle');
         appTitle.innerText = `${this.props.selectedWiki.name} - Create article ${this.state.name ? '(' + this.state.name + ')' : ''}`;
     }
-    onChange = (change: Change) => {
+    onChange = (change: { operations: any, value: Value }) => {
         const editorContent = change.value;
         this.setState(() => ({ editorContent }));
     }

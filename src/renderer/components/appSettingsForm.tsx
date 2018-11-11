@@ -7,7 +7,7 @@ import { withHistoryContext, MemoryHistory } from '@axc/react-components/navigat
 import { connect } from 'react-redux';
 import { AppData } from '../store/reducers/appData';
 import { AppState } from '../store/store';
-import {resetAppData, setLocale, setAppBackground } from '../actions/appData';
+import { resetAppData, setLocale, setAppBackground, setAppAutoSave,setAppAutoSaveInterval } from '../actions/appData';
 import { ActionCreator } from 'redux';
 
 
@@ -18,16 +18,19 @@ interface OwnProps {
 }
 interface ReduxProps {
     data: AppData,
-    resetAppData:  typeof resetAppData,
+    resetAppData: typeof resetAppData,
     setLocale: typeof setLocale,
-    setAppBackground: typeof setAppBackground
+    setAppBackground: typeof setAppBackground,
+    setAppAutoSave: typeof setAppAutoSave,
+    setAppAutoSaveInterval: typeof setAppAutoSaveInterval
 }
 
 type SettingsProps = OwnProps & ReduxProps;
 
 interface SettingsState {
     background: string,
-    locale: string
+    locale: string,
+    autoSave: boolean
 }
 
 export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
@@ -39,8 +42,19 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
         this.props.setLocale(locale as ISO639Locale);
     }
     onBackgroundChange = (background: string) => {
-        this.props.setAppBackground( background
-        );
+        this.props.setAppBackground(background);
+    }
+    onAutoSaveChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const shouldAutoSave = event.target.value === 'true';
+        console.log('Should auto save? ', shouldAutoSave, event.target);
+        this.props.setAppAutoSave(shouldAutoSave);
+    }
+    onAutoSaveIntervalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let newInterval = Number(event.target.value);
+        if(newInterval < 1){
+            newInterval = 1;
+        }
+        this.props.setAppAutoSaveInterval(newInterval);
     }
     onResetValues = (event: React.MouseEvent<HTMLButtonElement>) => {
         this.props.resetAppData();
@@ -53,25 +67,51 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
         if (this.props.isOpen) {
             return (
                 <form className='settings-form'>
-                    <select
-                        className='form-input'
-                        value={this.props.data.locale}
-                        onChange={this.onLocaleChange}
-                    >
-                        {Object.keys(ISO639Locale).map((locale) => {
-                            return (
-                                <option key={locale} value={locale}>{locale}</option>
-                            );
-                        })}
-                    </select>
-                    <ImageInput
-                        className='form-input'
-                        windowTitle='select App background image'
-                        value={this.props.data.background}
-                        onChange={this.onBackgroundChange}
-                    >
+                    <div className='form-field'>
+                        Language
+                        <select
+                            className='form-input select-input'
+                            value={this.props.data.locale}
+                            onChange={this.onLocaleChange}
+                        >
+                            {Object.keys(ISO639Locale).map((locale) => {
+                                return (
+                                    <option key={locale} value={locale}>{locale}</option>
+                                );
+                            })}
+                        </select>
+                    </div>
+                    <div className='form-field'>
+                        Auto save articles?
+                        <select
+                            className='form-input select-input'
+                            value={String(this.props.data.shouldAutoSave)}
+                            onChange={this.onAutoSaveChange}
+                        >
+                            <option key='false' value='false'>False</option>
+                            <option key='true' value='true'>True</option>
+                        </select>
+                    </div>
+
+                    {this.props.data.shouldAutoSave ?
+                        <div className='form-field'>
+                            Auto save interval <input style={{width: '50px'}}className='form-input number-input' type="number" value={this.props.data.autoSaveInterval} onChange={this.onAutoSaveIntervalChange} /> Minutes
+                        </div>
+                        :
+                        null
+                    }
+                    <div className='form-field'>
                         Background Image
-                    </ImageInput>
+                        <ImageInput
+                            className='form-input image-input'
+                            windowTitle='select App background image'
+                            value={this.props.data.background}
+                            onChange={this.onBackgroundChange}
+                        >
+                            select
+                        </ImageInput>
+                    </div>
+
                     <button
                         className='form-action'
                         type='button'
@@ -105,6 +145,8 @@ export default connect(
     {
         setLocale,
         resetAppData,
-        setAppBackground
+        setAppBackground,
+        setAppAutoSave,
+        setAppAutoSaveInterval
     }
 )(SettingsForm);

@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { EditorPluginOptions } from "../wikiEditor";
+import { EditorPluginContext } from "../wikiEditor";
 import EditorButton from './editorButton';
-import { Value } from 'slate';
+import { Value, Editor } from 'slate';
 import { hasInlineType, wrapInline,unwrapInline } from '../utilities/inlines';
 import Modal from '@axc/react-components/layout/modal';
 import { hasBlockType } from '../utilities/blocks';
 
 
-export class LinkButton extends React.Component<EditorPluginOptions, any>{
+export class LinkButton extends React.Component<EditorPluginContext, any>{
     constructor(props: any) {
         super(props);
         this.state = {
@@ -26,11 +26,10 @@ export class LinkButton extends React.Component<EditorPluginOptions, any>{
     addLink = (event: React.MouseEvent<HTMLSpanElement>) => {
         event.preventDefault();
         const value = this.props.getContent();
+        const editor = this.props.getEditor();
         const hasLinks = hasInlineType(value,'link');
-        const change = value.change();
         if (hasLinks) {
-            //@ts-ignore
-            change.call(unwrapInline(value, 'link'))
+            unwrapInline(editor,'link');
         } else if (value.selection.isExpanded) {
             if (this.state.isModalOpen) {
                 this.closeModal();
@@ -41,8 +40,7 @@ export class LinkButton extends React.Component<EditorPluginOptions, any>{
                     return;
                 }
 
-                //@ts-ignore
-                change.call(wrapInline,'link', {
+                wrapInline(editor,'link',{
                     href: dest, 
                     isOutLink
                 });
@@ -65,14 +63,15 @@ export class LinkButton extends React.Component<EditorPluginOptions, any>{
                 if (dest === null || text === null) {
                     return;
                 }
-                //@ts-ignore
-                change
+
+                editor
                     .insertText(text)
-                    .moveFocusBackward(text.length)
-                    .call(wrapInline,'link', {
+                    .moveFocusBackward(text.length);
+                    wrapInline(editor,'link', {
                         href: dest, 
                         isOutLink
                     });
+            
 
             } else {
                 this.setState(() => ({
@@ -81,7 +80,6 @@ export class LinkButton extends React.Component<EditorPluginOptions, any>{
                 }));
             }
         }
-        this.props.onChange(change);
     }
     Button = () => {
         const isActive = hasBlockType(this.props.getContent(), 'link');

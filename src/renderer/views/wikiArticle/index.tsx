@@ -7,7 +7,7 @@ import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import WikiEditor, { defaultEditorContents } from '../../components/wikiEditor/wikiEditor';
 import * as ReactMarkdown from 'react-markdown';
-import { Change, Value } from 'slate';
+import {Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../../actions/errors';
 import Header from '../../components/header';
 import { loadArticle, LoadArticleActionCreator, Article, DeleteArticleActionCreator, deleteArticle, ArticleMetaData } from '../../actions/article';
@@ -98,7 +98,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
 
 
     }
-    onChange = (change: Change) => {
+    onChange = (change: { operations: any, value: Value }) => {
         const content = change.value;
         this.setState(() => ({ content }));
     }

@@ -1,5 +1,6 @@
-import { Value, MarkProperties } from "slate";
+import { Value, MarkProperties, Editor } from "slate";
 import { RenderMarkProps } from "slate-react";
+import { EditorPluginContext } from "../wikiEditor";
 
 
 
@@ -10,19 +11,21 @@ export const hasMarkType = (content: Value, type: string) => {
 
 
 export const RenderMark = (type: string, fn: (props:RenderMarkProps)=>React.ReactNode)=>{
-    return (props: RenderMarkProps)=>{
+    return (props: RenderMarkProps, editor: Editor,next: Function)=>{
+     
         if(props.mark.type === type){
             return fn(props);
+        }else{
+            return next();
         }
     }
 }
 
-export const onClickMarkButton = (getContent: ()=>Value, onChange: Function)=>{
+export const onClickMarkButton = (context:EditorPluginContext)=>{
     return(event: React.MouseEvent<HTMLSpanElement>, type: string, data:any)=>{
-        console.log('here!', type);
         event.preventDefault();
-        const change = getContent().change().toggleMark({type,data});
-        onChange(change);
+        const editor = context.getEditor();
+        editor.toggleMark({type,data});
     }
 }
 

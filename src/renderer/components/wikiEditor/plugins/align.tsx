@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { RenderNodeProps } from "slate-react";
-import { EditorPluginOptions, DEFAULT_NODE } from '../wikiEditor';
+import { RenderNodeProps, Plugin } from "slate-react";
+import { EditorPluginContext, DEFAULT_NODE } from '../wikiEditor';
 import EditorButton from '../components/editorButton';
-import { Value } from 'slate';
+import { Value, } from 'slate';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
 
 
 
-export const generateAlignmentPlugins = (options: EditorPluginOptions) => {
+export const generateAlignmentPlugins = (context: EditorPluginContext) => {
 
     const renderAlignment = (props: RenderNodeProps) => {
         const { children, node, attributes } = props;
@@ -23,8 +23,8 @@ export const generateAlignmentPlugins = (options: EditorPluginOptions) => {
     }
     const onClickButton = (event: React.MouseEvent<HTMLSpanElement>, type: string, data: any) => {
         event.preventDefault()
-        const value = options.getContent();
-        const change = value.change();
+        const value = context.getContent();
+        const editor = context.getEditor();
         const { document } = value;
 
 
@@ -39,7 +39,7 @@ export const generateAlignmentPlugins = (options: EditorPluginOptions) => {
         // Handle everything but list buttons.
         if (type !== 'bulleted-list' && type !== 'numbered-list') {
             if (isList) {
-                change
+                editor
                     .setBlocks(isActive ? DEFAULT_NODE : type)
                     .unwrapBlock('bulleted-list')
                     .unwrapBlock('numbered-list')
@@ -55,12 +55,12 @@ export const generateAlignmentPlugins = (options: EditorPluginOptions) => {
                     });
                     if (isType) {
                         if (isSameAlignment) {
-                            change.unwrapBlock({
+                            editor.unwrapBlock({
                                 type,
                                 data
                             });
                         } else {
-                            change
+                            editor
                                 .unwrapBlock({
                                     type
                                 })
@@ -72,7 +72,7 @@ export const generateAlignmentPlugins = (options: EditorPluginOptions) => {
                         }
 
                     } else {
-                        change.wrapBlock({
+                        editor.wrapBlock({
                             type,
                             data
                         }).moveToEnd();
@@ -82,21 +82,20 @@ export const generateAlignmentPlugins = (options: EditorPluginOptions) => {
         } else {
             // Handle the extra wrapping required for list buttons.
             if (isList && isType) {
-                change
+                editor
                     .setBlocks(DEFAULT_NODE)
                     .unwrapBlock('bulleted-list')
                     .unwrapBlock('numbered-list')
             } else if (isList) {
-                change
+                editor
                     .unwrapBlock(
                         type == 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
                     )
                     .wrapBlock(type)
             } else {
-                change.setBlocks('list-item').wrapBlock(type);
+                editor.setBlocks('list-item').wrapBlock(type);
             }
         }
-        options.onChange(change);
     }
     const numberToWords = ['zero', 'one', 'two', 'three', 'four', 'five', 'six']
 
@@ -104,10 +103,11 @@ export const generateAlignmentPlugins = (options: EditorPluginOptions) => {
 
     const alignmentPlugins = alignments.map((alignment) => {
         return {
+            id: `${alignment}_alingment_plugin`,
             renderNode: RenderBlock('align', renderAlignment),
             Button() {
                 let isActive;
-                const value = options.getContent();
+                const value = context.getContent();
                 const block = value.blocks.first();
                 if (block) {
                     const parent = value.document.getParent(block.key);

@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { RenderNodeProps, Editor } from "slate-react";
-import { EditorPluginOptions } from '../wikiEditor';
+import { EditorPluginContext } from '../wikiEditor';
 import EditorButton from '../components/editorButton';
 import { Value, BlockProperties } from 'slate';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
 
 
 
-export const generateHeaderPlugins = (options: EditorPluginOptions) => {
+export const generateHeaderPlugins = (context: EditorPluginContext) => {
 
     const renderHeader = (HeaderComponent: string) => {
         return (props: RenderNodeProps) => {
             const { children, node, attributes } = props;
-            return <HeaderComponent className='wiki-heading'{...attributes}>{children}</HeaderComponent>;
+            return <HeaderComponent className='wiki-article-header'{...attributes}>{children}</HeaderComponent>;
         }
     }
-    const onClickButton = onClickBlockButton(options.getContent, options.onChange);
+    const onClickButton = onClickBlockButton(context);
 
     const numberToWords = ['zero', 'one', 'two', 'three', 'four', 'five', 'six']
 
@@ -29,9 +29,10 @@ export const generateHeaderPlugins = (options: EditorPluginOptions) => {
         }
         const element = `h${i}`;
         headerPlugins.push({
+            id: `header_${i}_plugin`,
             renderNode: RenderBlock(type, renderHeader(element)),
             Button() {
-                const isActive = hasBlockType(options.getContent(), type);
+                const isActive = hasBlockType(context.getContent(), type);
                 return (
                     <EditorButton
                         onClick={onClickButton}
@@ -41,20 +42,20 @@ export const generateHeaderPlugins = (options: EditorPluginOptions) => {
                     />
                 );
             },
-            onKeyUp: (event: React.KeyboardEvent<any>, editor: Editor, next: Function) => {  
+            onKeyUp: (event: React.KeyboardEvent<any>, editor: Editor, next: Function) => {
                 if (event.key === 'Enter') {
-                    debugger;
-                    const value = options.getContent();
+                    const value = context.getContent();
                     const { document } = value;
                     if (!!value.blocks.some(block => block.type === type)) {
                         event.preventDefault();
+                        //@ts-ignore
                         const change = value.change();
                         const key = value.blocks.get(value.blocks.size - 1).key;
                         change.removeNodeByKey(key);
                         change.insertBlock('');
                         change.moveAnchorToStartOfNextBlock();
                         change.moveToFocus();
-                        options.onChange(change);
+                        context.onChange(change);
                     }
                 }
             }

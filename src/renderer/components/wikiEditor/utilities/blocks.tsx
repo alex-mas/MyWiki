@@ -1,12 +1,13 @@
-import { Value, MarkProperties } from "slate";
+import { Value, MarkProperties, Editor } from "slate";
 import { RenderNodeProps } from "slate-react";
-import { DEFAULT_NODE } from "../wikiEditor";
+import { DEFAULT_NODE, EditorPluginContext } from "../wikiEditor";
 
 export const RenderBlock = (type: string, fn: (props: RenderNodeProps) => React.ReactNode) => {
-    return (props: RenderNodeProps) => {
-        //@ts-ignore
+    return (props: RenderNodeProps, editor: Editor,next: Function ) => {
         if (props.node.type === type) {
             return fn(props);
+        }else{
+            return next();
         }
     }
 }
@@ -16,11 +17,11 @@ export const hasBlockType = (content: Value, type: string) => {
     return content.blocks.some(block => block.type === type);
 }
 
-export const onClickBlockButton = (getContent: () => Value, onChange: Function) => {
+export const onClickBlockButton = (pluginContext: EditorPluginContext) => {
     return (event: React.MouseEvent<HTMLSpanElement>, type: string, data: any) => {
         event.preventDefault();
-        const value = getContent();
-        const change = value.change();
+        const value = pluginContext.getContent();
+        const editor = pluginContext.getEditor();
         const { document } = value;
 
         const isActive = hasBlockType(value,type);
@@ -34,12 +35,12 @@ export const onClickBlockButton = (getContent: () => Value, onChange: Function) 
         // Handle everything but list buttons.
         if (type != 'bulleted-list' && type != 'numbered-list') {
             if (isList) {
-                change
+                editor
                     .setBlocks(isActive ? DEFAULT_NODE : type)
                     .unwrapBlock('bulleted-list')
                     .unwrapBlock('numbered-list')
             } else {
-                change.setBlocks(isActive ? DEFAULT_NODE : {
+                editor.setBlocks(isActive ? DEFAULT_NODE : {
                     type,
                     data
                 });
@@ -48,21 +49,20 @@ export const onClickBlockButton = (getContent: () => Value, onChange: Function) 
         } else {
             // Handle the extra wrapping required for list buttons.
             if (isList && isType) {
-                change
+                editor
                     .setBlocks(DEFAULT_NODE)
                     .unwrapBlock('bulleted-list')
                     .unwrapBlock('numbered-list')
             } else if (isList) {
-                change
+                editor
                     .unwrapBlock(
                         type == 'bulleted-list' ? 'numbered-list' : 'bulleted-list'
                     )
                     .wrapBlock(type)
             } else {
-                change.setBlocks('list-item').wrapBlock(type);
+                editor.setBlocks('list-item').wrapBlock(type);
             }
         }
-        onChange(change);
     }
 }
 

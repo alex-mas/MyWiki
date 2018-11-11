@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Editor, RenderNodeProps, RenderMarkProps } from 'slate-react';
-import { Value, Change, Data, Schema, Block } from 'slate';
+import { Editor as SlateEditor, RenderNodeProps, RenderMarkProps, Plugin } from 'slate-react';
+import { Value, Data, Schema, Block, Editor } from 'slate';
 import { connect } from 'react-redux';
 import { remote, Dialog } from 'electron';
-
 
 //plugins
 import BoldPlugin from './plugins/bold';
@@ -17,20 +16,24 @@ import BlockQuotePlugin from './plugins/blockQuote';
 import LinkPlugin from './plugins/link';
 import ImagePlugin from './plugins/image';
 import TabulationPlugin from './plugins/tabulation';
-import { UndoPlugin } from './plugins/undo';
-import { RedoPlugin } from './plugins/redo';
+import UndoPlugin from './plugins/undo';
+import RedoPlugin from './plugins/redo';
+import TablePlugin from './plugins/tables';
+import { generatePluginID } from './utilities/plugin';
 
 
 
-export type WikiEditorPluginCreator = (options: EditorPluginOptions) => WikiEditorPlugin;
+export type WikiEditorPluginCreator = (context: EditorPluginContext) => WikiEditorPlugin;
 
-export interface WikiEditorPlugin {
-
+export interface WikiEditorPlugin extends Plugin {
+    id: string,
+    Button: React.ComponentClass<any> | React.SFCFactory<any>
 }
 
-export interface EditorPluginOptions {
+export interface EditorPluginContext {
     getContent: () => Value,
-    onChange: (change: Change) => any,
+    getEditor: ()=>Editor,
+    onChange: (change: { operations: any, value: Value }) => any,
     isReadOnly: () => boolean
 }
 
@@ -80,7 +83,6 @@ const schema: Schema = {
     nodes: {
         paragraph: function (props: RenderNodeProps) {
             const { node, attributes, children } = props
-            //@ts-ignore
             const textAlign = node.data.get('align') || 'left'
             const style = { textAlign }
             return <p style={style} {...attributes}>{children}</p>
@@ -115,12 +117,12 @@ export interface WikiEditorState {
 }
 
 export interface WikiEditorStateProps {
-    plugins: WikiEditorPlugin[]
+    plugins: WikiEditorPluginCreator[]
 }
 
 export interface WikiEditorOwnProps {
     content: Value,
-    onChange: (change: Change) => any,
+    onChange: (change: { operations: any, value: Value }) => any,
     readOnly: boolean
 }
 export type WikiEditorProps = WikiEditorOwnProps & WikiEditorStateProps;
@@ -134,39 +136,35 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         isOutLink: undefined,
         plugins: []
     }
+    editor: React.Ref<Editor>;
     constructor(props: any) {
         super(props);
         if (props.content) {
-            const pluginContext = this.getPluginContext();
+            this.editor = React.createRef();
             this.state = {
                 isModalOpen: false,
                 promptForText: false,
                 linkText: undefined,
                 linkDest: undefined,
                 isOutLink: undefined,
-                plugins: [
-                    BoldPlugin(pluginContext),
-                    ItalicPlugin(pluginContext),
-                    UnderlinedPlugin(pluginContext),
-                    CodePlugin(pluginContext),
-                    ...generateHeaderPlugins(pluginContext),
-                    ...generateAlignmentPlugins(pluginContext),
-                    ...generateListPlugins(pluginContext),
-                    BlockQuotePlugin(pluginContext),
-                    LinkPlugin(pluginContext),
-                    ImagePlugin(pluginContext),
-                    TabulationPlugin(pluginContext),
-                    UndoPlugin(pluginContext),
-                    RedoPlugin(pluginContext)
-                ]
+                plugins: this.getPlugins()
             }
         }
     }
+
     getPluginContext = () => {
         return {
+            getEditor: this.getEditor,
             getContent: this.getContent,
             onChange: this.props.onChange,
             isReadOnly: this.isReadOnly
+        }
+    }
+    getEditor = ()=>{
+        if(typeof this.editor === 'object'){
+            return this.editor.current as Editor;
+        }else{
+            throw new Error('attempted to acces editor when its ref is not yet set');
         }
     }
     getContent = () => {
@@ -175,13 +173,40 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
     isReadOnly = () => {
         return this.props.readOnly;
     }
-    getMergedPlugins = () => {
-        return [...this.state.plugins, ...this.props.plugins];
+    getPlugins = () => {
+        const pluginContext = this.getPluginContext();
+        const plugins =[
+            BoldPlugin(pluginContext),
+            ItalicPlugin(pluginContext),
+            UnderlinedPlugin(pluginContext),
+            CodePlugin(pluginContext),
+            ...generateHeaderPlugins(pluginContext),
+            ...generateAlignmentPlugins(pluginContext),
+            ...generateListPlugins(pluginContext),
+            BlockQuotePlugin(pluginContext),
+            LinkPlugin(pluginContext),
+            ImagePlugin(pluginContext),
+            TabulationPlugin(pluginContext),
+            UndoPlugin(pluginContext),
+            RedoPlugin(pluginContext),
+            TablePlugin(pluginContext),
+            ...this.props.plugins.map((pluginConstructor)=>{
+                const plugin = pluginConstructor(pluginContext);
+                if(plugin.id){
+                    return plugin;
+                }else{
+                    return generatePluginID(plugin);
+                }
+            })
+        ];
+        return plugins;
     }
     render() {
         if (this.props.readOnly) {
             return (
-                <Editor
+                <SlateEditor
+                    //@ts-ignore
+                    ref={this.editor}
                     plugins={this.state.plugins}
                     readOnly={this.props.readOnly}
                     value={this.props.content}
@@ -192,16 +217,19 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         } else {
             return (
                 <div>
-                    <div className='editor__actions'>
-                        {this.state.plugins.map((plugin) => {
+                    <div key='editor__actions' className='editor__actions'>
+                        {this.state.plugins.map((plugin: WikiEditorPlugin) => {
                             if (plugin.Button) {
-                                return <plugin.Button />;
+                                return <plugin.Button key={plugin.id} />;
                             } else {
                                 return null;
                             }
                         })}
                     </div>
-                    <Editor
+                    <SlateEditor
+                        key='wiki-editor'
+                        //@ts-ignore
+                        ref={this.editor}
                         plugins={this.state.plugins}
                         readOnly={this.props.readOnly}
                         value={this.props.content}
@@ -217,7 +245,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
     }
 }
 
-export const defaultPlugins: WikiEditorPlugin[] = [];
+export const defaultPlugins: WikiEditorPluginCreator[] = [];
 
 export default connect((state, props) => {
     return {

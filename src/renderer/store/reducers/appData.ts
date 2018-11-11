@@ -1,11 +1,13 @@
 import { Reducer, AnyAction } from "redux";
 import I18String, { ISO639Locale } from '@axc/react-components/display/i18string';
-import { SET_LOCALE, SET_APP_DATA, UPDATE_APP_DATA, RESET_APP_DATA } from "../../actions/appData";
+import { SET_LOCALE, SET_APP_DATA, UPDATE_APP_DATA, RESET_APP_DATA, SET_APP_AUTO_SAVE, SET_APP_AUTO_SAVE_INTERVAL } from "../../actions/appData";
 import { SELECT_WIKI, selectWiki } from "../../actions/wikis";
 
 export interface AppData {
     background: string,
     locale: ISO639Locale,
+    shouldAutoSave: boolean,
+    autoSaveInterval: number,
     selectedWiki: string
 }
 
@@ -13,6 +15,8 @@ export interface AppData {
 export const defaultAppData: AppData = {
     background: 'resources/images/landscape.jpg',
     locale: ISO639Locale.en,
+    shouldAutoSave: false,
+    autoSaveInterval: 1,
     selectedWiki: undefined
 };
 
@@ -23,6 +27,16 @@ export const AppDataReducer: Reducer<AppData> = (state: AppData = defaultAppData
                 ...state,
                 selectedWiki: action.wiki
             };
+        case SET_APP_AUTO_SAVE:
+            return {
+                ...state,
+                shouldAutoSave: action.shouldAutoSave
+            }
+        case SET_APP_AUTO_SAVE_INTERVAL:
+            return {
+                ...state,
+                autoSaveInterval: action.autoSaveInterval
+            }
         case SET_LOCALE:
             return {
                 ...state,

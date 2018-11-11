@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { RenderNodeProps } from "slate-react";
-import { EditorPluginOptions } from '../wikiEditor';
+import { EditorPluginContext } from '../wikiEditor';
 import EditorButton from '../components/editorButton';
-import { Value } from 'slate';
+import { Value, Editor } from 'slate';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
 import { hasInlineType, wrapInline, unwrapInline } from '../utilities/inlines';
 import Modal from '@axc/react-components/layout/modal';
@@ -10,19 +10,31 @@ import LinkButton from '../components/linkButton';
 import WikiLink from '../components/wikiLink';
 
 
-export const LinkPlugin = (options: EditorPluginOptions) => {
+export const wrapLink = (editor: Editor, href: string, isOutLink: boolean = false) => {
+    editor.wrapInline({
+        type: 'link',
+        data: { href, isOutLink }
+    });
+    editor.moveToEnd()
+}
+
+
+
+export const unwrapLink = (editor: Editor) => {
+    editor.unwrapInline('link')
+}
+
+export const LinkPlugin = (context: EditorPluginContext) => {
 
     const renderLink = (props: RenderNodeProps) => {
         const { children, node, attributes } = props;
-        //@ts-ignore
         const href = node.data.get('href');
-        //@ts-ignore
         const isOutLink = node.data.get('isOutLink');
         return (
             <WikiLink
                 {...props}
                 to={href}
-                active={options.isReadOnly()}
+                active={context.isReadOnly()}
                 isOutLink={isOutLink}
             >
                 {children}
@@ -31,10 +43,13 @@ export const LinkPlugin = (options: EditorPluginOptions) => {
     }
 
     return {
+        id: 'link_plugin',
         renderNode: RenderBlock('link', renderLink),
         Button() {
             return (
-                <LinkButton {...options} />
+                <LinkButton
+                    {...context}
+                />
             )
         }
     }

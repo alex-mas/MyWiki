@@ -135,14 +135,12 @@ export const loadWiki: LoadWikiActionCreator = (id: string) => {
                 const articleContents = await fsp.readFile(`./wikis/${id}/articles/${articleFile}`, 'utf8');
                 const article: Article = JSON.parse(articleContents);
                 delete article.content;
-                debugger;
                 return article as ArticleMetaData;
             }))
             .catch((e)=>{
                 dispatch(fsError('error while reading articles'));
                 throw e;
             });
-            debugger;
             return dispatch({
                 type: LOAD_WIKI,
                 wiki: {

@@ -1,4 +1,4 @@
-import { Value, MarkProperties, Change } from "slate";
+import { Value, MarkProperties, Editor } from "slate";
 import { RenderMarkProps } from "slate-react";
 
 
@@ -6,18 +6,18 @@ import { RenderMarkProps } from "slate-react";
 export const hasInlineType = (content: Value, type: string) => {
     return content.inlines.some(inline => inline.type === type);
 }
-
-export const wrapInline = (change: Change, type: string, data?: any) => {
-    change.wrapInline({
+  
+export const wrapInline = (editor: Editor, type: string, data?: any) => {
+    editor.wrapInline({
         type,
         data: data ? data : {}
     });
-    change.moveToEnd();
+    editor.moveToEnd();
 };
 
-
-export const unwrapInline = (change: Change, type: string) => {
-    change.unwrapInline(type);
+    
+export const unwrapInline = (editor: Editor, type: string) => {
+    editor.unwrapInline(type);
 }
 
 
@@ -41,25 +41,9 @@ export const unwrapInline = (change: Change, type: string) => {
  */ 
 
 
-export const  wrapLink = (change: Change, href: string, isOutLink: boolean = false) => {
-    console.log('Href: ', href);
-    change.wrapInline({
-        type: 'link',
-        data: { href, isOutLink }
-    });
-    change.moveToEnd()
-}
-
-
-
-export const unwrapLink =(change: Change)=> {
-    change.unwrapInline('link')
-}
 
 export default {
     hasInlineType,
-    unwrapLink,
     unwrapInline,
-    wrapInline,
-    wrapLink
+    wrapInline
 }

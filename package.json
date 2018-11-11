@@ -30,15 +30,19 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/image-size": "^0.0.29",
     "@types/react": "^16.4.14",
     "@types/react-dom": "^16.0.7",
     "@types/react-redux": "^6.0.9",
+    "@types/showdown": "^1.7.5",
     "@types/uuid": "^3.4.4",
+    "@types/slate": "^0.43.1",
+    "@types/slate-plain-serializer": "^0.6.1",
+    "@types/slate-react": "^0.20.1",
     "css-loader": "^1.0.0",
     "electron": "^2.0.8",
     "electron-builder": "^20.28.3",
     "jest": "^23.5.0",
-    "mocha": "^5.2.0",
     "node-sass": "^4.9.3",
     "nodemon": "^1.18.4",
     "redux-thunk": "^2.3.0",
@@ -54,13 +58,7 @@
   "dependencies": {
     "@axc/react-components": "^0.1.7",
     "@axc/thread-manager": "^0.1.0",
-    "@slate-editor/alignment-plugin": "^5.0.0",
-    "@types/draft-js": "^0.10.25",
-    "@types/image-size": "^0.0.29",
-    "@types/showdown": "^1.7.5",
-    "@types/slate": "^0.42.0",
-    "@types/slate-plain-serializer": "^0.6.1",
-    "@types/slate-react": "^0.18.0",
+
     "express": "^4.16.3",
     "image-size": "^0.6.3",
     "immutable": "^3.8.2",
@@ -76,9 +74,9 @@
     "retext": "^6.0.0",
     "retext-keywords": "^4.0.2",
     "showdown": "^1.8.6",
-    "slate": "^0.41.2",
-    "slate-plain-serializer": "^0.6.22",
-    "slate-react": "^0.18.10",
+    "slate": "^0.44.4",
+    "slate-plain-serializer": "^0.6.28",
+    "slate-react": "^0.21.10",
     "uuid": "^3.3.2"
   }
 }

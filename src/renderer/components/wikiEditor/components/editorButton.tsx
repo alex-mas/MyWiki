@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Value } from 'slate';
 
-export type EditorButtonClickHandler =(event: React.MouseEvent<HTMLSpanElement>, type?: string,data?:any) => void;
+export type EditorButtonClickHandler = (event: React.MouseEvent<HTMLSpanElement>, type?: string,data?:any) => void;
 
 export interface EditorButtonProps {
     icon: string,

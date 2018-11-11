@@ -1,26 +1,26 @@
 import * as React from 'react';
 import { RenderMarkProps } from "slate-react";
-import { EditorPluginOptions } from '../wikiEditor';
+import { EditorPluginContext } from '../wikiEditor';
 import EditorButton from '../components/editorButton';
-import { hasMarkType, RenderMark, onClickMarkButton} from '../utilities/marks';
+import { hasMarkType, RenderMark, onClickMarkButton } from '../utilities/marks';
 import { Value } from 'slate';
 
 
 
-export const ItalicPlugin = (options: EditorPluginOptions) => {
+export const ItalicPlugin = (context: EditorPluginContext) => {
 
     const renderItalicText = (props: RenderMarkProps) => {
         const { children, mark, attributes } = props;
         return <em className='wiki-italic-text'{...attributes}>{children}</em>;
     }
 
-    const onClickButton = onClickMarkButton(options.getContent,options.onChange);
+    const onClickButton = onClickMarkButton(context);
 
     return {
+        id: 'italic_plugin',
         renderMark: RenderMark('italic', renderItalicText),
-
         Button() {
-            const isActive = hasMarkType(options.getContent(), 'italic');
+            const isActive = hasMarkType(context.getContent(), 'italic');
             return (
                 <EditorButton
                     onClick={onClickButton}

@@ -7,7 +7,7 @@ import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import WikiEditor, { defaultEditorContents } from '../../components/wikiEditor/wikiEditor';
 import * as ReactMarkdown from 'react-markdown';
-import { ValueJSON, Change, Value } from 'slate';
+import {Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../../actions/errors';
 import Header from '../../components/header';
 import AppHeader from '../../components/appHeader';
@@ -17,11 +17,11 @@ import { getArticle } from '../../selectors/articles';
 import { ImageInput } from '../../components/imageInput';
 import WikiHeader from '../../components/wikiHeader';
 import { WikiMetaData } from '../../store/reducers/wikis';
+import { AppData } from '../../store/reducers/appData';
 
 
 
 export interface WikiEditPageDispatchProps {
-    fsError: FsErrorActionCreator,
     loadArticle: LoadArticleActionCreator,
     saveArticle: SaveArticleActionCreator
 }
@@ -31,7 +31,8 @@ export interface WikiEditPageOwnProps extends MemoryRouteProps {
 
 export interface WikiEditPageReduxProps {
     selectedWiki: WikiMetaData,
-    article: ArticleMetaData
+    article: ArticleMetaData,
+    appData: AppData
 }
 
 
@@ -42,7 +43,8 @@ export interface WikiEditPageState {
     editorContent: Value,
     tags: string[],
     areTagsBeingManaged: boolean,
-    background: string
+    background: string,
+    autoSaveInterval: NodeJS.Timer
 }
 
 
@@ -53,7 +55,8 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
             editorContent: Value.fromJSON(JSON.parse('{}')),
             tags: this.props.article.tags,
             areTagsBeingManaged: false,
-            background: this.props.article.background
+            background: this.props.article.background,
+            autoSaveInterval: undefined
         }
 
     }
@@ -72,21 +75,45 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
                 tags: article.tags
             }));
         });
+        const {shouldAutoSave} = this.props.appData;
+        if(shouldAutoSave){
+            let interval  = this.props.appData.autoSaveInterval;
+            if(typeof interval !== 'number' || interval < 1){
+                interval = 1;
+            }
+            this.setState(()=>({
+                autoSaveInterval: setInterval(this.saveChanges,1000*60*interval)
+            }));
+        }
+
+
+    }
+    componentWillUnmount(){
+        if(this.state.autoSaveInterval !== undefined){
+            clearInterval(this.state.autoSaveInterval);
+            this.setState(()=>({
+                autoSaveInterval: null
+            }));
+        }
     }
 
-    onChange = (change: Change) => {
+    onChange = (change: { operations: any, value: Value }) => {
         const editorContent = change.value;
         this.setState(() => ({ editorContent }));
     }
-    saveChanges = () => {
-        this.props.saveArticle({
+    saveChanges = ()=>{
+        console.log('Saved changes');
+        return this.props.saveArticle({
             name: this.props.routeParams.article,
             tags: this.state.tags,
             content: this.state.editorContent.toJSON(),
             background: this.state.background,
-            keywords: []
-            //@ts-ignore
-        }).then(() => {
+            keywords: [] 
+        })
+    }
+    saveChangesAndRedirect = () => {
+        //@ts-ignore
+        this.saveChanges().then(() => {
             this.props.history.pushState(`/wiki/article/${this.props.routeParams.article}`);
         }).catch((e: string) => console.warn(e));
     }
@@ -133,7 +160,7 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
                         <div className='wiki-article__header__section'>
                             <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
                             <div className='wiki-article__actions'>
-                                <button onClick={this.saveChanges}>
+                                <button onClick={this.saveChangesAndRedirect}>
                                     <i className='material-icons'>check</i>
                                 </button>
                                 <button onClick={this.discardChanges}>
@@ -180,14 +207,19 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
 const mapStateToProps: MapStateToProps<WikiEditPageReduxProps, WikiEditPageOwnProps, AppState> = (state, props) => {
     return {
         selectedWiki: state.selectedWiki,
-        article: getArticle(props.routeParams.article, state.selectedWiki)
+        article: getArticle(props.routeParams.article, state.selectedWiki),
+        appData: state.appData
     };
 }
 
 
 
-export default connect(mapStateToProps, {
-    fsError,
-    loadArticle,
-    saveArticle
+export default connect(mapStateToProps, (dispatch,props)=>{
+    return{
+        //@ts-ignore
+        loadArticle:  (name: string)=>dispatch(loadArticle(name)),
+        //@ts-ignore
+        saveArticle:  (article: Article)=>dispatch(saveArticle(article))
+    }
+
 })(WikiEditPage);

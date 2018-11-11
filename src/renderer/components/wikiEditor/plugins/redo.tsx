@@ -1,21 +1,16 @@
 import * as React from 'react';
-import { RenderNodeProps, Editor } from "slate-react";
-import { EditorPluginOptions } from '../wikiEditor';
+import { EditorPluginContext } from '../wikiEditor';
 import EditorButton, { EditorButtonClickHandler } from '../components/editorButton';
-import { Value, BlockProperties } from 'slate';
-import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
 
 
 
-export const RedoPlugin = (options: EditorPluginOptions) => {
+
+export const RedoPlugin = (context: EditorPluginContext) => {
     const redo: EditorButtonClickHandler = () => {
-        const value = options.getContent();
-        const { document } = value;
-        const change = value.change();
-        change.redo();
-        options.onChange(change);
+        context.getEditor().redo();
     }
     return {
+        id: 'redo_plugin',
         Button() {
             return (
                 <EditorButton

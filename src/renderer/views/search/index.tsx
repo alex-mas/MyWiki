@@ -1,14 +1,9 @@
-import * as fs from 'fs';
-import * as path from 'path';
 import * as React from 'react';
 import { RouteProps } from '../../router/router';
 import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetaData } from '../../store/reducers/wikis';
-import WikiEditor, { defaultEditorContents } from '../../components/wikiEditor/wikiEditor';
-import { Change, Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../../actions/errors';
-import Header from '../../components/header';
 import { MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import { getRelevantArticles } from '../../selectors/articles';
 import WikiHeader from '../../components/wikiHeader';

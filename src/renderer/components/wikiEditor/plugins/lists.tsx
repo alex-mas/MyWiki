@@ -1,17 +1,16 @@
 import * as React from 'react';
 import { RenderNodeProps } from "slate-react";
-import { EditorPluginOptions } from '../wikiEditor';
+import { EditorPluginContext } from '../wikiEditor';
 import EditorButton from '../components/editorButton';
-import { Value } from 'slate';
+import { Value, Editor } from 'slate';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
 
 
 
-export const generateListPlugins = (options: EditorPluginOptions) => {
+export const generateListPlugins = (context: EditorPluginContext) => {
 
-    const renderLists = (props: RenderNodeProps) => {
+    const renderLists = (props: RenderNodeProps, editor: Editor, next: Function) => {
         const { children, node, attributes } = props;
-        //@ts-ignore;
         switch (node.type) {
             case 'bulleted-list':
                 return <ul {...attributes} className='wiki-bulleted-list'>
@@ -22,10 +21,11 @@ export const generateListPlugins = (options: EditorPluginOptions) => {
             case 'numbered-list':
                 return <ol {...attributes} className='wiki-numbered-list'>{children}</ol>
             default:
-                return undefined;
+                return next();
         }
+
     }
-    const onClickButton = onClickBlockButton(options.getContent, options.onChange);
+    const onClickButton = onClickBlockButton(context);
 
 
     const lists = ['bulleted', 'numbered'];
@@ -33,9 +33,10 @@ export const generateListPlugins = (options: EditorPluginOptions) => {
     const listPlugins = lists.map((list) => {
         const type = `${list}-list`;
         return {
+            id: `${type}_plugin`,
             renderNode: renderLists,
             Button() {
-                const isActive = hasBlockType(options.getContent(), type);
+                const isActive = hasBlockType(context.getContent(), type);
                 return (
                     <EditorButton
                         onClick={onClickButton}
