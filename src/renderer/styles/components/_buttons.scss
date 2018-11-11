@@ -13,11 +13,11 @@
     height: $size-ml;
     &:hover{
         background-color: lighten($button-contained-color, 10%);
-        box-shadow: $elevation-3p;
+        box-shadow: $elevation-4p;
     }
     &:active{
         background-color: lighten($button-contained-color, 20%);
-        box-shadow: $elevation-4p;
+        box-shadow: $elevation-2p;
         border-radius: 5%;
     }
 }

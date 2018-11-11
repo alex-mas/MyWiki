@@ -17,6 +17,8 @@ import BlockQuotePlugin from './plugins/blockQuote';
 import LinkPlugin from './plugins/link';
 import ImagePlugin from './plugins/image';
 import TabulationPlugin from './plugins/tabulation';
+import { UndoPlugin } from './plugins/undo';
+import { RedoPlugin } from './plugins/redo';
 
 
 
@@ -46,7 +48,7 @@ export const defaultEditorContents = Value.fromJSON({
                         object: 'text',
                         leaves: [
                             {
-                                text: 'A line of text in a paragraph.',
+                                text: 'Insert your content here',
                             },
                         ],
                     },
@@ -153,8 +155,9 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     BlockQuotePlugin(pluginContext),
                     LinkPlugin(pluginContext),
                     ImagePlugin(pluginContext),
-                    TabulationPlugin(pluginContext)
-
+                    TabulationPlugin(pluginContext),
+                    UndoPlugin(pluginContext),
+                    RedoPlugin(pluginContext)
                 ]
             }
         }

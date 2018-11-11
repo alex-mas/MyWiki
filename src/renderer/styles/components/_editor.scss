@@ -5,13 +5,27 @@
 }
 
 
+
+.editor-btn--core{
+    font-size: 32px;
+    &:hover{
+        color: lighten(black, 15%);
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+    }
+    &:active{
+        color: lighten(black, 25%);
+    }
+}
+
 .editor-btn{
+    @extend .editor-btn--core;
     background: linear-gradient(to left top, transparent 47.75%, red 43.5%, red 53.5%, transparent 52.25%);
 }
-
-.editor-btn--disabled{
-
+.editor-btn--inactive{
+    @extend .editor-btn--core;
 }
+
+
 
 .editor__actions{
     position: sticky;
