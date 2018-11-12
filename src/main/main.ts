@@ -14,13 +14,8 @@ const setApplicationMenu = () => {
 
 };
 
-// Save userData in separate folders for each environment.
-// Thanks to this you can use production and development versions of the app
-// on same machine like those are two separate apps.
-if (process.env.ENV !== "production") {
-    const userDataPath = app.getPath("userData");
-    app.setPath("userData", `${userDataPath} (${process.env.ENV})`);
-}
+
+console.log('Node env: ',process.env.NODE_ENV);
 
 app.on("ready", () => {
     console.log('app ready');
@@ -43,7 +38,7 @@ app.on("ready", () => {
         show: false,
         webPreferences: {
             nodeIntegrationInWorker: true,
-            webSecurity: false,
+            webSecurity: true
         },
         fullscreenable: true
     });

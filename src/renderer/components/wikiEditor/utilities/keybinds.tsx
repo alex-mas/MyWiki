@@ -8,13 +8,13 @@ const isHotkey = (hotkey: string, event: React.KeyboardEvent<any>)=>{
 }
 
 // @https://docs.slatejs.org/guides/plugins
-export function Hotkey(hotkey: string, fn: (change: Value)=>any) {
+export function Hotkey(hotkey: string, fn: (editor: Editor)=>any) {
     return {
-      onKeyDown(event: React.KeyboardEvent<any>, change:Value, editor:Editor) {
+      onKeyDown(event: React.KeyboardEvent<any>, editor:Editor, next: Function) {
         if (isHotkey(hotkey, event)) {
-            //@ts-ignore
-            change.call(fn)
+            fn(editor);
         }
+        next();
       },
     }
 }

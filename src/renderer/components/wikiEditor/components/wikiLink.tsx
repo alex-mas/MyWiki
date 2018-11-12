@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import { RenderAttributes } from 'slate-react';
-import {doesArticleExist} from '../../../selectors/articles';
-import {connect} from 'react-redux';
+import { doesArticleExist } from '../../../selectors/articles';
+import { connect } from 'react-redux';
 import { AppState } from '../../../store/store';
 import { WikiMetaData } from '../../../store/reducers/wikis';
-
+import { shell } from 'electron';
 
 
 
@@ -20,7 +20,7 @@ export interface WikiLinkOwnProps {
 }
 
 
-export interface WikiLinkStateProps{ 
+export interface WikiLinkStateProps {
     selectedWiki: WikiMetaData
 }
 
@@ -30,10 +30,22 @@ export class WikiLink extends React.Component<WikiLinkProps, any>{
     constructor(props: any) {
         super(props);
     }
+    openOutLink = () => {
+        const href = this.props.to;
+        shell.openExternal(href);
+    }
     render() {
         if (this.props.active) {
             if (this.props.isOutLink) {
                 //create a link that on click opens a browser with the url providedd. if its http or opens the relevant article if it refers to another wiki.
+                return (
+                    <span onClick={this.openOutLink}{...this.props.attributes}>
+                        <a href=''>
+                            {this.props.text}
+                            {this.props.children}
+                        </a>
+                    </span>
+                );
             } else {
                 const exists = doesArticleExist(this.props.to, this.props.selectedWiki);
                 let to = `/wiki/${exists ? 'article' : 'create'}/${this.props.to}`
@@ -42,7 +54,7 @@ export class WikiLink extends React.Component<WikiLinkProps, any>{
                         <MemoryLink
                             to={to}
                             text={this.props.text ? this.props.text : undefined}
-                            className={exists ? 'wiki-link' :'wiki-link--undone'}
+                            className={exists ? 'wiki-link' : 'wiki-link--undone'}
                         >
                             {this.props.children}
                         </MemoryLink>
@@ -66,8 +78,8 @@ export class WikiLink extends React.Component<WikiLinkProps, any>{
 }
 
 
-export default connect((state: AppState,props:WikiLinkOwnProps)=>{
-    return{
+export default connect((state: AppState, props: WikiLinkOwnProps) => {
+    return {
         selectedWiki: state.selectedWiki
     }
-},undefined)(WikiLink);
+}, undefined)(WikiLink);

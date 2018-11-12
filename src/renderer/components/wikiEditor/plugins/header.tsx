@@ -44,20 +44,23 @@ export const generateHeaderPlugins = (context: EditorPluginContext) => {
             },
             onKeyUp: (event: React.KeyboardEvent<any>, editor: Editor, next: Function) => {
                 if (event.key === 'Enter') {
+                    console.log('executing enter handler')
                     const value = context.getContent();
-                    const { document } = value;
+                    const editor = context.getEditor();
                     if (!!value.blocks.some(block => block.type === type)) {
+                        console.log('executing enter handler, block type detected');
                         event.preventDefault();
-                        //@ts-ignore
-                        const change = value.change();
                         const key = value.blocks.get(value.blocks.size - 1).key;
-                        change.removeNodeByKey(key);
-                        change.insertBlock('');
-                        change.moveAnchorToStartOfNextBlock();
-                        change.moveToFocus();
-                        context.onChange(change);
+                        editor.removeNodeByKey(key);
+                        editor.insertBlock('');
+                        editor.moveAnchorToStartOfNextBlock();
+                        editor.moveToFocus();
+                        return;
                     }
                 }
+                console.log('after executing enter handler', next, editor);
+                return next();
+              
             }
         });
     }

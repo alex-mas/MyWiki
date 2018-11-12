@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { RenderNodeProps, Editor } from "slate-react";
+import { RenderNodeProps } from "slate-react";
 import { EditorPluginContext } from '../wikiEditor';
 import EditorButton from '../components/editorButton';
-import { Value, BlockProperties } from 'slate';
+import { Value, BlockProperties, Editor} from 'slate';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
+import { generatePluginID } from '../utilities/plugin';
+import Hotkey from '../utilities/keybinds';
 
 
 
@@ -14,11 +16,12 @@ export const TabulationPlugin = (context: EditorPluginContext) => {
         onKeyDown: (event: React.KeyboardEvent<any>, editor: Editor, next: Function) => {  
             if (event.key === 'Tab') {
                 event.preventDefault();
-                const editor = context.getEditor();
                 editor.insertText('\t');
             }
+            return next();
         }
     };
 }
+
 
 export default TabulationPlugin;

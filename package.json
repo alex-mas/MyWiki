@@ -19,15 +19,15 @@
     }
   },
   "scripts": {
-    "webpack:dev": "node_modules/.bin/webpack --config webpack/webpack.config.dev.js --debug",
-    "webpack:prod": "node_modules/.bin/webpack --config webpack/webpack.config.dev.js --mode=production",
-    "start": "npm run webpack:dev && electron dist/app/main.js",
+    "webpack:dev": "node_modules/.bin/webpack --config webpack/webpack.config.js --env.NODE_ENV=development --debug --watch",
+    "webpack:prod": "node_modules/.bin/webpack --config webpack/webpack.config.js --env.NODE_ENV=production ",
+    "start": "concurrently \"npm run webpack:dev\" \"electron dist/app/main.js\"",
     "build": " npm run webpack:prod && electron-builder",
     "start-nobuild": "electron dist/src/main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "electron-builder install-app-deps"
   },
-  "author": "",
+  "author": "axc",
   "license": "ISC",
   "devDependencies": {
     "@types/image-size": "^0.0.29",
@@ -39,10 +39,12 @@
     "@types/slate-plain-serializer": "^0.6.1",
     "@types/slate-react": "^0.20.1",
     "@types/uuid": "^3.4.4",
+    "concurrently": "^4.0.1",
     "css-loader": "^1.0.1",
     "electron": "3.0.7",
     "electron-builder": "^20.31.2",
     "jest": "^23.5.0",
+    "mini-css-extract-plugin": "^0.4.4",
     "node-sass": "^4.10.0",
     "nodemon": "^1.18.4",
     "redux-thunk": "^2.3.0",
