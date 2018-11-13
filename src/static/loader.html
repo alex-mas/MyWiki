@@ -6,11 +6,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title id='pageTitle'>MyWiki</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <style>
+            .loading{
+                transition: transform 1s;
+                transition-timing-function: ease-out;
+            }
+            .loading:hover{
+                transform: rotate(360deg);
+            }
+    </style>
 </head>
 
 <body style="background: transparent;">
-    <img src='resources/images/appIcon.png' height='200' width='200'>
+    <img class="loading" src='resources/images/appIcon.png' height='200' width='200'>
+
 </body>
 
 </html>

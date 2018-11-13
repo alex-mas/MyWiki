@@ -9,12 +9,17 @@ import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/bloc
 
 export const generateAlignmentPlugins = (context: EditorPluginContext) => {
 
+    const alingmentStyleValue: any = {
+        right: 'flex-start',
+        left: 'flex-end',
+        center: 'center'
+    }
     const renderAlignment = (props: RenderNodeProps) => {
         const { children, node, attributes } = props;
         return (
             <div
                 //@ts-ignore
-                style={{ textAlign: node.data.get('align') }}
+                style={{ alignSelf: alingmentStyleValue[node.data.get('align')] }}
                 {...attributes}
             >
                 {children}
@@ -100,7 +105,6 @@ export const generateAlignmentPlugins = (context: EditorPluginContext) => {
     const numberToWords = ['zero', 'one', 'two', 'three', 'four', 'five', 'six']
 
     const alignments = ['right', 'left', 'center'];
-
     const alignmentPlugins = alignments.map((alignment) => {
         return {
             id: `${alignment}_alingment_plugin`,

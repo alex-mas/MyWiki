@@ -1,10 +1,9 @@
 
 
-.myWiki__editor {
+.wiki-editor{
     display: flex;
+    flex-direction: column;
 }
-
-
 
 .editor-btn--core{
     font-size: 32px;

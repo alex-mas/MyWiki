@@ -21,8 +21,8 @@
     uuid "^3.3.2"
 
 "@axc/thread-manager@^0.1.0":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@axc/thread-manager/-/thread-manager-0.1.7.tgz#14beced298dbad926419864bca2a320901ec3c56"
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@axc/thread-manager/-/thread-manager-0.1.9.tgz#9ca634461b30fe76f21b93fa44ec15ca0c41b8df"
 
 "@babel/code-frame@^7.0.0-beta.35":
   version "7.0.0"

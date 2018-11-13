@@ -5,7 +5,7 @@
     top: 0;
     display: flex;
     justify-content: space-between;
-    height: 5rem;
+    height: 3rem;
     background: white;
     z-index: 2;
     padding: 0 1rem;
@@ -14,7 +14,7 @@
 
 .wiki-header__actions{
     position: relative;
-    padding-top: calc(2.5rem - 17px);
+    padding-top: 0.45rem;
 }
 
 .wiki-header__action{
@@ -36,11 +36,22 @@
 
 
 .wiki-header__search-bar{
-    padding-top: calc(2.5rem - 16px);
+    padding-top: 0.45rem;
     font-size: $font-size-s;
     input{
+        border: none;
         line-height: 2;
         width: 15rem;
+        background-position: center;
+        transition: background 0.8s;
+    }
+    input:hover{
+        background: darken(white,5%) radial-gradient(circle, transparent 1%, darken(white,5%) 1%) center/15000%;
+    }
+    input:active{
+        background-color: darken(white,15%);
+        background-size: 100%;
+        transition: background 0s;
     }
     .axc-auto-complete__suggestion--selected{
         color: lighten(black, 15%);
@@ -55,9 +66,9 @@
 
 
 .wiki-header__home-btn{
-    height: $size-xl;
-    width: $size-xl;
-    margin: 1rem;
+    height:$font-size-xl;
+    width: $font-size-xl;
+    margin: 0.45rem;
 }
 
 .wiki-header__home-btn__image {
@@ -72,5 +83,6 @@
         box-shadow: $elevation-4p;
     }
 }
+
 
 

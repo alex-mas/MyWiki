@@ -3,7 +3,7 @@ const url = require('url');
 const fs = require('fs');
 const child_process = require('child_process');
 import * as Electron from 'electron'
-const {app, Menu, BrowserWindow, ipcMain, WebContents} = require('electron');
+const { app, Menu, BrowserWindow, ipcMain, WebContents } = require('electron');
 
 
 let loadingWindow: Electron.BrowserWindow;
@@ -15,22 +15,22 @@ const setApplicationMenu = () => {
 };
 
 
-console.log('Node env: ',process.env.NODE_ENV);
+console.log('Node env: ', process.env.NODE_ENV);
 
 app.on("ready", () => {
     console.log('app ready');
     setApplicationMenu();
     const screen = require('electron').screen;
     debugger;
-    loadingWindow =  new BrowserWindow({
-        x: screen.getPrimaryDisplay().bounds.width/2 - 100,
-        y:screen.getPrimaryDisplay().bounds.height/2 - 100,
-        transparent:true,
-        frame:false
+    loadingWindow = new BrowserWindow({
+        x: screen.getPrimaryDisplay().bounds.width / 2 - 100,
+        y: screen.getPrimaryDisplay().bounds.height / 2 - 100,
+        transparent: true,
+        frame: false
     });
     loadingWindow.show();
     loadingWindow.loadURL(url.format({
-        pathname: path.join(__dirname,'loader.html'),
+        pathname: path.join(__dirname, 'loader.html'),
         protocol: 'file',
         slashes: true
     }))
@@ -48,16 +48,17 @@ app.on("ready", () => {
         slashes: true
     }));
 
-    mainWindow.webContents.once('did-finish-load',()=>{
+    mainWindow.webContents.once('did-finish-load', () => {
         loadingWindow.close();
         mainWindow.show();
+
     });
 
-    mainWindow.on('close',()=>{
+    mainWindow.on('close', () => {
         //@ts-ignore
         mainWindow = null;
     })
-    loadingWindow.on('close',()=>{
+    loadingWindow.on('close', () => {
         console.log('closing loading window');
         //@ts-ignore
         loadingWindow = null;

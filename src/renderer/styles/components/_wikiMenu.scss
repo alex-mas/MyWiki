@@ -3,7 +3,7 @@
 .wiki-menu__container{
     position: absolute;
     background-color:$white;
-    top: 5rem;
+    top: 3rem;
     width: calc(7rem + 9px);
     left: -1rem;
     height: 20vh;
@@ -31,11 +31,12 @@
     text-decoration: none;
     justify-content: space-between;
     &:hover{
-        background: darken($white, 10%);
+        background: darken($white, 5%);
     }
     &:active{
         color: lighten(black, 15%);
     }
+    
 }
 
 .wiki-menu__section{
