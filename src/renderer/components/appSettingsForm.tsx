@@ -7,7 +7,7 @@ import { withHistoryContext, MemoryHistory } from '@axc/react-components/navigat
 import { connect } from 'react-redux';
 import { AppData } from '../store/reducers/appData';
 import { AppState } from '../store/store';
-import { resetAppData, setLocale, setAppBackground, setAppAutoSave,setAppAutoSaveInterval } from '../actions/appData';
+import { resetAppData, setLocale, setAppBackground, setAppAutoSave, setAppAutoSaveInterval } from '../actions/appData';
 import { ActionCreator } from 'redux';
 
 
@@ -51,7 +51,7 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
     }
     onAutoSaveIntervalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let newInterval = Number(event.target.value);
-        if(newInterval < 1){
+        if (newInterval < 1) {
             newInterval = 1;
         }
         this.props.setAppAutoSaveInterval(newInterval);
@@ -95,7 +95,7 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
 
                     {this.props.data.shouldAutoSave ?
                         <div className='form-field'>
-                            Auto save interval <input style={{width: '50px'}}className='form-input number-input' type="number" value={this.props.data.autoSaveInterval} onChange={this.onAutoSaveIntervalChange} /> Minutes
+                            Auto save interval <input style={{ width: '50px' }} className='form-input number-input' type="number" value={this.props.data.autoSaveInterval} onChange={this.onAutoSaveIntervalChange} /> Minutes
                         </div>
                         :
                         null
@@ -111,21 +111,22 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
                             select
                         </ImageInput>
                     </div>
-
-                    <button
-                        className='form-action'
-                        type='button'
-                        onClick={this.onConfirmChanges}
-                    >
-                        Confirm
-                 </button>
-                    <button
-                        className='form-action'
-                        type='button'
-                        onClick={this.onResetValues}
-                    >
-                        Reset
-                 </button>
+                    <div className='form-actions'>
+                        <button
+                            className='form-action--primary'
+                            type='button'
+                            onClick={this.onConfirmChanges}
+                        >
+                            Confirm
+                        </button>
+                        <button
+                            className='form-action--secondary'
+                            type='button'
+                            onClick={this.onResetValues}
+                        >
+                            Reset
+                        </button>
+                    </div>
                 </form>
             )
         } else {

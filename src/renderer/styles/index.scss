@@ -4,10 +4,15 @@
 @import '../../../node_modules/reset-css/sass/reset';
 @import './defs';
 @import './base';
-@import './components/materialIcons';
-@import './components/body';
+
+//base components
+@import './components/button';
 @import './components/action';
 @import './components/buttons';
+@import './components/materialIcons';
+
+//specific styles
+@import './components/body';
 @import './components/header';
 @import './components/modal';
 @import './components/prompt';

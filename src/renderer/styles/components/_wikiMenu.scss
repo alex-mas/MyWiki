@@ -2,7 +2,7 @@
 
 .wiki-menu__container{
     position: absolute;
-    background-color:$white;
+    background-color:var(--theme-primary);
     top: 3rem;
     width: calc(7rem + 9px);
     left: -1rem;
@@ -31,7 +31,7 @@
     text-decoration: none;
     justify-content: space-between;
     &:hover{
-        background: darken($white, 5%);
+        background: darken(white, 5%);
     }
     &:active{
         color: lighten(black, 15%);

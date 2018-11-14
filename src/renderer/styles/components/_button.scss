@@ -1,0 +1,82 @@
+
+
+.button{
+    text-decoration: none;
+    border: none;
+}
+
+//flat buttons
+
+.button-flat{
+    @extend .button;
+    background: transparent;
+}
+
+.button-flat--primary{
+    @extend .button-flat;
+    color: var(--theme-text-on-primary);
+    &:hover{
+        background: rgba(var(--theme-secondary-rgb),0.1);
+    }
+}
+.button-flat--secondary{
+    @extend .button-flat;
+    color: var(--theme-text-on-secondary);
+    &:hover{
+        background: rgba(var(--theme-primary-rgb),0.1);
+    }
+}
+
+.button-flat--primary--accent{
+    @extend .button-flat--primary;
+    color: var(--theme-accent);
+}
+.button-flat--primary--disabled{
+    @extend .button-flat--primary;
+    color: var(--theme-disabled-text-on-primary);
+}
+
+.button-flat--secondary--accent{
+    @extend .button-flat--secondary;
+    color: var(--theme-accent);
+}
+
+.button-flat--secondary--disabled{
+    @extend .button-flat--secondary;
+    color: var(--theme-disabled-text-on-secondary);
+}
+
+
+
+//solid buttons
+
+.button-solid{
+    @extend .button;
+    background: var(--theme-secondary);
+}
+
+.button-solid--primary{
+    @extend .button-solid;
+    background-color: var(--theme-secondary);
+    color: var(--theme-text-on-secondary);
+    &:hover{
+        filter: brightness(110%);
+    }
+}
+.button-solid--secondary{
+    @extend .button-solid;
+    background-color: var(--theme-primary);
+    color: var(--theme-text-on-primary);
+    &:hover{
+        filter: brightness(90%);
+    }
+}
+
+.button-solid--accent{
+    @extend .button-solid;
+    background-color: var(--theme-accent);
+    color: var(--theme-text-on-accent);
+    &:hover{
+        filter: brightness(110%);
+    }
+}

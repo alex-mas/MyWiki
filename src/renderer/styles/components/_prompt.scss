@@ -2,7 +2,7 @@
 .axc-prompt__modal{
     width: fit-content;
     margin: 10vh auto;
-    background-color: rgba(255,255,255,0.95);
+    background-color: var(--theme-primary-faded);
     display: flex;
     flex-direction: column;
     align-content: center;

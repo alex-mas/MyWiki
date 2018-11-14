@@ -1,4 +1,19 @@
 
+:root{
+    --theme-primary-rgb: 255,255,255;
+    --theme-primary: rgb(var(--theme-primary-rgb));
+    --theme-primary-faded: rgba(var(--theme-primary-rgb),0.95);
+    --theme-primary-x-faded: rgba(var(--theme-primary-rgb),0.9);
+    --theme-secondary-rgb: 0,0,0;
+    --theme-secondary: rgb(var(--theme-secondary-rgb));
+    --theme-text-on-primary: black;
+    --theme-disabled-text-on-primary: grey;
+    --theme-text-on-secondary: white;
+    --theme-disabled-text-on-secondary: darken(white, 10%);
+    --theme-accent: #cb2d3e;
+    --theme-text-on-accent: white;
+}
+
 
 
 /*gradients*/
@@ -92,21 +107,4 @@ $font-size-xs: 0.8rem;
 
 
 
-//colors
 
-$white: white;
-
-$white-faded: rgba(255,255,255,0.9);
-
-$white-faded-l: rgba(255,255,255,0.95);
-
-
-
-
-$button-contained-color: lighten(black, 10%);
-
-$text-on-contained: $white;
-
-$button-flat-color: transparent;
-
-$text-on-flat: grey;

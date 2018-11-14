@@ -2,8 +2,8 @@
 
 
 .wiki-button--primary{
-    background: $button-contained-color;
-    color: $text-on-contained;
+    background: var(--theme-secondary);
+    color: var(--theme-text-on-secondary);
     border: none;
     box-shadow: $elevation-2p;
     i{
@@ -12,11 +12,11 @@
     width: 5rem;
     height: $size-ml;
     &:hover{
-        background-color: lighten($button-contained-color, 10%);
+        background-color: lighten(black, 10%);
         box-shadow: $elevation-4p;
     }
     &:active{
-        background-color: lighten($button-contained-color, 20%);
+        background-color: lighten(black, 20%);
         box-shadow: $elevation-2p;
         border-radius: 5%;
     }

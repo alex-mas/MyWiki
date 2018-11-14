@@ -66,6 +66,16 @@ export const TablePlugin = (context: EditorPluginContext) => {
     return {
         id: 'tables_plugin',
         renderNode: renderImage,
+        onKeyDown: (event: React.KeyboardEvent<any>, editor: Editor, next: Function) => {
+            return next();
+            if(event.key === 'ArrowUp'){
+                
+            }else if (event.key === 'ArrowDown'){
+
+            }else if(event.key === 'Enter'){
+
+            }
+        },
         Button() {
             const isActive = hasBlockType(context.getContent(), 'table');
             return (

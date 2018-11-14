@@ -2,16 +2,16 @@
 
 
 .text-action--contained{
-    background-color: $button-contained-color;
-    color: $text-on-contained;
+    background-color: var(--theme-secondary);
+    color: var(--theme-text-on-secondary);
     border:none;
     box-shadow:$elevation-2p;
     &:hover{
-        background-color: lighten($button-contained-color, 10%);
+        background-color: lighten(black, 10%);
         box-shadow: $elevation-3p;
     }
     &:active{
-        background-color: lighten($button-contained-color, 20%);
+        background-color: lighten(black, 20%);
         box-shadow: $elevation-4p;
         border-radius: 5%;
     }
@@ -20,14 +20,14 @@
 
 
 .text-action--flat{
-    background-color: $button-flat-color;
-    color: $text-on-flat;
+    background-color: var(--theme-primary);
+    color: var(--theme-text-on-primary);
     border:none;
     &:hover{
-        background-color: darken($button-flat-color,10%);
+        background-color: darken(white,10%);
     }
     &:hover{
-        background-color: darken($button-flat-color,20%);
+        background-color: darken(white,20%);
         box-shadow: $elevation-2p;
         border-radius: 5%;
     }
