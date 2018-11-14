@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Editor as SlateEditor, RenderNodeProps, RenderMarkProps, Plugin } from 'slate-react';
-import { Value, Data, Schema, Block, Editor } from 'slate';
+import { Value, Data, Schema, Block, Editor, BlockJSON } from 'slate';
 import { connect } from 'react-redux';
 import { remote, Dialog } from 'electron';
 
@@ -40,7 +40,7 @@ export interface EditorPluginContext {
 
 const dialog: Dialog = remote.dialog;
 
-export const emptyParagraph = {
+export const emptyParagraph: BlockJSON = {
     object: 'block',
     type: 'paragraph'
 };

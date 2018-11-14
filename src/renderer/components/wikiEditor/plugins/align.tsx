@@ -10,8 +10,8 @@ import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/bloc
 export const generateAlignmentPlugins = (context: EditorPluginContext) => {
 
     const alingmentStyleValue: any = {
-        right: 'flex-start',
-        left: 'flex-end',
+        right: 'flex-end',
+        left: 'flex-start',
         center: 'center'
     }
     const renderAlignment = (props: RenderNodeProps) => {

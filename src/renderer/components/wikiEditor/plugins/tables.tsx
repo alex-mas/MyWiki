@@ -3,7 +3,8 @@ import { RenderNodeProps } from "slate-react";
 import { EditorPluginContext, DEFAULT_NODE } from '../wikiEditor';
 import EditorButton from '../components/editorButton';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
-import { Editor } from 'slate';
+import { Editor, Block } from 'slate';
+import { emptyTable } from '../utilities/table';
 
 export const TablePlugin = (context: EditorPluginContext) => {
 
@@ -14,21 +15,54 @@ export const TablePlugin = (context: EditorPluginContext) => {
         switch (node.type) {
             case 'table':
                 return (
-                    <table>
-                        <tbody {...attributes}>{children}</tbody>
+                    <table className='wiki-editor__table'>
+                        <tbody
+                            className='wiki-editor__table-body'
+                            {...attributes}
+                        >
+                            {children}
+                        </tbody>
                     </table>
                 );
             case 'table-row':
-                return <tr {...attributes}>{children}</tr>;
+                return (
+                    <tr
+                        className='wiki-editor__table-row'
+                        {...attributes}
+                    >
+                        {children}
+                    </tr>
+                );
             case 'table-cell':
-                return <td {...attributes}>{children}</td>;
+                return (
+                    <td
+                        className='wiki-editor__table-cell'
+                        {...attributes}
+                    >
+                        {children}
+                    </td>
+                );
             default:
                 return next();
         }
 
     }
 
-    const onClickButton = onClickBlockButton(context);
+    const onClickButton = (event: React.MouseEvent<HTMLSpanElement>, type: string, data: any) => {
+        event.preventDefault();
+        const value = context.getContent();
+        const editor = context.getEditor();
+        const { document } = value;
+
+        const isActive = hasBlockType(value, type);
+        if (isActive) {
+            editor.removeNodeByKey(value.blocks.get(-1).key);
+        } else {
+            editor.insertBlock('');
+            editor.moveToEndOfPreviousBlock();
+            editor.insertBlock(Block.fromJSON(emptyTable));
+        }
+    }
     return {
         id: 'tables_plugin',
         renderNode: renderImage,
@@ -38,7 +72,7 @@ export const TablePlugin = (context: EditorPluginContext) => {
                 <EditorButton
                     onClick={onClickButton}
                     active={isActive}
-                    icon={'table_chart'}
+                    icon={'border_all'}
                     type={'table'}
                 />
             )

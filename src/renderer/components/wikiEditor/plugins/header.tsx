@@ -12,7 +12,7 @@ export const generateHeaderPlugins = (context: EditorPluginContext) => {
     const renderHeader = (HeaderComponent: string) => {
         return (props: RenderNodeProps) => {
             const { children, node, attributes } = props;
-            return <HeaderComponent className='wiki-article-header'{...attributes}>{children}</HeaderComponent>;
+            return <HeaderComponent className='wiki-editor__header'{...attributes}>{children}</HeaderComponent>;
         }
     }
     const onClickButton = onClickBlockButton(context);
@@ -45,8 +45,8 @@ export const generateHeaderPlugins = (context: EditorPluginContext) => {
             onKeyUp: (event: React.KeyboardEvent<any>, editor: Editor, next: Function) => {
                 if (event.key === 'Enter') {
                     const value = context.getContent();
-                    const editor = context.getEditor();
                     if (!!value.blocks.some(block => block.type === type)) {
+                        const editor = context.getEditor();
                         event.preventDefault();
                         event.stopPropagation();
                         const current = value.blocks.get(value.blocks.size -2);

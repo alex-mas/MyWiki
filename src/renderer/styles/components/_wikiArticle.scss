@@ -1,10 +1,13 @@
 
 .wiki-article__header{
     display: flex;
+    position: sticky;
+    top:3rem;
+    z-index: 1;
+    background-color: $white;
     flex-direction: column;
-    margin-left: $font-size-sm;
-    margin-right: $font-size-sm;
-    margin-bottom: $font-size-xxl;
+    padding-left: $font-size-sm;
+    padding-right: $font-size-sm;
     border-bottom: 2px solid black;
 }
 
