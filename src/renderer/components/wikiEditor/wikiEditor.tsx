@@ -40,6 +40,11 @@ export interface EditorPluginContext {
 
 const dialog: Dialog = remote.dialog;
 
+export const emptyParagraph = {
+    object: 'block',
+    type: 'paragraph'
+};
+
 export const defaultEditorContents = Value.fromJSON({
     document: {
         nodes: [

@@ -11,7 +11,6 @@ export class DynamicTextInput extends React.Component<any, { characters: number 
         }
     }
     onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        debugger;
         const selection = window.getSelection().toString();
         if (event.key === 'Backspace') {
             this.setState((prevState) => {

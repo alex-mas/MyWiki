@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { RenderNodeProps, Editor } from "slate-react";
-import { EditorPluginContext } from '../wikiEditor';
+import { EditorPluginContext, emptyParagraph } from '../wikiEditor';
 import EditorButton from '../components/editorButton';
-import { Value, BlockProperties } from 'slate';
+import { Value, BlockProperties, Node, Block } from 'slate';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
 
 
@@ -44,21 +44,25 @@ export const generateHeaderPlugins = (context: EditorPluginContext) => {
             },
             onKeyUp: (event: React.KeyboardEvent<any>, editor: Editor, next: Function) => {
                 if (event.key === 'Enter') {
-                    console.log('executing enter handler')
                     const value = context.getContent();
                     const editor = context.getEditor();
                     if (!!value.blocks.some(block => block.type === type)) {
-                        console.log('executing enter handler, block type detected');
                         event.preventDefault();
-                        const key = value.blocks.get(value.blocks.size - 1).key;
-                        editor.removeNodeByKey(key);
-                        editor.insertBlock('');
-                        editor.moveAnchorToStartOfNextBlock();
-                        editor.moveToFocus();
-                        return;
+                        event.stopPropagation();
+                        const current = value.blocks.get(value.blocks.size -2);
+                        const previous = value.previousBlock;
+                        debugger;
+                        if(current.type === type && current.text === ''){
+                            const key = current.key;
+                            editor.removeNodeByKey(key);
+                            editor.insertBlock('');
+                            editor.moveAnchorToStartOfNextBlock();
+                        }else if(previous.type === type && previous.text === ''){
+                            editor.replaceNodeByKey(previous.key, Block.fromJSON(emptyParagraph));
+                        }
+                        return false;
                     }
                 }
-                console.log('after executing enter handler', next, editor);
                 return next();
               
             }
