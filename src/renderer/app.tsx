@@ -13,7 +13,7 @@ import { Provider, connect } from 'react-redux';
 import configureStore, { AppState } from './store/store';
 
 import AppRouter from './router/router';
-import { loadWikis, loadWiki } from './actions/wikis';
+import { loadWikis, loadWiki, saveWikis } from './actions/wikis';
 import { WikiMetaData } from './store/reducers/wikis';
 import { fsError } from './actions/errors';
 import { parsePlugins } from './actions/plugins';
@@ -22,6 +22,8 @@ import { PromptSystem } from '@axc/react-components/interactive/prompt';
 import { AnyAction } from 'redux';
 import { ThreadManager, WorkDistributionStrategy } from '@axc/thread-manager';
 import { onRecieveArticleKeywords } from './actions/ml';
+import { AppData } from './store/reducers/appData';
+import { setAppData, saveAppData, loadAppData } from './actions/appData';
 
 
 
@@ -57,54 +59,37 @@ const I18nSystem = connect((state: AppState, props) => {
 
 const App = (
     <Provider store={store}>
-        <PromptSystem>
-            <I18nSystem>
+        <I18nSystem>
+            <PromptSystem>
                 <AppRouter />
-            </I18nSystem>
-        </PromptSystem>
+            </PromptSystem>
+        </I18nSystem>
     </Provider>
 );
 
 ReactDOM.render(App, appRoot);
 
-//TODO: Convert into actions and do window.onEvent = action
 
-window.onload = async () => {
-    const wikis: WikiMetaData[] | undefined = JSON.parse(localStorage.getItem('myWikis'));
-    try {
-        const files = await fsp.readdir('./wikis');
-        files.forEach(async (file) => {
-            try {
-                //@ts-ignore
-                store.dispatch(loadWiki(file));
-            } catch (e) {
-                store.dispatch(fsError('Error while parsing wiki meta data'));
-            }
-        });
-    } catch (e) {
-        store.dispatch(fsError('Error loading wiki meta-data'));
-    }
+window.onload = () => {
+    //@ts-ignore
+    store.dispatch(loadWikis());
+    //@ts-ignore
+    store.dispatch(loadAppData());
+    //@ts-ignore
+    store.dispatch(parsePlugins());
+
 }
 
-window.onbeforeunload = () => {
-    const wikis = store.getState().wikis;
-    wikis.forEach(async (wiki, index) => {
-        if (wiki) {
-            try {
-                fsp.writeFile(`./wikis/${wiki.id}/myWiki.config.json`, JSON.stringify(wiki), 'utf8');
-            } catch (e) {
-                store.dispatch(fsError('Error saving wiki configuration files'));
-            }
-        }
-    });
+window.onbeforeunload =() => {
+    saveWikis();
+    saveAppData();
 }
 
 
-//@ts-ignore
-store.dispatch(parsePlugins());
 
 
-export default{
+
+export default {
     store,
     mlThreads
 }

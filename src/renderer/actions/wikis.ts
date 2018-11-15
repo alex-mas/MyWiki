@@ -7,9 +7,10 @@ import * as path from 'path';
 import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
 import { errorAction, fsError, ErrorAction, ErrorActionCode } from "./errors";
-import { deleteFolderRecursively } from '../utilities/fsutils';
+import { deleteFolderRecursively } from '../../utils/fsutils';
 import { Article, ArticleMetaData, getArticleMetaData } from "./article";
 import { ActionWithPayload, AsyncACreator, ACreator } from "./utils";
+import { store } from "../app";
 
 
 export const CREATE_WIKI = 'CREATE_WIKI';
@@ -156,15 +157,6 @@ export const loadWiki: LoadWikiActionCreator = (id: string) => {
 }
 
 
-export type LoadWikisAction = ActionWithPayload<{ wikis: WikiMetaData[] }>;
-export type LoadWikisActionCreator = ACreator<[WikiMetaData[]], LoadWikisAction>;
-
-export const loadWikis: LoadWikisActionCreator = (wikis: WikiMetaData[]) => {
-    return {
-        type: LOAD_WIKIS,
-        wikis
-    }
-}
 
 export type SetWikiBgAction =ActionWithPayload<{background:string}>;
 export type SetWikiBgActionCreator =ACreator<[string,string], SetWikiBgAction>
@@ -199,6 +191,50 @@ export const setWikiDescription: SetWikiDescriptionActionCreator = (id: string, 
       
     }
 }
+
+
+
+export type LoadWikisAction = Action<string>;
+export type LoadWikisActionCreator = AsyncACreator<any, LoadWikisAction, void>;
+
+export const loadWikis: LoadWikisActionCreator = ()=>{
+    return async(dispatch, getState)=>{
+        try {
+            const files = await fsp.readdir('./wikis');
+            files.forEach(async (file) => {
+                try {
+                    //@ts-ignore
+                    dispatch(loadWiki(file));
+                } catch (e) {
+                    dispatch(fsError('Error while parsing wiki meta data'));
+                }
+            });
+        } catch (e) {
+            dispatch(fsError('Error loading wiki meta-data'));
+        }
+    }
+}
+
+
+
+export type SaveWikisAction = Action<string>;
+export type SaveWikisActionCreator = AsyncACreator<any, SaveWikisAction, void>;
+
+
+export const saveWikis = ()=>{
+    const wikis = store.getState().wikis;
+    wikis.forEach(async (wiki, index) => {
+        if (wiki) {
+            try {
+                fsp.writeFile(`./wikis/${wiki.id}/myWiki.config.json`, JSON.stringify(wiki), 'utf8');
+            } catch (e) {
+                store.dispatch(fsError('Error saving wiki configuration files'));
+            }
+        }
+    });
+}
+
+
 
 
 

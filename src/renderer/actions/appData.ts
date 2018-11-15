@@ -6,6 +6,7 @@ import { AppState } from "../store/store";
 import { ErrorAction, fsError } from "./errors";
 import * as fsp from '../../utils/promisify-fs';
 import { ActionWithPayload, ACreator, AsyncACreator} from "./utils";
+import { store } from "../app";
 
 
 export const SET_APP_DATA = 'SET_APP_DATA';
@@ -111,6 +112,38 @@ export const setAppAutoSaveInterval: SetAppAutoSaveIntervalCreator = (autoSaveIn
     };
 }
 
+
+export type LoadAppDataAction = Action<string>;
+
+export type LoadAppDataActionCreator = AsyncACreator<any,LoadAppDataAction,void>
+
+export const loadAppData: LoadAppDataActionCreator = ()=>{
+    return async (dispatch,getState)=>{
+        try{
+            const appDataContents = await fsp.readFile('./appConfig/app.config.json', 'utf8');
+            const appData: AppData = JSON.parse(appDataContents);
+            //@ts-ignore
+            dispatch(setAppData(appData));
+        }catch(e){
+            dispatch(fsError('error parsing app configuration'));
+        }
+    }
+}
+
+
+
+export const saveAppData = ()=>{
+    const appData = store.getState().appData;
+    if(appData){
+        fsp.writeFile('./appConfig/app.config.json', JSON.stringify(appData), 'utf8')
+        .then(()=>{
+
+        })
+        .catch((e)=>{
+            store.dispatch(fsError('error serializing and saving app configuration'));
+        });
+    }
+}
 
 
 

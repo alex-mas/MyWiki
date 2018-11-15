@@ -8,7 +8,7 @@ import { fsError, ErrorAction, ErrorActionCode} from "./errors";
 import { isPluginLoaded } from "../selectors/plugins";
 import {Action} from 'redux';
 import { isPluginMetaDataValid } from "../validators/plugins";
-import { settle } from "../utilities/promise";
+import { settle } from "../../utils/promise";
 import { ActionWithPayload, AsyncACreator } from "./utils";
 
 export const LOAD_PLUGIN = 'LOAD_PLUGIN';
