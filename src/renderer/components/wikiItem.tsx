@@ -5,8 +5,10 @@ import { WikiMetaData } from '../store/reducers/wikis';
 import { selectWiki, SelectWikiActionCreator, removeWiki, loadWiki, LoadWikiActionCreator } from '../actions/wikis';
 import { MemoryHistory, withHistoryContext } from '@axc/react-components/navigation/memoryRouter';
 import { ActionCreator } from 'redux';
-import {withPrompt} from '@axc/react-components/interactive/prompt';
+import {withPrompt, PromptComponentProps} from '@axc/react-components/interactive/prompt';
 import I18String from '@axc/react-components/display/i18string';
+import { Button } from './button';
+import { DeletePrompt, DeletePromptProps, DeletePromptFunction } from './deletePrompt';
 
 export interface WikiItemOwnProps {
     wiki: WikiMetaData,
@@ -20,7 +22,7 @@ export interface WikiItemDispatchProps {
 }
 
 export interface WikiItemPromptProps {
-    prompt: (component: string | React.StatelessComponent<any>)=>Promise<string | undefined>
+    prompt:DeletePromptFunction;
 }
 
 export type WikiItemProps = WikiItemOwnProps & WikiItemDispatchProps & WikiItemPromptProps;
@@ -38,7 +40,7 @@ class WikiItem extends React.Component<WikiItemProps, any>{
 
     }
     removeWiki = () => {
-        this.props.prompt('Do you really wish to remove this wiki?').then((response)=>{
+        this.props.prompt(DeletePrompt,{title:'do you really wish to remove this wiki?'}).then((response: boolean)=>{
             if(response){
                 this.props.removeWiki(this.props.wiki);
             }
@@ -52,18 +54,20 @@ class WikiItem extends React.Component<WikiItemProps, any>{
                     <div className='wiki-item__description'>{this.props.wiki.description}</div>
                 </div>
                 <div className='wiki-item__actions'>
-                    <button
-                        className='wiki-item__action text-action--contained'
+                    <Button
+                        btnType='solid'
+                        theme='primary'
                         onClick={this.onOpen}
                     >
                         <I18String text='open'/>
-                    </button>
-                    <button
-                        className='wiki-item__action text-action--flat'
+                    </Button>
+                    <Button
+                        btnType='flat'
+                        theme='primary'
                         onClick={this.removeWiki}
                     >
                         <I18String text='remove' format='capitalizeFirst'/>
-                    </button>
+                    </Button>
                 </div>
             </li>
         );

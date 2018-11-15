@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import AppHeader from '../components/appHeader';
 import ImageInput from '../components/imageInput';
-import { ISO639Locale } from '@axc/react-components/display/i18string';
+import I18String, { ISO639Locale } from '@axc/react-components/display/i18string';
 import { withHistoryContext, MemoryHistory } from '@axc/react-components/navigation/memoryRouter';
 import { connect } from 'react-redux';
 import { AppData } from '../store/reducers/appData';
@@ -44,8 +44,8 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
     onBackgroundChange = (background: string) => {
         this.props.setAppBackground(background);
     }
-    onAutoSaveChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const shouldAutoSave = event.target.value === 'true';
+    onAutoSaveChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const shouldAutoSave = event.target.checked;
         console.log('Should auto save? ', shouldAutoSave, event.target);
         this.props.setAppAutoSave(shouldAutoSave);
     }
@@ -68,7 +68,7 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
             return (
                 <form className='settings-form'>
                     <div className='form-field'>
-                        Language
+                        <I18String text='language' format='capitalizeFirst' />
                         <select
                             className='form-input select-input'
                             value={this.props.data.locale}
@@ -82,33 +82,46 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
                         </select>
                     </div>
                     <div className='form-field'>
-                        Auto save articles?
-                        <select
-                            className='form-input select-input'
-                            value={String(this.props.data.shouldAutoSave)}
+
+                        <I18String text='auto save articles' format='capitalizeFirst' />
+                        <input
+                            type='checkbox'
+                            className='form-input checkbox-input'
+                            checked={this.props.data.shouldAutoSave}
                             onChange={this.onAutoSaveChange}
-                        >
-                            <option key='false' value='false'>False</option>
-                            <option key='true' value='true'>True</option>
-                        </select>
+                        />
                     </div>
 
                     {this.props.data.shouldAutoSave ?
                         <div className='form-field'>
-                            Auto save interval <input style={{ width: '50px' }} className='form-input number-input' type="number" value={this.props.data.autoSaveInterval} onChange={this.onAutoSaveIntervalChange} /> Minutes
+                            <I18String
+                                text='auto save interval'
+                                format='capitalizeFirst'
+                            />
+                            <input
+                                style={{ width: '50px' }}
+                                className='form-input number-input'
+                                type="number"
+                                value={this.props.data.autoSaveInterval}
+                                onChange={this.onAutoSaveIntervalChange}
+                            />
+                            <I18String
+                                text='minutes'
+                                format='capitalizeFirst'
+                            />
                         </div>
                         :
                         null
                     }
                     <div className='form-field'>
-                        Background Image
+                        <I18String text='background image' format='capitalizeFirst' />
                         <ImageInput
                             className='form-input image-input'
                             windowTitle='select App background image'
                             value={this.props.data.background}
                             onChange={this.onBackgroundChange}
                         >
-                            select
+                            <I18String text='select' format='capitalizeFirst' />
                         </ImageInput>
                     </div>
                     <div className='form-actions'>
@@ -117,14 +130,14 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
                             type='button'
                             onClick={this.onConfirmChanges}
                         >
-                            Confirm
+                            <I18String text='confirm' format='capitalizeFirst' />
                         </button>
                         <button
                             className='form-action--secondary'
                             type='button'
                             onClick={this.onResetValues}
                         >
-                            Reset
+                            <I18String text='reset' format='capitalizeFirst' />
                         </button>
                     </div>
                 </form>

@@ -2,13 +2,14 @@ import * as React from 'react';
 import Header from './header';
 
 import CreateWikiForm from './createWikiForm';
-import { withHistoryContext, MemoryHistory, MemoryLink} from '@axc/react-components/navigation/memoryRouter';
+import { withHistoryContext, MemoryHistory, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import HomeButton from './homeButton';
-import  SettingsForm  from './appSettingsForm';
+import SettingsForm from './appSettingsForm';
+import { Button } from './button';
 
 
 export interface AppHeaderProps {
-    
+
 }
 
 export interface AppHeaderState {
@@ -23,36 +24,36 @@ class AppHeader extends React.Component<AppHeaderProps, AppHeaderState>{
         }
 
     }
-    componentDidMount(){
-        window.addEventListener('click',this.handleClicksOutsideActions);
+    componentDidMount() {
+        window.addEventListener('click', this.handleClicksOutsideActions);
     }
-    componentWillUnmount(){
-        window.removeEventListener('click',this.handleClicksOutsideActions);
+    componentWillUnmount() {
+        window.removeEventListener('click', this.handleClicksOutsideActions);
     }
-    handleClicksOutsideActions = (e: MouseEvent)=>{
+    handleClicksOutsideActions = (e: MouseEvent) => {
         console.log('handling click outside', e, this.state);
         //@ts-ignore
         if (this.state.isSettingsFormOpen && !this.actionsRef.current.contains(e.target)) {
-            this.setState(()=>({ 
-                isSettingsFormOpen: false 
+            this.setState(() => ({
+                isSettingsFormOpen: false
             }));
         }
     }
     actionsRef: React.RefObject<HTMLDivElement> = React.createRef();
-    toggleSettings = ()=>{
-        this.setState((prevState)=>({
+    toggleSettings = () => {
+        this.setState((prevState) => ({
             isSettingsFormOpen: !prevState.isSettingsFormOpen
         }));
     }
-    closeSettings = ()=>{
-        this.setState(()=>({
+    closeSettings = () => {
+        this.setState(() => ({
             isSettingsFormOpen: false
         }));
     }
     render() {
         return (
             <Header>
-                <HomeButton/>
+                <HomeButton />
                 <div ref={this.actionsRef} className='wiki-header__actions'>
                     <button
                         onClick={this.toggleSettings}
@@ -60,7 +61,7 @@ class AppHeader extends React.Component<AppHeaderProps, AppHeaderState>{
                     >
                         <i className='material-icons'>settings</i>
                     </button>
-                    <SettingsForm isOpen={this.state.isSettingsFormOpen} onClose={this.closeSettings}/>
+                    <SettingsForm isOpen={this.state.isSettingsFormOpen} onClose={this.closeSettings} />
                 </div>
             </Header>
         )

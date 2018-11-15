@@ -67,7 +67,7 @@ export class WikiMenu extends React.Component<WikiMenuProps, any>{
 
                         </section>
                         <section className='wiki-menu__section--last'>
-                            plugin defined actions
+                            <I18String text='plugin defined actions' format='capitalizeFirst'/>
                         </section>
                     </ul>
                 </div>

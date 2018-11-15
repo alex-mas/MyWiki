@@ -64,5 +64,7 @@ export default connect((state: AppState,props: OwnProps)=>{
         return{
             wikiID: state.selectedWiki.id
         }
+    }else{
+        return{};
     }
 })(WikiSettingsButton);
