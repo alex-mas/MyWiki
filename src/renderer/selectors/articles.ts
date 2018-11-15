@@ -28,8 +28,8 @@ export const getRelevantArticles= (search:string, selectedWiki: WikiMetaData): s
     const regularMatches = selectedWiki.articles.filter((article)=>{
         if(
             article.name.toLocaleLowerCase().includes(search) ||
-            article.tags.indexOf(search) > -1 ||
-            article.keywords.indexOf(search) > -1
+            (article.tags && article.tags.indexOf(search) > -1) ||
+            (article.keywords && article.keywords.indexOf(search) > -1)
         ){
             return true;
         }else{

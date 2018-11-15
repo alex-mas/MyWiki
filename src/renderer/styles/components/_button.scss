@@ -3,6 +3,9 @@
 .button{
     text-decoration: none;
     border: none;
+    &:hover{
+        cursor: pointer;
+    }
 }
 
 //flat buttons
@@ -10,40 +13,71 @@
 .button-flat{
     @extend .button;
     background: transparent;
+    background-position: center;
+    transition: background 0.8s;
 }
 
 .button-flat--primary{
     @extend .button-flat;
     color: var(--theme-text-on-primary);
     &:hover{
-        background: rgba(var(--theme-secondary-rgb),0.1);
+        background: var(--theme-primary-darkened) radial-gradient(circle, transparent 1%, var(--theme-primary-darkened) 1%) center/15000%;
     }
+    &:active{
+        background-color: var(--theme-primary-x-darkened);
+        background-size: 100%;
+        transition: background 0s;
+    }
+}
+
+
+.button-flat--primary--disabled{
+    @extend .button-flat--primary;
+    color: var(--theme-disabled-text-on-primary);
 }
 .button-flat--secondary{
     @extend .button-flat;
     color: var(--theme-text-on-secondary);
     &:hover{
-        background: rgba(var(--theme-primary-rgb),0.1);
+        background: var(--theme-secondary-lightened) radial-gradient(circle, transparent 1%, var(--theme-secondary-lightened) 1%) center/15000%;
     }
-}
-
-.button-flat--primary--accent{
-    @extend .button-flat--primary;
-    color: var(--theme-accent);
-}
-.button-flat--primary--disabled{
-    @extend .button-flat--primary;
-    color: var(--theme-disabled-text-on-primary);
-}
-
-.button-flat--secondary--accent{
-    @extend .button-flat--secondary;
-    color: var(--theme-accent);
+    &:active{
+        background-color: var(--theme-secondary-x-lightened);
+        background-size: 100%;
+        transition: background 0s;
+    }
+    
 }
 
 .button-flat--secondary--disabled{
     @extend .button-flat--secondary;
     color: var(--theme-disabled-text-on-secondary);
+}
+
+.button-flat--primary--accent{
+    @extend .button-flat--primary;
+    color: var(--theme-accent);
+    &:hover{
+        background: var(--theme-primary-darkened) radial-gradient(circle, transparent 1%, var(--theme-primary-darkened) 1%) center/15000%;
+    }
+    &:active{
+        background-color: var(--theme-accent-lightened);
+        background-size: 100%;
+        transition: background 0s;
+    }
+}
+
+.button-flat--secondary--accent{
+    @extend .button-flat--secondary;
+    color: var(--theme-accent);
+    &:hover{
+        background: var(--theme-secondary-lightened) radial-gradient(circle, transparent 1%, var(--theme-secondary-lightened) 1%) center/15000%;
+    }
+    &:active{
+        background-color: var(--theme-accent-lightened);
+        background-size: 100%;
+        transition: background 0s;
+    }
 }
 
 
@@ -53,6 +87,8 @@
 .button-solid{
     @extend .button;
     background: var(--theme-secondary);
+    background-position: center;
+    transition: background 0.8s;
 }
 
 .button-solid--primary{
@@ -60,7 +96,12 @@
     background-color: var(--theme-secondary);
     color: var(--theme-text-on-secondary);
     &:hover{
-        filter: brightness(110%);
+        background: var(--theme-secondary-lightened) radial-gradient(circle, transparent 1%, var(--theme-secondary-lightened) 1%) center/15000%;
+    }
+    &:active{
+        background-color: var(--theme-secondary-x-lightened);
+        background-size: 100%;
+        transition: background 0s;
     }
 }
 .button-solid--secondary{
@@ -68,7 +109,12 @@
     background-color: var(--theme-primary);
     color: var(--theme-text-on-primary);
     &:hover{
-        filter: brightness(90%);
+        background: var(--theme-primary-darkened) radial-gradient(circle, transparent 1%, var(--theme-primary-darkened) 1%) center/15000%;
+    }
+    &:active{
+        background-color: var(--theme-primary-x-darkened);
+        background-size: 100%;
+        transition: background 0s;
     }
 }
 
@@ -77,6 +123,11 @@
     background-color: var(--theme-accent);
     color: var(--theme-text-on-accent);
     &:hover{
-        filter: brightness(110%);
+        background: var(--theme-accent-lightened) radial-gradient(circle, transparent 1%, var(--theme-accent-lightened) 1%) center/15000%;
+    }
+    &:active{
+        background-color: var(--theme-accent-x-lightened);
+        background-size: 100%;
+        transition: background 0s;
     }
 }

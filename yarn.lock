@@ -6,9 +6,9 @@
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-4.1.0.tgz#33eff662a5c39c0c2061170cc003c5120743fff0"
 
-"@axc/react-components@^0.1.7":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@axc/react-components/-/react-components-0.1.9.tgz#d87765706c5d148ac2cdbfac80ff0157500bbc64"
+"@axc/react-components@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@axc/react-components/-/react-components-0.2.3.tgz#5e63b559bf373f7ee9b73cb01f2c0356206308d6"
   dependencies:
     "@fortawesome/fontawesome" "^1.1.8"
     "@fortawesome/fontawesome-free-regular" "^5.0.13"

@@ -10,7 +10,7 @@
     height: fit-content;
     box-shadow: $elevation-8p;
     animation-name: slideUp;
-    animation-duration: 1s;
+    animation-duration: 0.5s;
 }
 
 
@@ -42,7 +42,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-
     button{
         height: $size-sm;
     }
@@ -57,15 +56,3 @@
 }
 
 
-@keyframes slideUp{
- 0%{
-    tranparency: 0;
-    margin: 20vh 0;
-    margin-bottom: 0vh;
-    margin-top: 100vh;
- }
- 100%{
-    transparency: 1;
-    margin: 20vh 0;
- }
-}

@@ -1,7 +1,7 @@
 {
     "open": "abrir",
     "remove": "eliminar",
-    "Do you really wish to remove this wiki?": "Estas seguro que quieres eliminar esta wiki?",
+    "do you really wish to remove this wiki?": "Estas seguro que quieres eliminar esta wiki?",
     "home": "inicio",
     "go home": "ir al inicio",
     "settings": "configuración",
@@ -12,5 +12,18 @@
     "search": "busqueda",
     "page not found": "página no encontrada",
     "article not found": "articulo no encontrado",
-    "the page you requested couldn't be located": "la página solicitada no se ha podido localizar"
+    "the page you requested couldn't be located": "la página solicitada no se ha podido localizar",
+    "are you sure you want to delete this article?": "Estas seguro que quieres borrar este artículo?",
+    "confirm": "confirma",
+    "cancel": "cancela",
+    "language": "idioma",
+    "auto save articles": "autoguardado de articulos",
+    "auto save interval": "intervalo de autoguardado",
+    "background image": "imagen de fondo",
+    "select": "seleccionar",
+    "reset": "reestablecer",
+    "seconds": "segundos",
+    "minutes": "minutos",
+    "hours": "horas",
+    "days": "dias"
 }

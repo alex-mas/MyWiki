@@ -38,7 +38,6 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
     renderNotFoundMessage = () => {
         return (
             <div className='search-results'>
-            
                 <h2 className='wiki-article__subtitle'><I18String text='there are no results relevant to the search' format='capitalizeFirst'/></h2>
                 <MemoryLink to='/wiki/article/home'><I18String text='go home' format='capitalizeFirst'/></MemoryLink>
             </div>

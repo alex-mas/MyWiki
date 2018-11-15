@@ -6,19 +6,22 @@
 @import './base';
 
 //base components
+@import './components/transitions';
 @import './components/button';
 @import './components/action';
 @import './components/buttons';
 @import './components/materialIcons';
-
-//specific styles
 @import './components/body';
 @import './components/header';
+@import './components/route';
 @import './components/modal';
 @import './components/prompt';
+
+//specific styles
+
+@import './components/deletePrompt';
 @import './components/editor';
 @import './components/wikiList';
-@import './components/route';
 @import './components/wikiArticle';
 @import './components/wikiMenu';
 @import './components/tag';

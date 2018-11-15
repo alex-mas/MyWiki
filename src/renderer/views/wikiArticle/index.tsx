@@ -7,7 +7,7 @@ import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import WikiEditor, { defaultEditorContents } from '../../components/wikiEditor/wikiEditor';
 import * as ReactMarkdown from 'react-markdown';
-import {Value } from 'slate';
+import { Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../../actions/errors';
 import Header from '../../components/header';
 import { loadArticle, LoadArticleActionCreator, Article, DeleteArticleActionCreator, deleteArticle, ArticleMetaData } from '../../actions/article';
@@ -18,8 +18,9 @@ import WikiHeader from '../../components/wikiHeader';
 import HomeButton from '../../components/homeButton';
 import I18String from '@axc/react-components/display/i18string';
 import WikiView from '../../components/wikiView';
+import { withPrompt, PromptFunction } from '@axc/react-components/interactive/prompt';
+import { DeletePromptFunction, DeletePrompt } from '../../components/deletePrompt';
 const { dialog } = require('electron').remote
-
 
 
 
@@ -29,21 +30,23 @@ export interface DispatchProps {
     deleteArticle: DeleteArticleActionCreator
 }
 
-export interface WikiArticlePageOwnProps extends MemoryRouteProps {
+export interface PromptProps {
+    prompt: DeletePromptFunction;
+}
+export interface OwnProps extends MemoryRouteProps {
 }
 
-export interface WikiArticlePageReduxProps {
+export interface ReduxProps {
     selectedWiki: WikiMetaData,
     article: ArticleMetaData
 }
 
 
-export interface WikiArticlePageProps extends MemoryRouteProps, WikiArticlePageReduxProps, DispatchProps {
-}
+export type PageProps = MemoryRouteProps & ReduxProps & DispatchProps & PromptProps;
 
 //  <ReactMarkdown source={fs.readFileSync(path.join(props.selectedWiki.path, 'home.md'), 'utf8')}/>
-export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
-    constructor(props: WikiArticlePageProps) {
+export class WikiArticlePage extends React.Component<PageProps, any>{
+    constructor(props: PageProps) {
         super(props);
         this.state = {
             content: Value.fromJSON(JSON.parse('{}'))
@@ -67,7 +70,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
             }));
         })
     }
-    componentDidUpdate(prevProps: WikiArticlePageProps, prevState: any) {
+    componentDidUpdate(prevProps: PageProps, prevState: any) {
         if (this.props.routeParams.article !== prevProps.routeParams.article) {
             //@ts-ignore
             this.props.loadArticle(this.props.routeParams.article).then((article: Article) => {
@@ -84,19 +87,14 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
         }
     }
     deleteArticle = () => {
-
-        const dialogOptions = { title: `Delete ${this.props.routeParams.article}`, type: 'warning', buttons: ['Cancel', 'Yes'], message: 'Are you sure you want to delete the article?' }
-
-        dialog.showMessageBox(dialogOptions, (response) => {
+        this.props.prompt(DeletePrompt, {title: 'are you sure you want to delete this article?'}).then((response) => {
             if (response) {
                 //@ts-ignore
                 this.props.deleteArticle(this.props.routeParams.article).then(() => {
                     this.props.history.pushState('/wiki/article/home');
                 });
             }
-        })
-
-
+        });
     }
     onChange = (change: { operations: any, value: Value }) => {
         const content = change.value;
@@ -169,7 +167,7 @@ export class WikiArticlePage extends React.Component<WikiArticlePageProps, any>{
 }
 
 
-const mapStateToProps: MapStateToProps<WikiArticlePageReduxProps, WikiArticlePageOwnProps, AppState> = (state, props) => {
+const mapStateToProps: MapStateToProps<ReduxProps, OwnProps, AppState> = (state, props) => {
     return {
         selectedWiki: state.selectedWiki,
         article: getArticle(props.routeParams.article, state.selectedWiki)
@@ -177,8 +175,8 @@ const mapStateToProps: MapStateToProps<WikiArticlePageReduxProps, WikiArticlePag
 }
 
 
-export default connect(mapStateToProps, {
+export default withPrompt<any>(connect(mapStateToProps, {
     fsError,
     loadArticle,
     deleteArticle
-})(WikiArticlePage);
+})(WikiArticlePage));

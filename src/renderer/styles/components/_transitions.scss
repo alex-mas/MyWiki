@@ -1,0 +1,32 @@
+
+@keyframes slideUp{
+    0%{
+       tranparency: 0;
+       margin: 20vh 0;
+       margin-bottom: 0vh;
+       margin-top: 100vh;
+    }
+    100%{
+       transparency: 1;
+       margin: 20vh 0;
+    }
+   }
+
+
+@keyframes fadeIn{
+    0%{
+        filter: opacity(0%);
+    }
+    100%{
+        filter: opacity(100%);
+    }
+}
+
+@keyframes fadeOut{
+    0%{
+        filter: opacity(100%);
+    }
+    100%{
+        filter: opacity(0%);
+    }
+}

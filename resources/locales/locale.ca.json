@@ -1,7 +1,7 @@
 {
     "open": "obrir",
     "remove": "eliminar",
-    "Do you really wish to remove this wiki?": "Estas segur que vols eliminar aquesta wiki?",
+    "do you really wish to remove this wiki?": "estas segur que vols eliminar aquesta wiki?",
     "home": "inici",
     "go home": "ves a l'inici",
     "settings": "configuració",
@@ -12,5 +12,18 @@
     "search": "cerca",
     "page not found": "la pàgina no s’ha trobat",
     "article not found":"l'article no s’ha trobat",
-    "the page you requested couldn't be located": "la pàgina solicitada no s'ha pogut localitzar"
+    "the page you requested couldn't be located": "la pàgina solicitada no s'ha pogut localitzar",
+    "are you sure you want to delete this article?": "estas segur que vols eliminar aquest article?",
+    "confirm": "confirma",
+    "cancel": "cancela",
+    "language": "idioma",
+    "auto save articles": "auto-guardat d'articles",
+    "auto save interval": "interval d'auto-guardat",
+    "background image": "imatge de fons",
+    "select": "seleccionar",
+    "reset": "reestablir",
+    "seconds": "segons",
+    "minutes": "minuts",
+    "hours": "hores",
+    "days": "dies"
 }

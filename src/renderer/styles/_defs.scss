@@ -4,16 +4,25 @@
     --theme-primary: rgb(var(--theme-primary-rgb));
     --theme-primary-faded: rgba(var(--theme-primary-rgb),0.95);
     --theme-primary-x-faded: rgba(var(--theme-primary-rgb),0.9);
+    --theme-primary-darkened: #{darken(white,15%)};
+    --theme-primary-x-darkened: #{darken(white,35%)};
+    --theme-primary-ligthened: #{lighten(white, 15%)};
     --theme-secondary-rgb: 0,0,0;
     --theme-secondary: rgb(var(--theme-secondary-rgb));
+    --theme-secondary-lightened: #{lighten(black, 15%)};
+    --theme-secondary-x-lightened: #{lighten(black, 35%)};
+    --theme-secondary-darkened: #{darken(black, 15%)};
     --theme-text-on-primary: black;
     --theme-disabled-text-on-primary: grey;
     --theme-text-on-secondary: white;
-    --theme-disabled-text-on-secondary: darken(white, 10%);
+    --theme-disabled-text-on-secondary: #{darken(white, 15%)};
     --theme-accent: #cb2d3e;
+    --theme-accent-lightened: #{lighten(#cb2d3e, 15%)};
+    --theme-accent-x-lightened: #{lighten(#cb2d3e, 35%)};
+    --theme-accent-darkened: #{darken(#cb2d3e, 15%)};
+    --theme-accent-x-darkened: #{darken(#cb2d3e, 35%)};
     --theme-text-on-accent: white;
 }
-
 
 
 /*gradients*/

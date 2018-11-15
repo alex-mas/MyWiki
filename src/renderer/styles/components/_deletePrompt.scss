@@ -1,0 +1,28 @@
+
+
+.delete-prompt{
+    width: fit-content;
+    margin: 10vh auto;
+    background-color: var(--theme-primary-faded);
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    padding: $size-m;
+    animation-name: fadeIn;
+    animation-duration: 0.4s;
+}
+
+.delete-prompt__title{
+    font-size: $font-size-m;
+    padding-bottom: 2rem;
+}
+.delete-prompt__options{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+    button{
+        height: $size-ml;
+        font-size: $font-size-sm;
+    }
+}
+
