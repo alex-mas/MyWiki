@@ -1,27 +1,22 @@
 const path = require('path');
 const url = require('url');
-const fs = require('fs');
-const child_process = require('child_process');
 import * as Electron from 'electron'
+import { saveWindowConfig, getWindowConfig } from './appData';
 const { app, Menu, BrowserWindow, ipcMain, WebContents } = require('electron');
+
 
 
 let loadingWindow: Electron.BrowserWindow;
 let mainWindow: Electron.BrowserWindow;
 
-const setApplicationMenu = () => {
-
-
-};
 
 
 console.log('Node env: ', process.env.NODE_ENV);
 
-app.on("ready", () => {
+app.on("ready", async () => {
     console.log('app ready');
-    setApplicationMenu();
+    let windowConfig = await getWindowConfig();
     const screen = require('electron').screen;
-    debugger;
     loadingWindow = new BrowserWindow({
         x: screen.getPrimaryDisplay().bounds.width / 2 - 100,
         y: screen.getPrimaryDisplay().bounds.height / 2 - 100,
@@ -40,7 +35,11 @@ app.on("ready", () => {
             nodeIntegrationInWorker: true,
             webSecurity: true
         },
-        fullscreenable: true
+        fullscreenable: true,
+        width: windowConfig ? windowConfig.width : undefined,
+        height: windowConfig ? windowConfig.height : undefined,
+        x: windowConfig ? windowConfig.x : undefined,
+        y: windowConfig ? windowConfig.y : undefined
     });
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
@@ -49,17 +48,23 @@ app.on("ready", () => {
     }));
 
     mainWindow.webContents.once('did-finish-load', () => {
+        if (!windowConfig) {
+            mainWindow.maximize();
+        }
         loadingWindow.close();
         mainWindow.show();
-
     });
 
     mainWindow.on('close', () => {
-        //@ts-ignore
-        mainWindow = null;
+        saveWindowConfig(mainWindow).then(() => {
+            //@ts-ignore
+            mainWindow = null;
+        }).catch((e) => {
+            console.log(e);
+        })
+
     })
     loadingWindow.on('close', () => {
-        console.log('closing loading window');
         //@ts-ignore
         loadingWindow = null;
     })
