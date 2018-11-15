@@ -1,4 +1,19 @@
 
+.modal{
+    width: 45vw;
+    margin: 0 auto;
+    margin-top: 20vh;
+    background-color: var(--theme-primary);
+    color: var(--theme-text-on-primary);
+    padding: 3rem 2rem;
+    box-shadow: $elevation-16p;
+    border-radius: 15px;
+    animation: slideUp;
+    animation-duration: 0.5s;
+    animation-timing-function: easeOutCubic;
+}
+
+
 
 .create-wiki__modal{
     height: 30vh;
@@ -18,4 +33,5 @@
 .axc-modal__overlay{
     position: fixed;
     z-index: 500;
+    overflow-y: scroll;
 }

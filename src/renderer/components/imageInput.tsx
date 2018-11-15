@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { remote, Dialog, OpenDialogOptions } from 'electron';
 import * as path from 'path';
+import I18String from '@axc/react-components/display/i18string';
+import { Button } from './button';
 
 const dialog: Dialog = remote.dialog;
 
@@ -11,7 +13,7 @@ export interface ImageInputProps {
     windowTitle: string
     placeholder?: string,
     children?: any,
-    className?:string
+    className?: string
 }
 
 export class ImageInput extends React.PureComponent<ImageInputProps, any>{
@@ -32,24 +34,31 @@ export class ImageInput extends React.PureComponent<ImageInputProps, any>{
             });
     }
     render() {
+        const className = this.props.className ? this.props.className : 'image-input';
         return (
-            <div className={this.props.className ? this.props.className :'image-input'}>
-                {!this.props.value && !this.props.placeholder ?
+            <div className={className}>
+                {this.props.placeholder ?
                     <span
-                        className='image-input__label'
+                        className={`${className}__label`}
                     >
-                        {this.props.value ? this.props.value : this.props.placeholder}
+                        <I18String text={this.props.placeholder} format='capitalizeFirst' />
                     </span>
                     :
                     null
                 }
-                <button
-                    type='button'
-                    className='image-input__prompt'
+                <Button
+                    btnType='flat'
+                    theme='primary'
+                    className={`${className}__prompt`}
                     onClick={this.changeBackgroundImage}
                 >
-                    {this.props.children ? this.props.children : this.props.prompt}
-                </button>
+                    {this.props.children ?
+                        this.props.children
+                        :
+                        <I18String text={this.props.prompt} format='capitalizeFirst' />
+                    }
+
+                </Button>
             </div>
         )
     }

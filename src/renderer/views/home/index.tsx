@@ -8,15 +8,22 @@ import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/m
 import Modal from '@axc/react-components/layout/modal';
 import MyEditor from '../../components/wikiEditor/wikiEditor';
 import AppHeader from '../../components/appHeader';
-import CreateWikiForm from '../../components/createWikiForm';
 import { AppData } from '../../store/reducers/appData';
+import { Button } from '../../components/button';
+import { UserWikiData, createWiki } from '../../actions/wikis';
+import WikiForm from '../../components/wikiForm';
 
 
-export interface HomePageProps extends MemoryRouteProps {
-    wikis: WikiMetaData[],
-    appData: AppData
+export interface HomePageOwnProps {
+
+}
+export interface HomePageReduxProps {
+    appData: AppData;
+    wikis: WikiMetaData[];
+    createWiki: typeof createWiki;
 }
 
+export type HomePageProps = MemoryRouteProps & HomePageOwnProps & HomePageReduxProps;
 export interface HomePageState {
     shouldRenderWikiForm: boolean;
 }
@@ -37,6 +44,11 @@ export class HomePage extends React.Component<HomePageProps, HomePageState>{
             shouldRenderWikiForm: !prevState.shouldRenderWikiForm
         }));
     }
+    createWiki = (metaData: UserWikiData)=>{
+        event.preventDefault();
+        this.props.createWiki(metaData);
+        this.props.history.pushState('/');
+    }
     render() {
         return (
             <div className='wiki-route'>
@@ -48,21 +60,25 @@ export class HomePage extends React.Component<HomePageProps, HomePageState>{
                                 return <Wiki key={wiki.id} wiki={wiki} />
                             })}
                             <div key='wiki-list__actions' className='wiki-list__actions'>
-                                <button
-
-                                    className='wiki-button--primary'
+                                <Button
+                                    btnType='solid'
+                                    theme='primary'
+                                    className='wiki-list__action--primary'
                                     onClick={this.toggleWikiForm}
                                 >
                                     <i className='material-icons'>add</i>
-                                </button>
+                                </Button>
                             </div>
                         </ul>  
                     <Modal
                         isOpen={this.state.shouldRenderWikiForm}
                         onClose={this.toggleWikiForm}
-                        className='create-wiki__modal'
+                        className='modal'
                     >
-                        <CreateWikiForm />
+                        <WikiForm
+                            onClose={this.toggleWikiForm}
+                            onSubmit={this.createWiki}
+                        />
                     </Modal>
                 </div>
             </div>
@@ -82,5 +98,5 @@ const mapStateToProps: MapStateToProps<Pick<AppState, 'wikis'>, HomePageProps, A
 
 
 export default connect(mapStateToProps, {
-
+    createWiki
 })(HomePage);

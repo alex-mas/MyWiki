@@ -1,10 +1,11 @@
 import { ActionWithPayload, ACreator } from "./utils";
+import { WikiMetaData } from "../store/reducers/wikis";
 
 
 export const SET_CURRENT_WIKI_NAME = 'SET_CURRENT_WIKI_NAME';
 export const SET_CURRENT_WIKI_DESCRIPTION = 'SET_CURRENT_WIKI_DESCRIPTION';
 export const SET_CURRENT_WIKI_BACKGROUND = 'SET_CURRENT_WIKI_BACKGROUND';
-
+export const UPDATE_CURRENT_WIKI_METADATA = 'UPDATE_CURRENT_WIKI_METADATA';
 
 export type SetCurrentWikiBgAction =ActionWithPayload<{background:string}>;
 export type SetCurrentWikiBgActionCreator =ACreator<[string], SetCurrentWikiBgAction>
@@ -35,3 +36,17 @@ export const setCurrentWikiDescription: SetCurrentWikiDescriptionActionCreator =
         description
     }
 }
+
+
+export type UpdateWikiMetadataPayload ={name:string, description:string, background:string};
+export type UpdateCurrentWikiMetadataAction =ActionWithPayload<{metadata: UpdateWikiMetadataPayload}>;
+export type UpdateCurrentWikiMetadataActionCreator =ACreator<[UpdateWikiMetadataPayload], UpdateCurrentWikiMetadataAction>
+export const updateCurrentWikiMetadata: UpdateCurrentWikiMetadataActionCreator = (metadata: UpdateWikiMetadataPayload)=>{
+    return {
+        type: UPDATE_CURRENT_WIKI_METADATA,
+        metadata
+        
+    }
+}
+
+

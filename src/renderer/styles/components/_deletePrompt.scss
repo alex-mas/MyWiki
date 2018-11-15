@@ -2,8 +2,9 @@
 
 .delete-prompt{
     width: fit-content;
-    margin: 10vh auto;
-    background-color: var(--theme-primary-faded);
+    margin: 30vh auto;
+    background-color: var(--theme-primary);
+    color: var(--theme-text-on-primary);
     display: flex;
     flex-direction: column;
     align-content: center;

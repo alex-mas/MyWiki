@@ -47,24 +47,25 @@ export class DeletePrompt extends React.PureComponent<PromptProps, PromptState>{
                 className='delete-prompt'
             >
                 <div className='delete-prompt__title'>
-                    <I18String text={this.props.title} format='capitalizeFirst'/>
+                    <I18String text={this.props.title} format='capitalizeFirst' />
                 </div>
                 <div className='delete-prompt__options'>
+                    <Button
+                        btnType='solid'
+                        theme='primary'
+                        onClick={this.onCancel}
+                    >
+                        <I18String text='cancel' format='capitalizeFirst' />
+                    </Button>
                     <Button
                         btnType='flat'
                         theme='primary'
                         mode='accent'
                         onClick={this.onConfirm}
                     >
-                        <I18String text='confirm' format='capitalizeFirst'/>
+                        <I18String text='confirm' format='capitalizeFirst' />
                     </Button>
-                    <Button
-                        btnType='solid'
-                        theme='primary'
-                        onClick={this.onCancel}
-                    >
-                        <I18String text='cancel' format='capitalizeFirst'/>
-                    </Button>
+
                 </div>
             </Modal>
         );

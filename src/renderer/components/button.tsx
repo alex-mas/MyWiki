@@ -37,6 +37,7 @@ export class Button extends React.PureComponent<ButtonProps, any>{
         delete props.theme;
         delete props.mode;
         delete props.btnType;
+        delete props.className;
         return props;
     }
     render() {

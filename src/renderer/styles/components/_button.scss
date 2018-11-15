@@ -87,6 +87,7 @@
 .button-solid{
     @extend .button;
     background: var(--theme-secondary);
+    color: var(--theme-text-on-secondary);
     background-position: center;
     transition: background 0.8s;
 }
