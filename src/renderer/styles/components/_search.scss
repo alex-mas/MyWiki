@@ -1,0 +1,32 @@
+.search-results {
+    padding: 2rem;
+}
+
+.search-result {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4rem;
+}
+
+
+.search-result__name {
+    color: var(--theme-text-on-primary);
+    font-size: $font-size-m;
+    font-weight: bold;
+    padding-bottom: 1rem;
+}
+
+.search-result__description {
+    color: var(--theme-disabled-text-on-primary)
+}
+
+
+
+.search-result__actions {
+    margin: auto 0;
+}
+
+.search-result__action{
+    height: $size-ml;
+    font-size: $font-size-m;
+}

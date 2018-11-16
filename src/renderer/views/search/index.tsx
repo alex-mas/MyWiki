@@ -7,7 +7,8 @@ import { fsError, FsErrorActionCreator } from '../../actions/errors';
 import { MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import { getRelevantArticles } from '../../selectors/articles';
 import WikiHeader from '../../components/wikiHeader';
-import I18String  from '@axc/react-components/display/i18string';
+import I18String from '@axc/react-components/display/i18string';
+import { Button } from '../../components/button';
 
 
 
@@ -35,11 +36,14 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
         super(props);
 
     }
+    componentDidMount() {
+        //TODO: Fetch descriptions for the search results
+    }
     renderNotFoundMessage = () => {
         return (
             <div className='search-results'>
-                <h2 className='wiki-article__subtitle'><I18String text='there are no results relevant to the search' format='capitalizeFirst'/></h2>
-                <MemoryLink to='/wiki/article/home'><I18String text='go home' format='capitalizeFirst'/></MemoryLink>
+                <h2 className='wiki-article__subtitle'><I18String text='there are no results relevant to the search' format='capitalizeFirst' /></h2>
+                <MemoryLink to='/wiki/article/home'><I18String text='go home' format='capitalizeFirst' /></MemoryLink>
             </div>
         )
     }
@@ -51,14 +55,35 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
                 <div className='body--article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
-                            <h1 className='wiki-article__title'><I18String text='search' format='capitalizeFirst'/>: {this.props.routeParams.articleName}</h1>
+                            <h1 className='wiki-article__title'><I18String text='search' format='capitalizeFirst' />: {this.props.routeParams.articleName}</h1>
                         </div>
                     </div>
                     <div className='search-results'>
                         {this.props.searchResults.map((result) => {
                             return (
                                 <div className='search-result'>
-                                    <MemoryLink to={`/wiki/article/${result}`}>{result}</MemoryLink>
+                                    <div className='search-result__labels'>
+                                        <div className='search-result__name'>
+                                            {result}
+                                        </div>
+                                        <div className='search-result__description'>
+
+                                        </div>
+                                    </div>
+                                    <div className='search-result__actions'>
+                                        <Button
+                                            btnType='flat'
+                                            theme='primary'
+                                            className='search-result__action'
+                                        >
+                                            <MemoryLink
+                                                to={`/wiki/article/${result}`}
+                                            >
+                                                <I18String text='open' format='capitalizeFirst' />
+                                            </MemoryLink>
+                                        </Button>
+                                    </div>
+
                                 </div>
                             );
                         })}

@@ -15,6 +15,10 @@
     background: transparent;
     background-position: center;
     transition: background 0.8s;
+    a{
+        text-decoration: none;
+        color: inherit;
+    }
 }
 
 .button-flat--primary{
@@ -90,6 +94,10 @@
     color: var(--theme-text-on-secondary);
     background-position: center;
     transition: background 0.8s;
+    a{
+        text-decoration: none;
+        color: inherit;
+    }
 }
 
 .button-solid--primary{
@@ -104,6 +112,7 @@
         background-size: 100%;
         transition: background 0s;
     }
+
 }
 .button-solid--secondary{
     @extend .button-solid;
@@ -117,6 +126,7 @@
         background-size: 100%;
         transition: background 0s;
     }
+
 }
 
 .button-solid--accent{
