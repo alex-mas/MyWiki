@@ -46,10 +46,10 @@
         transition: background 0.8s;
     }
     input:hover{
-        background: darken(white,5%) radial-gradient(circle, transparent 1%, darken(white,5%) 1%) center/15000%;
+        background: darken(white,3%) radial-gradient(circle, transparent 1%, darken(white,3%) 1%) center/15000%;
     }
     input:active{
-        background-color: darken(white,15%);
+        background-color: darken(white,10%);
         background-size: 100%;
         transition: background 0s;
     }

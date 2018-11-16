@@ -9,6 +9,8 @@
     padding-left: $font-size-sm;
     padding-right: $font-size-sm;
     border-bottom: 2px solid black;
+    flex-wrap: wrap;
+    word-break: break-word;
 }
 
 .wiki-article__header__section{
