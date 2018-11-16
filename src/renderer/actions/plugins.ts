@@ -9,7 +9,7 @@ import { isPluginLoaded } from "../selectors/plugins";
 import {Action} from 'redux';
 import { isPluginMetaDataValid } from "../validators/plugins";
 import { settle } from "../../utils/promise";
-import { ActionWithPayload, AsyncACreator } from "./utils";
+import { ActionWithPayload, AsyncACreator } from "../../utils/typeUtils";
 
 export const LOAD_PLUGIN = 'LOAD_PLUGIN';
 export const PARSE_PLUGIN = 'PARSE_PLUGIN';

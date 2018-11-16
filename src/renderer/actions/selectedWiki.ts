@@ -1,4 +1,4 @@
-import { ActionWithPayload, ACreator } from "./utils";
+import { ActionWithPayload, ACreator } from "../../utils/typeUtils";
 import { WikiMetaData } from "../store/reducers/wikis";
 
 

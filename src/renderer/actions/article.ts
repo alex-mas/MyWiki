@@ -5,7 +5,7 @@ import * as fsp from '../../utils/promisify-fs';
 import * as path from 'path';
 import { errorAction, fsError, ErrorAction, ErrorActionCode } from "./errors";
 import { ValueJSON, Value } from "slate";
-import { ActionWithPayload, AsyncACreator, ACreator } from "./utils";
+import { ActionWithPayload, AsyncACreator, ACreator } from "../../utils/typeUtils";
 import { generateArticleKeywords } from "./ml";
 
 

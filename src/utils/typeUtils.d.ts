@@ -1,7 +1,7 @@
-import { AppState } from "../store/store";
+import { AppState } from "../renderer/store/store";
 import { ThunkAction } from "redux-thunk";
 import { ActionCreator, Action } from "redux";
-import { ErrorAction } from "./errors";
+import { ErrorAction } from "../renderer/actions/errors";
 
 
 

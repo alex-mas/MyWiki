@@ -9,7 +9,7 @@ import { AppState } from "../store/store";
 import { errorAction, fsError, ErrorAction, ErrorActionCode } from "./errors";
 import { deleteFolderRecursively } from '../../utils/fsutils';
 import { Article, ArticleMetaData, getArticleMetaData } from "./article";
-import { ActionWithPayload, AsyncACreator, ACreator } from "./utils";
+import { ActionWithPayload, AsyncACreator, ACreator } from "../../utils/typeUtils";
 import { store } from "../app";
 
 

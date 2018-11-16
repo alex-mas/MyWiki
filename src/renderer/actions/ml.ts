@@ -1,7 +1,7 @@
 import Plain from "slate-plain-serializer";
 import { Value } from "slate";
 import { Article } from "./article";
-import { AsyncACreator, ActionWithPayload } from "./utils";
+import { AsyncACreator, ActionWithPayload } from "../../utils/typeUtils";
 import { ThunkAction } from "redux-thunk";
 import fsp from '../../utils/promisify-fs';
 import {store, mlThreads} from "../app";

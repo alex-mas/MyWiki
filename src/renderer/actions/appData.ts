@@ -5,7 +5,7 @@ import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
 import { ErrorAction, fsError } from "./errors";
 import * as fsp from '../../utils/promisify-fs';
-import { ActionWithPayload, ACreator, AsyncACreator} from "./utils";
+import { ActionWithPayload, ACreator, AsyncACreator} from "../../utils/typeUtils";
 import { store } from "../app";
 
 
