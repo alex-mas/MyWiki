@@ -47,7 +47,6 @@ export const onClickBlockButton = (pluginContext: EditorPluginContext) => {
 
             }
         } else {
-            // Handle the extra wrapping required for list buttons.
             if (isList && isType) {
                 editor
                     .setBlocks(DEFAULT_NODE)

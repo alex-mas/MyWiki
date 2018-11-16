@@ -3,7 +3,7 @@ import { RenderNodeProps } from "slate-react";
 import { EditorPluginContext, DEFAULT_NODE } from '../wikiEditor';
 import EditorButton from '../components/editorButton';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
-import { Editor, Block } from 'slate';
+import { Editor, Block, Path, Node, Inline, Text } from 'slate';
 import { emptyTable } from '../utilities/table';
 
 export const TablePlugin = (context: EditorPluginContext) => {
@@ -15,10 +15,9 @@ export const TablePlugin = (context: EditorPluginContext) => {
         switch (node.type) {
             case 'table':
                 return (
-                    <table className='wiki-editor__table'>
+                    <table {...attributes} className='wiki-editor__table'>
                         <tbody
                             className='wiki-editor__table-body'
-                            {...attributes}
                         >
                             {children}
                         </tbody>
@@ -54,9 +53,12 @@ export const TablePlugin = (context: EditorPluginContext) => {
         const editor = context.getEditor();
         const { document } = value;
 
-        const isActive = hasBlockType(value, type);
-        if (isActive) {
-            editor.removeNodeByKey(value.blocks.get(-1).key);
+        const isTable = hasBlockType(value, 'table-cell');
+        const block = value.blocks.get(0);
+        if (isTable) {
+            //@ts-ignore
+            const table = document.getClosest(block.key, parent => parent.type == 'table');
+            editor.removeNodeByKey(table.key);
         } else {
             editor.insertBlock('');
             editor.moveToEndOfPreviousBlock();
@@ -67,17 +69,55 @@ export const TablePlugin = (context: EditorPluginContext) => {
         id: 'tables_plugin',
         renderNode: renderImage,
         onKeyDown: (event: React.KeyboardEvent<any>, editor: Editor, next: Function) => {
-            return next();
-            if(event.key === 'ArrowUp'){
-                
-            }else if (event.key === 'ArrowDown'){
+            if (
+                (event.key !== 'ArrowUp' && event.key !== 'ArrowDown' && event.key !== 'Enter')
+                ||
+                !hasBlockType(editor.value, 'table-cell')
+            ) {
+                return next();
+            }
+            //We only get here if event is one of those 3 and the selected element is a table cell
+            const isTable = true;
+            const tableCell = editor.value.blocks.get(0);
+            //@ts-ignore
+            const table: Block = editor.value.document.getClosest(tableCell.key, parent => parent.type == 'table');
+            //@ts-ignore
+            const tableRow: Block = editor.value.document.getClosest(tableCell.key, parent => parent.type == 'table-row');
+            if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                //@ts-ignore;
+                const previousRow: Block = table.getPreviousNode(tableRow.key);
+                if (previousRow) {
+                    const column = tableRow.getBlocks().findIndex(block => block.key === tableCell.key);
+                    const target = previousRow.getBlocks().get(column);
+                    const offset = editor.value.selection.anchor.offset;
+                    editor.moveTo(target.getLastText().key, offset);
+                } else {
+                    const previous = editor.value.document.getPreviousNode(table.key);
+                    editor.moveTo(previous.key);
+                }
+            } else if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                //@ts-ignore;
+                const nextRow: Block = table.getNextNode(tableRow.key);
+                if (nextRow) {
+                    const column = tableRow.getBlocks().findIndex(block => block.key === tableCell.key);
+                    const target = nextRow.getBlocks().get(column);
+                    const offset = editor.value.selection.anchor.offset;
+                    editor.moveTo(target.getFirstText().key, offset);
+                } else {
+                    const next = editor.value.document.getNextNode(table.key);
+                    editor.moveTo(next.key);
+                }
 
-            }else if(event.key === 'Enter'){
-
+            } else if (event.key === 'Enter') {
+                event.preventDefault();
+                editor.insertText('\n');
             }
         },
         Button() {
-            const isActive = hasBlockType(context.getContent(), 'table');
+            const value = context.getContent();
+            const isActive = hasBlockType(value, 'table') || hasBlockType(value, 'table-row') || hasBlockType(value, 'table-cell');
             return (
                 <EditorButton
                     onClick={onClickButton}
