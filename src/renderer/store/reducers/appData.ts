@@ -7,8 +7,7 @@ export interface AppData {
     background: string,
     locale: ISO639Locale,
     shouldAutoSave: boolean,
-    autoSaveInterval: number,
-    selectedWiki: string
+    autoSaveInterval: number
 }
 
 
@@ -16,17 +15,11 @@ export const defaultAppData: AppData = {
     background: 'resources/images/landscape.jpg',
     locale: ISO639Locale.en,
     shouldAutoSave: false,
-    autoSaveInterval: 1,
-    selectedWiki: undefined
+    autoSaveInterval: 1
 };
 
 export const AppDataReducer: Reducer<AppData> = (state: AppData = defaultAppData, action: AnyAction) => {
     switch (action.type) {
-        case SELECT_WIKI:
-            return {
-                ...state,
-                selectedWiki: action.wiki
-            };
         case SET_APP_AUTO_SAVE:
             return {
                 ...state,
