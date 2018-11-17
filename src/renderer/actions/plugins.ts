@@ -10,6 +10,7 @@ import {Action} from 'redux';
 import { isPluginMetaDataValid } from "../validators/plugins";
 import { settle } from "../../utils/promise";
 import { ActionWithPayload, AsyncACreator } from "../../utils/typeUtils";
+import { plugins as pluginHooks } from "../app";
 
 export const LOAD_PLUGIN = 'LOAD_PLUGIN';
 export const PARSE_PLUGIN = 'PARSE_PLUGIN';
@@ -35,8 +36,7 @@ export const loadPlugin: LoadPluginActionCreator = (pluginMetaData)=>{
         }else{
             //validate meta data -> if its correct load it, else dispatch error
             if(isPluginMetaDataValid(pluginMetaData)){
-                const plugin = eval(`require(plugins/${pluginMetaData.name}/${pluginMetaData.main})`);
-                plugin();
+                pluginHooks.load(pluginMetaData.id);
                 return dispatch(_loadPlugin(pluginMetaData));
             }
             
@@ -86,6 +86,8 @@ export const parsePlugins: ParsePluginActionCreator = () =>{
                     const fileContents = await fsp.readFile(`./plugins/${plugin}/plugin.config.json`, 'utf8');
                     const data: PluginMetaData = JSON.parse(fileContents);
                     data.loaded = false;
+                    debugger;
+                    pluginHooks.initialize(data);
                     dispatch(parsePlugin(data));
                     return data;
                 }catch(e){

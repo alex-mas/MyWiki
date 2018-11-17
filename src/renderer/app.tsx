@@ -24,9 +24,10 @@ import { ThreadManager, WorkDistributionStrategy } from '@axc/thread-manager';
 import { onRecieveArticleKeywords } from './actions/ml';
 import { AppData } from './store/reducers/appData';
 import { setAppData, saveAppData, loadAppData } from './actions/appData';
+import { Plugins } from './plugins/plugins';
 
 
-
+export const plugins = new Plugins();
 export const store = configureStore();
 export const mlThreads = new ThreadManager(
     './workers/ml.js',
@@ -84,6 +85,7 @@ window.onbeforeunload =() => {
     saveWikis();
     saveAppData();
 }
+
 
 
 

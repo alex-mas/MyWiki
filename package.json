@@ -2,11 +2,11 @@
   "name": "mywiki",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/src/main.js",
+  "main": "dist/app/main.js",
   "build": {
     "appId": "com.myWiki.app",
     "files": [
-      "dist/src/**/*",
+      "dist/app/**/*",
       "package.json",
       "resources/*"
     ],

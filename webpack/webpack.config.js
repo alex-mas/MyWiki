@@ -8,6 +8,10 @@ const workerOutputFolder = './dist/app/workers';
 const outputFolder = './dist/app/';
 const readdir = promisify(fs.readdir);
 
+
+if(!fs.existsSync(outputFolder)){
+  fs.mkdirSync(outputFolder);
+}
 fs.copyFileSync('./src/static/index.html', outputFolder+'/index.html');
 fs.copyFileSync('./src/static/loader.html', outputFolder+'/loader.html')
 
