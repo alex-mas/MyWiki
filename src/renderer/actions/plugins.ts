@@ -13,8 +13,10 @@ import { ActionWithPayload, AsyncACreator } from "../../utils/typeUtils";
 import { plugins as pluginHooks } from "../app";
 
 export const LOAD_PLUGIN = 'LOAD_PLUGIN';
-export const PARSE_PLUGIN = 'PARSE_PLUGIN';
 export const UNLOAD_PLUGIN = 'UNLOAD_PLUGIN';
+export const INSTALL_PLUGIN = 'INSTALL_PLUGIN';
+export const UNINSTALL_PLUGIN = 'UNINSTALL_PLUGIN';
+export const PARSE_PLUGIN = 'PARSE_PLUGIN';
 
 
 export type LoadPluginAction = ActionWithPayload<{plugin: PluginMetaData}>;
@@ -69,12 +71,10 @@ export const parsePlugin = (pluginMetaData: PluginMetaData) =>{
 }
 
 
-
 export interface ParsePluginAction extends Action {
     plugin: PluginMetaData
 }
 export type ParsePluginActionCreator = () => ThunkAction<Promise<PluginMetaData[]| ErrorAction>, AppState, void, ParsePluginAction | ErrorAction>;
-
 
 
 export const parsePlugins: ParsePluginActionCreator = () =>{
@@ -97,7 +97,8 @@ export const parsePlugins: ParsePluginActionCreator = () =>{
             }));
             return pluginData;
         }catch(e){
-            return dispatch(fsError("Error reading plugin directory"));
+            dispatch(fsError("Error reading plugin directory"));
+            throw e;
         }
     };
 }

@@ -32,7 +32,7 @@ export class Plugins{
     initialize = (metaData: PluginMetaData)=>{
         debugger;
         console.log(path.resolve(`./plugins/${metaData.name}/${metaData.main}`));
-        const plugin = eval('require')(path.join('plugins',metaData.name,metaData.main));
+        const plugin = eval('require')(path.join(path.resolve('./'),'plugins',metaData.name,'/',metaData.main));
         const pluginHooks = new PluginHooks(metaData.id);
         plugin(pluginHooks.events);
         this.plugins.push(pluginHooks);

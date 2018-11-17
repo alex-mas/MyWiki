@@ -211,6 +211,7 @@ export const loadWikis: LoadWikisActionCreator = ()=>{
             });
         } catch (e) {
             dispatch(fsError('Error loading wiki meta-data'));
+            throw e;
         }
     }
 }
@@ -229,6 +230,7 @@ export const saveWikis = ()=>{
                 fsp.writeFile(`./wikis/${wiki.id}/myWiki.config.json`, JSON.stringify(wiki), 'utf8');
             } catch (e) {
                 store.dispatch(fsError('Error saving wiki configuration files'));
+                throw e;
             }
         }
     });

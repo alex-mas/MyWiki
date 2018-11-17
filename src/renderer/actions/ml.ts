@@ -54,7 +54,7 @@ export const onRecieveArticleKeywords = (message: MessageEvent, next: Function)=
         console.log('Store inside the callback: ',store);
         //@ts-ignore
         store.dispatch(setArticleKeywords(message.data.name, message.data.keywords));
-        //next();
+        next();
     }
 }
 

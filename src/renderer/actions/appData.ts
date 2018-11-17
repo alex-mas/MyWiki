@@ -73,7 +73,6 @@ export const setLocale: SetLocaleActionCreator = (locale: ISO639Locale) => {
             const localeData = JSON.parse(fileContents);
             return dispatch(_setLocale(locale, localeData));
         } catch (e) {
-            console.warn(e);
             dispatch(_setLocale(ISO639Locale.en, {}));
             dispatch(fsError('error fetching locale data'));
             throw e;
@@ -126,6 +125,7 @@ export const loadAppData: LoadAppDataActionCreator = ()=>{
             dispatch(setAppData(appData));
         }catch(e){
             dispatch(fsError('error parsing app configuration'));
+            throw e;
         }
     }
 }
@@ -141,6 +141,7 @@ export const saveAppData = ()=>{
         })
         .catch((e)=>{
             store.dispatch(fsError('error serializing and saving app configuration'));
+            throw e;
         });
     }
 }
