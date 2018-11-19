@@ -5,19 +5,20 @@ import { RouteProps } from '../../router/router';
 import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
-import WikiEditor, { defaultEditorContents } from '../../components/wikiEditor/wikiEditor';
+import WikiEditor, { defaultEditorContents } from '../wikiEditor/wikiEditor';
 import * as ReactMarkdown from 'react-markdown';
-import {Value } from 'slate';
+import { Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../../actions/errors';
-import Header from '../../components/header';
-import AppHeader from '../../components/appHeader';
-import { loadArticle,LoadArticleActionCreator, Article, saveArticle, SaveArticleActionCreator, ArticleMetaData } from '../../actions/article';
-import TagForm from '../../components/tagForm';
+import Header from '../header';
+import AppHeader from '../appHeader';
+import { loadArticle, LoadArticleActionCreator, Article, saveArticle, SaveArticleActionCreator, ArticleMetaData } from '../../actions/article';
+import TagForm from '../tagForm';
 import { getArticle } from '../../selectors/articles';
-import { ImageInput } from '../../components/imageInput';
-import WikiHeader from '../../components/wikiHeader';
-import { WikiMetaData } from '../../store/reducers/wikis';
+import { ImageInput } from '../imageInput';
+import WikiHeader from '../wikiHeader';
+import { WikiMetadata } from '../../store/reducers/wikis';
 import { AppData } from '../../store/reducers/appData';
+import WikiView from '../wikiView';
 
 
 
@@ -30,7 +31,7 @@ export interface WikiEditPageOwnProps extends MemoryRouteProps {
 }
 
 export interface WikiEditPageReduxProps {
-    selectedWiki: WikiMetaData,
+    selectedWiki: WikiMetadata,
     article: ArticleMetaData,
     appData: AppData
 }
@@ -75,23 +76,23 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
                 tags: article.tags
             }));
         });
-        const {shouldAutoSave} = this.props.appData;
-        if(shouldAutoSave){
-            let interval  = this.props.appData.autoSaveInterval;
-            if(typeof interval !== 'number' || interval < 1){
+        const { shouldAutoSave } = this.props.appData;
+        if (shouldAutoSave) {
+            let interval = this.props.appData.autoSaveInterval;
+            if (typeof interval !== 'number' || interval < 1) {
                 interval = 1;
             }
-            this.setState(()=>({
-                autoSaveInterval: setInterval(this.saveChanges,1000*60*interval)
+            this.setState(() => ({
+                autoSaveInterval: setInterval(this.saveChanges, 1000 * 60 * interval)
             }));
         }
 
 
     }
-    componentWillUnmount(){
-        if(this.state.autoSaveInterval !== undefined){
+    componentWillUnmount() {
+        if (this.state.autoSaveInterval !== undefined) {
             clearInterval(this.state.autoSaveInterval);
-            this.setState(()=>({
+            this.setState(() => ({
                 autoSaveInterval: null
             }));
         }
@@ -101,14 +102,14 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
         const editorContent = change.value;
         this.setState(() => ({ editorContent }));
     }
-    saveChanges = ()=>{
+    saveChanges = () => {
         console.log('Saved changes');
         return this.props.saveArticle({
             name: this.props.routeParams.article,
             tags: this.state.tags,
             content: this.state.editorContent.toJSON(),
             background: this.state.background,
-            keywords: [] 
+            keywords: []
         })
     }
     saveChangesAndRedirect = () => {
@@ -152,9 +153,7 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
     render() {
         const article = this.props.routeParams.article;
         return (
-            <div className='wiki-route'>
-                <img className='wiki-background' src={this.getBackground()} alt="" />
-                <WikiHeader />
+            <WikiView background={this.getBackground()}>
                 <div className='body--article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
@@ -198,8 +197,9 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
                         />
                     </div>
                 </div>
-            </div>
-        )
+
+            </WikiView>
+        );
     }
 }
 
@@ -214,12 +214,12 @@ const mapStateToProps: MapStateToProps<WikiEditPageReduxProps, WikiEditPageOwnPr
 
 
 
-export default connect(mapStateToProps, (dispatch,props)=>{
-    return{
+export default connect(mapStateToProps, (dispatch, props) => {
+    return {
         //@ts-ignore
-        loadArticle:  (name: string)=>dispatch(loadArticle(name)),
+        loadArticle: (name: string) => dispatch(loadArticle(name)),
         //@ts-ignore
-        saveArticle:  (article: Article)=>dispatch(saveArticle(article))
+        saveArticle: (article: Article) => dispatch(saveArticle(article))
     }
 
 })(WikiEditPage);

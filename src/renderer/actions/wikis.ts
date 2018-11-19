@@ -1,5 +1,5 @@
 import { ActionCreator, Dispatch, Action } from "redux";
-import { WikiMetaData } from "../store/reducers/wikis";
+import { WikiMetadata, UserDefinedWikiMetadata } from "../store/reducers/wikis";
 import * as uuid from 'uuid/v4';
 import * as fs from 'fs';
 import * as fsp from '../../utils/promisify-fs';
@@ -25,16 +25,16 @@ export const SET_WIKI_DESCRIPTION = 'SET_WIKI_DESCRIPTION';
 export const SET_WIKI_DATA = 'SET_WIKI_DATA';
 
 
-type WikiAction = Action & { wiki: WikiMetaData };
+type WikiAction = Action & { wiki: WikiMetadata };
 
 export type CreateWikiAction = WikiAction;
 
-export type UserWikiData = Pick<WikiMetaData, Exclude<keyof WikiMetaData, 'id' | 'path' | 'articles'>>;
-
-export type CreateWikiActionCreator = (wiki: UserWikiData) => ThunkAction<any, AppState, void, CreateWikiAction | ErrorAction>;
 
 
-const _createWiki = (wiki: WikiMetaData) => {
+export type CreateWikiActionCreator = (wiki: UserDefinedWikiMetadata) => ThunkAction<any, AppState, void, CreateWikiAction | ErrorAction>;
+
+
+const _createWiki = (wiki: WikiMetadata) => {
     return {
         type: CREATE_WIKI,
         wiki
@@ -42,19 +42,19 @@ const _createWiki = (wiki: WikiMetaData) => {
 };
 
 
-export const createWiki: CreateWikiActionCreator = (wiki: UserWikiData) => {
+export const createWiki: CreateWikiActionCreator = (wiki: UserDefinedWikiMetadata) => {
     return async(dispatch, getState) => {
         const wikiId = uuid();
         const wikiPath = `./wikis/${wikiId}`;
         try {
             await fsp.mkdir('./wikis').catch((e) => console.log(e));
-            const wikiData: WikiMetaData = {
-                path: wikiPath,
+            const wikiData: WikiMetadata = {
                 name: wiki.name,
                 id: wikiId,
                 background: wiki.background,
                 description: wiki.description,
-                articles: []
+                articles: [],
+                selected: false
             }
             await fsp.mkdir(wikiPath);
             await fsp.mkdir(path.join(wikiPath, 'articles'));
@@ -78,7 +78,7 @@ export const createWiki: CreateWikiActionCreator = (wiki: UserWikiData) => {
 export type RemoveWikiAction = WikiAction;
 export type RemoveWikiActionCreator = ActionCreator<ThunkAction<any, AppState, void, RemoveWikiAction | ErrorAction>>;
 
-export const removeWiki: RemoveWikiActionCreator = (wiki: WikiMetaData) => {
+export const removeWiki: RemoveWikiActionCreator = (wiki: WikiMetadata) => {
     return async(dispatch, getState) => {
         try {
             const wikis = await fsp.readdir('./wikis');
@@ -123,7 +123,7 @@ export const selectWiki: SelectWikiActionCreator = (id: string) => {
 
 
 export type LoadWikiAction = ActionWithPayload<{
-    wiki: WikiMetaData
+    wiki: WikiMetadata
 }>;
 export type LoadWikiActionCreator = AsyncACreator<[string], LoadWikiAction>;
 
@@ -146,7 +146,8 @@ export const loadWiki: LoadWikiActionCreator = (id: string) => {
                 type: LOAD_WIKI,
                 wiki: {
                     ...wiki,
-                    articles
+                    articles,
+                    selected: false
                 }
             });
         } catch (err) {
@@ -191,6 +192,9 @@ export const setWikiDescription: SetWikiDescriptionActionCreator = (id: string, 
       
     }
 }
+
+
+export type UpdateWikiMetadataAction = ActionWithPayload<{metadata: UserDefinedWikiMetadata}>
 
 
 

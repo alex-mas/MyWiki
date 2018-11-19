@@ -3,12 +3,16 @@ import { ThunkAction } from "redux-thunk";
 import { ActionCreator, Action } from "redux";
 import { ErrorAction } from "../renderer/actions/errors";
 
-
+export type ReactInstanciable<T = any> = React.ComponentClass<T> | React.SFCFactory<T>;
 
 
 
 //https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html
 type Filter<T, U> = T extends U ? T : never; 
+
+
+//https://stackoverflow.com/questions/48215950/exclude-property-from-type
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
 
 /**

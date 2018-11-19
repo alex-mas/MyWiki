@@ -4,17 +4,18 @@ import * as React from 'react';
 import { RouteProps } from '../../router/router';
 import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
-import { WikiMetaData } from '../../store/reducers/wikis';
-import WikiEditor, { defaultEditorContents } from '../../components/wikiEditor/wikiEditor';
+import { WikiMetadata } from '../../store/reducers/wikis';
+import WikiEditor, { defaultEditorContents } from '../wikiEditor/wikiEditor';
 import { MemoryRouteProps } from '@axc/react-components/navigation/memoryRouter';
 import { Value } from 'slate';
 import { CreateArticleActionCreator, createArticle } from '../../actions/article';
 import { fsError, FsErrorActionCreator } from '../../actions/errors';
-import Header from '../../components/header';
-import TagForm from '../../components/tagForm';
-import { ImageInput } from '../../components/imageInput';
-import WikiHeader from '../../components/wikiHeader';
-import  I18String  from '@axc/react-components/display/i18string';
+import Header from '../header';
+import TagForm from '../tagForm';
+import { ImageInput } from '../imageInput';
+import WikiHeader from '../wikiHeader';
+import I18String from '@axc/react-components/display/i18string';
+import WikiView from '../wikiView';
 
 export interface CreateArticlePageDispatchProps {
     createArticle: CreateArticleActionCreator,
@@ -23,7 +24,7 @@ export interface CreateArticlePageDispatchProps {
 
 
 export interface CreateArticlePageStateProps {
-    selectedWiki: WikiMetaData
+    selectedWiki: WikiMetadata
 }
 
 export interface CreateArticlePageOwnProps extends MemoryRouteProps {
@@ -99,24 +100,23 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
     }
     render() {
         return (
-            <div className='wiki-route'>
-                <img className='wiki-background' src={this.state.background ? this.state.background : this.props.selectedWiki.background} alt="" />
-                <WikiHeader/>
+            <WikiView background={this.state.background}>
                 <div className='body--article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
                             <h1 className='wiki-article__title'>
-                                <I18String text='creating' format='capitalizeFirst'/>: {this.props.routeParams.article ?
-                                    this.state.name
-                                    :
-                                    <input
-                                        className='wiki-article__header-input'
-                                        type="text"
-                                        value={this.state.name}
-                                        onChange={this.onNameChange}
-                                        placeholder='Article Name'
-                                    />
-                                }
+                                <I18String text='creating' format='capitalizeFirst' />:
+                                    {this.props.routeParams.article ?
+                                        this.state.name
+                                        :
+                                        <input
+                                            className='wiki-article__header-input'
+                                            type="text"
+                                            value={this.state.name}
+                                            onChange={this.onNameChange}
+                                            placeholder='Article Name'
+                                        />
+                                    }
 
                             </h1>
                             <div className='wiki-article__actions'>
@@ -159,7 +159,9 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
                     </div>
 
                 </div>
-            </div>
+
+            </WikiView>
+
         )
     }
 }

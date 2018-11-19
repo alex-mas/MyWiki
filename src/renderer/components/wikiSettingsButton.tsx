@@ -3,8 +3,8 @@ import I18String from '@axc/react-components/display/i18string';
 import { Modal } from '@axc/react-components/layout/modal';
 import { connect } from 'react-redux';
 import { AppState } from '../store/store';
-import { WikiMetaData } from '../store/reducers/wikis';
-import { updateCurrentWikiMetadata, UpdateWikiMetadataPayload } from '../actions/selectedWiki';
+import { WikiMetadata, UserDefinedWikiMetadata } from '../store/reducers/wikis';
+import { updateSelectedWikiMetadata } from '../actions/selectedWiki';
 import { WikiForm } from './wikiForm';
 
 const root = document.getElementById('app');
@@ -14,8 +14,8 @@ interface OwnProps {
     className: string;
 }
 interface ReduxProps {
-    currentWiki: WikiMetaData
-    updateCurrentWikiMetadata: typeof updateCurrentWikiMetadata;
+    currentWiki: WikiMetadata
+    updateSelectedWikiMetadata: typeof updateSelectedWikiMetadata;
 }
 type ButtonProps = OwnProps & ReduxProps;
 
@@ -31,8 +31,9 @@ export class WikiSettingsButton extends React.Component<ButtonProps, { isFormOpe
             isFormOpen: !prevState.isFormOpen
         }));
     }
-    onSubmitForm = (metadata: UpdateWikiMetadataPayload) => {
-        this.props.updateCurrentWikiMetadata(metadata);
+    onSubmitForm = (metadata: UserDefinedWikiMetadata) => {
+        this.props.updateSelectedWikiMetadata(metadata);
+        this.toggleForm();
     }
     render() {
         return (
@@ -71,6 +72,6 @@ export default connect(
         }
     },
     {
-        updateCurrentWikiMetadata
+        updateSelectedWikiMetadata
     }
 )(WikiSettingsButton);

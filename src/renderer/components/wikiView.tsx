@@ -5,17 +5,17 @@ import { AppState } from '../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import WikiHeader from '../components/wikiHeader';
-import { WikiMetaData } from '../store/reducers/wikis';
+import { WikiMetadata } from '../store/reducers/wikis';
 
 
 
 
 interface WikiViewOwnProps {
-    background: string
+    background?: string
 }
 
 interface WikiViewReduxProps {
-    selectedWiki: WikiMetaData
+    selectedWiki: WikiMetadata
 }
 
 
@@ -32,7 +32,6 @@ export class WikiView extends React.Component<WikiViewProps, WikiViewState>{
     }
     getBackground = () => {
         let background;
-        //let the caller provide a customized background
         if(this.props.background){
             background = this.props.background;
         }else if(this.props.selectedWiki.background){
@@ -44,8 +43,8 @@ export class WikiView extends React.Component<WikiViewProps, WikiViewState>{
     }
     render() {
         return (
-            <div className='wiki-route'>
-                <img className='wiki-background' src={this.getBackground()} alt="background" />
+            <div className='route'>
+                <img className='route__background' src={this.getBackground()} alt="background" />
                 <WikiHeader/>
                 {this.props.children}
             </div>

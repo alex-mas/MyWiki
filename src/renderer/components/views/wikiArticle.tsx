@@ -5,21 +5,21 @@ import { RouteProps } from '../../router/router';
 import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
-import WikiEditor, { defaultEditorContents } from '../../components/wikiEditor/wikiEditor';
+import WikiEditor, { defaultEditorContents } from '../wikiEditor/wikiEditor';
 import * as ReactMarkdown from 'react-markdown';
 import { Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../../actions/errors';
-import Header from '../../components/header';
+import Header from '../header';
 import { loadArticle, LoadArticleActionCreator, Article, DeleteArticleActionCreator, deleteArticle, ArticleMetaData } from '../../actions/article';
-import WikiSearchBar from '../../components/wikiSearchBar';
+import WikiSearchBar from '../wikiSearchBar';
 import { getArticle } from '../../selectors/articles';
-import { WikiMetaData } from '../../store/reducers/wikis';
-import WikiHeader from '../../components/wikiHeader';
-import HomeButton from '../../components/homeButton';
+import { WikiMetadata } from '../../store/reducers/wikis';
+import WikiHeader from '../wikiHeader';
+import HomeButton from '../homeButton';
 import I18String from '@axc/react-components/display/i18string';
-import WikiView from '../../components/wikiView';
+import WikiView from '../wikiView';
 import { withPrompt, PromptFunction } from '@axc/react-components/interactive/prompt';
-import { DeletePromptFunction, DeletePrompt } from '../../components/deletePrompt';
+import { DeletePromptFunction, DeletePrompt } from '../deletePrompt';
 const { dialog } = require('electron').remote
 
 
@@ -37,7 +37,7 @@ export interface OwnProps extends MemoryRouteProps {
 }
 
 export interface ReduxProps {
-    selectedWiki: WikiMetaData,
+    selectedWiki: WikiMetadata,
     article: ArticleMetaData
 }
 
@@ -147,9 +147,7 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
                                 </div>
                             </div>
                         </div>
-                        <div
-                            className='wiki-article__body'
-                        >
+                        <div className='wiki-article__body'>
                             <WikiEditor
                                 content={this.state.content}
                                 onChange={this.onChange}

@@ -1,5 +1,5 @@
 
-import { WikiMetaData } from "../store/reducers/wikis";
+import { WikiMetadata } from "../store/reducers/wikis";
 import * as uuid from 'uuid/v4';
 import * as fsp from '../../utils/promisify-fs';
 import * as path from 'path';
@@ -41,7 +41,7 @@ export type ArticleACreator = ACreator<[ArticleMetaData],ArticleAction>;
 
 
 
-export const getArticlePath = (wiki: WikiMetaData, articleName: string) => {
+export const getArticlePath = (wiki: WikiMetadata, articleName: string) => {
     return path.join('./wikis', wiki.id, 'articles', `${articleName}.json`);
 }
 

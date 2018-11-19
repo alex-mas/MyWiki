@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { WikisMetadataReducer, WikiMetaData } from '../store/reducers/wikis';
+import { WikisMetadataReducer, WikiMetadata, UserDefinedWikiMetadata } from '../store/reducers/wikis';
 import { remote, Dialog, OpenDialogOptions } from 'electron';
 import * as fs from 'fs';
 import * as util from 'util';
 import * as path from 'path';
 import { fsError, FsErrorActionCreator } from '../actions/errors';
-import { createWiki, CreateWikiActionCreator, UserWikiData } from '../actions/wikis';
+import { createWiki, CreateWikiActionCreator } from '../actions/wikis';
 import { MemoryHistory, withHistoryContext } from '@axc/react-components/navigation/memoryRouter';
 import { encode } from 'punycode';
 import { ImageInput } from './imageInput';
@@ -22,10 +22,10 @@ const dialog: Dialog = remote.dialog;
 export interface OwnProps {
     onSubmit: (value: State)=>any;
     onClose: Function;
-    initialValues?: WikiMetaData
+    initialValues?: WikiMetadata
 }
 
-export interface State extends UserWikiData {
+export interface State extends UserDefinedWikiMetadata {
 }
 
 export class WikiForm extends React.Component<OwnProps, State>{

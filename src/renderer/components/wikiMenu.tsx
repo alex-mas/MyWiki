@@ -4,7 +4,7 @@ import { MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import I18String from '@axc/react-components/display/i18string';
 import  WikiSettingsButton  from './wikiSettingsButton';
 import { AppState } from '../store/store';
-import { WikiMetaData } from '../store/reducers/wikis';
+import { WikiMetadata } from '../store/reducers/wikis';
 
 
 
@@ -12,7 +12,7 @@ interface OwnProps{
     isOpen: boolean
 }
 interface ReduxProps{
-    wiki: WikiMetaData
+    wiki: WikiMetadata
 }
 type WikiMenuProps = OwnProps & ReduxProps;
 

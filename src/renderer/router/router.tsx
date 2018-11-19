@@ -1,14 +1,13 @@
 import * as React from 'react';
 import Router, { MemoryRoute, withHistoryContext, MemoryRouteProps } from '@axc/react-components/navigation/memoryRouter';
 
-import HomePage from '../views/home/index';
-import WikiArticlePage from '../views/wikiArticle/index';
-import WikiEditPage from '../views/wikiEdit/index';
-import NotFoundPage from '../views/notFound/index';
-import CreateArticlePage from '../views/createArticle/index';
-import ArticleSearchPage from '../views/search/index';
-import WikiPluginsPage from '../views/wikiPlugins/index';
-import WikiSettingsPage from '../views/wikiSettings/index';
+import HomePage from '../components/views/home';
+import WikiArticlePage from '../components/views/wikiArticle';
+import WikiEditPage from '../components/views/wikiEdit';
+import NotFoundPage from '../components/views/notFound';
+import CreateArticlePage from '../components/views/createArticle';
+import ArticleSearchPage from '../components/views/wikiSearch';
+import WikiPluginsPage from '../components/views/wikiPlugins';
 
 export type RouteProps = Exclude<MemoryRouteProps, 'history'>;
 //Pick<MemoryRouteProps, "path" | "exact" | "children" | "component">;
@@ -23,7 +22,6 @@ const AppRouter = () => {
             <MemoryRoute path='/wiki/create/:article' exact component={CreateArticlePage}/>
             <MemoryRoute path='/wiki/search/:articleName' exact component={ArticleSearchPage}/>
             <MemoryRoute path='/wiki/plugins' exact component={WikiPluginsPage}/>
-            <MemoryRoute path='/wiki/settings' exact component={WikiSettingsPage}/>
             <MemoryRoute path='' component={NotFoundPage} />
         </Router>
     );

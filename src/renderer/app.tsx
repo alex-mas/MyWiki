@@ -14,7 +14,7 @@ import configureStore, { AppState } from './store/store';
 
 import AppRouter from './router/router';
 import { loadWikis, loadWiki, saveWikis } from './actions/wikis';
-import { WikiMetaData } from './store/reducers/wikis';
+import { WikiMetadata } from './store/reducers/wikis';
 import { fsError } from './actions/errors';
 import { parsePlugins } from './actions/plugins';
 import I18String, { I18nSystem as _I18nSystem, I18nSystemProps } from '@axc/react-components/display/i18string';
@@ -85,9 +85,6 @@ window.onbeforeunload =() => {
     saveWikis();
     saveAppData();
 }
-
-
-
 
 
 

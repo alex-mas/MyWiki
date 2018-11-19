@@ -4,7 +4,7 @@ import { RenderAttributes } from 'slate-react';
 import { doesArticleExist } from '../../../selectors/articles';
 import { connect } from 'react-redux';
 import { AppState } from '../../../store/store';
-import { WikiMetaData } from '../../../store/reducers/wikis';
+import { WikiMetadata } from '../../../store/reducers/wikis';
 import { shell } from 'electron';
 
 
@@ -21,7 +21,7 @@ export interface WikiLinkOwnProps {
 
 
 export interface WikiLinkStateProps {
-    selectedWiki: WikiMetaData
+    selectedWiki: WikiMetadata
 }
 
 export type WikiLinkProps = WikiLinkOwnProps & WikiLinkStateProps;

@@ -3,7 +3,7 @@ import { AnyAction } from "redux";
 import { ThunkAction, ThunkMiddleware } from "redux-thunk";
 import thunk from 'redux-thunk';
 import errorHandler from './middleware/errorHandler';
-import wikis, { WikiMetaData } from './reducers/wikis';
+import wikis, { WikiMetadata } from './reducers/wikis';
 import appData, { AppData } from './reducers/appData';
 import selectedWiki from './reducers/selectedWiki';
 import plugins, { PluginState } from './reducers/plugins';
@@ -12,9 +12,9 @@ import i18n, { I18N } from './reducers/i18n';
 export type StoreAction = AnyAction | ThunkAction<AnyAction,AppState,any,AnyAction>;
 
 export interface AppState{
-    wikis: WikiMetaData[],
+    wikis: WikiMetadata[],
     appData: AppData,
-    selectedWiki: WikiMetaData,
+    selectedWiki: WikiMetadata,
     plugins: PluginState,
     i18n: I18N
 }

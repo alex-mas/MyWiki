@@ -2,13 +2,14 @@ import * as React from 'react';
 import { RouteProps } from '../../router/router';
 import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
-import { WikiMetaData } from '../../store/reducers/wikis';
+import { WikiMetadata } from '../../store/reducers/wikis';
 import { fsError, FsErrorActionCreator } from '../../actions/errors';
 import { MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import { getRelevantArticles } from '../../selectors/articles';
-import WikiHeader from '../../components/wikiHeader';
+import WikiHeader from '../wikiHeader';
 import I18String from '@axc/react-components/display/i18string';
-import { Button } from '../../components/button';
+import { Button } from '../button';
+import WikiView from '../wikiView';
 
 
 
@@ -19,7 +20,7 @@ export interface ArticleSearchPageDispatchProps {
 
 export interface ArticleSearchPageStateProps {
     searchResults: string[],
-    selectedWiki: WikiMetaData
+    selectedWiki: WikiMetadata
 }
 
 export interface ArticleSearchPageOwnProps extends RouteProps {
@@ -49,19 +50,17 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
     }
     render() {
         return (
-            <div className='wiki-route'>
-                <img className='wiki-background' src={this.props.selectedWiki.background} alt="" />
-                <WikiHeader />
+            <WikiView>
                 <div className='body--article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
                             <h1 className='wiki-article__title'><I18String text='search' format='capitalizeFirst' />: {this.props.routeParams.articleName}</h1>
                         </div>
                     </div>
-                    <div className='search-results'>
+                    <ul className='search-results'>
                         {this.props.searchResults.map((result) => {
                             return (
-                                <div className='search-result'>
+                                <li className='search-result'>
                                     <div className='search-result__labels'>
                                         <div className='search-result__name'>
                                             {result}
@@ -84,14 +83,15 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
                                         </Button>
                                     </div>
 
-                                </div>
+                                </li>
                             );
                         })}
                         {this.props.searchResults.length === 0 ? this.renderNotFoundMessage() : null}
-                    </div>
+                    </ul>
                 </div>
-            </div>
-        )
+
+            </WikiView>
+        );
     }
 }
 

@@ -2,16 +2,16 @@ import * as React from 'react';
 import { RouteProps } from '../../router/router';
 import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
-import { WikiMetaData } from '../../store/reducers/wikis';
-import Wiki from '../../components/wikiItem';
+import { WikiMetadata, UserDefinedWikiMetadata } from '../../store/reducers/wikis';
+import Wiki from '../wikiItem';
 import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import Modal from '@axc/react-components/layout/modal';
-import MyEditor from '../../components/wikiEditor/wikiEditor';
-import AppHeader from '../../components/appHeader';
+import AppHeader from '../appHeader';
 import { AppData } from '../../store/reducers/appData';
-import { Button } from '../../components/button';
-import { UserWikiData, createWiki } from '../../actions/wikis';
-import WikiForm from '../../components/wikiForm';
+import { Button } from '../button';
+import { createWiki } from '../../actions/wikis';
+import WikiForm from '../wikiForm';
+import AppView from '../appView';
 
 
 export interface HomePageOwnProps {
@@ -19,7 +19,7 @@ export interface HomePageOwnProps {
 }
 export interface HomePageReduxProps {
     appData: AppData;
-    wikis: WikiMetaData[];
+    wikis: WikiMetadata[];
     createWiki: typeof createWiki;
 }
 
@@ -44,32 +44,30 @@ export class HomePage extends React.Component<HomePageProps, HomePageState>{
             shouldRenderWikiForm: !prevState.shouldRenderWikiForm
         }));
     }
-    createWiki = (metaData: UserWikiData)=>{
+    createWiki = (metaData: UserDefinedWikiMetadata) => {
         event.preventDefault();
         this.props.createWiki(metaData);
         this.props.history.pushState('/');
     }
     render() {
         return (
-            <div className='wiki-route'>
-                <AppHeader />
+            <AppView>
                 <div className='body'>
-                    <img className='wiki-background' src={this.props.appData.background} alt="" />
-                        <ul className='wiki-list'>
-                            {this.props.wikis.map((wiki) => {
-                                return <Wiki key={wiki.id} wiki={wiki} />
-                            })}
-                            <div key='wiki-list__actions' className='wiki-list__actions'>
-                                <Button
-                                    btnType='solid'
-                                    theme='primary'
-                                    className='wiki-list__action--primary'
-                                    onClick={this.toggleWikiForm}
-                                >
-                                    <i className='material-icons'>add</i>
-                                </Button>
-                            </div>
-                        </ul>  
+                    <ul className='wiki-list'>
+                        {this.props.wikis.map((wiki) => {
+                            return <Wiki key={wiki.id} wiki={wiki} />
+                        })}
+                        <div key='wiki-list__actions' className='wiki-list__actions'>
+                            <Button
+                                btnType='solid'
+                                theme='primary'
+                                className='wiki-list__action--primary'
+                                onClick={this.toggleWikiForm}
+                            >
+                                <i className='material-icons'>add</i>
+                            </Button>
+                        </div>
+                    </ul>
                     <Modal
                         isOpen={this.state.shouldRenderWikiForm}
                         onClose={this.toggleWikiForm}
@@ -81,7 +79,7 @@ export class HomePage extends React.Component<HomePageProps, HomePageState>{
                         />
                     </Modal>
                 </div>
-            </div>
+            </AppView>
         );
     }
 }

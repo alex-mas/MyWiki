@@ -1,49 +1,48 @@
 import { ActionWithPayload, ACreator } from "../../utils/typeUtils";
-import { WikiMetaData } from "../store/reducers/wikis";
+import { WikiMetadata, UserDefinedWikiMetadata } from "../store/reducers/wikis";
 
 
-export const SET_CURRENT_WIKI_NAME = 'SET_CURRENT_WIKI_NAME';
-export const SET_CURRENT_WIKI_DESCRIPTION = 'SET_CURRENT_WIKI_DESCRIPTION';
-export const SET_CURRENT_WIKI_BACKGROUND = 'SET_CURRENT_WIKI_BACKGROUND';
-export const UPDATE_CURRENT_WIKI_METADATA = 'UPDATE_CURRENT_WIKI_METADATA';
+export const SET_SELECTED_WIKI_NAME = 'SET_SELECTED_WIKI_NAME';
+export const SET_SELECTED_WIKI_DESCRIPTION = 'SET_SELECTED_WIKI_DESCRIPTION';
+export const SET_SELECTED_WIKI_BACKGROUND = 'SET_SELECTED_WIKI_BACKGROUND';
+export const UPDATE_SELECTED_WIKI_METADATA = 'UPDATE_SELECTED_WIKI_METADATA';
 
-export type SetCurrentWikiBgAction =ActionWithPayload<{background:string}>;
-export type SetCurrentWikiBgActionCreator =ACreator<[string], SetCurrentWikiBgAction>
-export const setCurrentWikiBackground: SetCurrentWikiBgActionCreator = (background: string)=>{
+export type SetSelectedWikiBgAction =ActionWithPayload<{background:string}>;
+export type SetSelectedWikiBgActionCreator =ACreator<[string], SetSelectedWikiBgAction>
+export const setSelectedWikiBackground: SetSelectedWikiBgActionCreator = (background: string)=>{
     return {
-        type: SET_CURRENT_WIKI_BACKGROUND,
+        type: SET_SELECTED_WIKI_BACKGROUND,
         background
     }
 }
 
 
 
-export type SetCurrentWikiNameAction =ActionWithPayload<{name:string}>;
-export type SetCurrentWikiNameActionCreator =ACreator<[string], SetCurrentWikiNameAction>
-export const setCurrentWikiName: SetCurrentWikiNameActionCreator = ( name: string)=>{
+export type SetSelectedWikiNameAction =ActionWithPayload<{name:string}>;
+export type SetSelectedWikiNameActionCreator =ACreator<[string], SetSelectedWikiNameAction>
+export const setSelectedWikiName: SetSelectedWikiNameActionCreator = ( name: string)=>{
     return {
-        type: SET_CURRENT_WIKI_NAME,
+        type: SET_SELECTED_WIKI_NAME,
         name
     }
 }
 
 
-export type SetCurrentWikiDescriptionAction =ActionWithPayload<{description: string}>;
-export type SetCurrentWikiDescriptionActionCreator =ACreator<[string], SetCurrentWikiDescriptionAction>
-export const setCurrentWikiDescription: SetCurrentWikiDescriptionActionCreator = ( description: string)=>{
+export type SetSelectedWikiDescriptionAction =ActionWithPayload<{description: string}>;
+export type SetSelectedWikiDescriptionActionCreator =ACreator<[string], SetSelectedWikiDescriptionAction>
+export const setSelectedWikiDescription: SetSelectedWikiDescriptionActionCreator = ( description: string)=>{
     return {
-        type: SET_CURRENT_WIKI_DESCRIPTION,
+        type: SET_SELECTED_WIKI_DESCRIPTION,
         description
     }
 }
 
 
-export type UpdateWikiMetadataPayload ={name:string, description:string, background:string};
-export type UpdateCurrentWikiMetadataAction =ActionWithPayload<{metadata: UpdateWikiMetadataPayload}>;
-export type UpdateCurrentWikiMetadataActionCreator =ACreator<[UpdateWikiMetadataPayload], UpdateCurrentWikiMetadataAction>
-export const updateCurrentWikiMetadata: UpdateCurrentWikiMetadataActionCreator = (metadata: UpdateWikiMetadataPayload)=>{
+export type UpdateSelectedWikiMetadataAction =ActionWithPayload<{metadata: UserDefinedWikiMetadata}>;
+export type UpdateSelectedWikiMetadataActionCreator =ACreator<[UserDefinedWikiMetadata], UpdateSelectedWikiMetadataAction>
+export const updateSelectedWikiMetadata: UpdateSelectedWikiMetadataActionCreator = (metadata: UserDefinedWikiMetadata)=>{
     return {
-        type: UPDATE_CURRENT_WIKI_METADATA,
+        type: UPDATE_SELECTED_WIKI_METADATA,
         metadata
         
     }

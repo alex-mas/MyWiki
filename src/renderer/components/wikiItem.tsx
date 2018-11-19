@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RouteProps } from '../router/router';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
-import { WikiMetaData } from '../store/reducers/wikis';
+import { WikiMetadata } from '../store/reducers/wikis';
 import { selectWiki, SelectWikiActionCreator, removeWiki, loadWiki, LoadWikiActionCreator } from '../actions/wikis';
 import { MemoryHistory, withHistoryContext } from '@axc/react-components/navigation/memoryRouter';
 import { ActionCreator } from 'redux';
@@ -11,7 +11,7 @@ import { Button } from './button';
 import { DeletePrompt, DeletePromptProps, DeletePromptFunction } from './deletePrompt';
 
 export interface WikiItemOwnProps {
-    wiki: WikiMetaData,
+    wiki: WikiMetadata,
     history: MemoryHistory
 }
 
