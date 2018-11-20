@@ -6,7 +6,7 @@ import { Button } from './button';
 
 const dialog: Dialog = remote.dialog;
 
-export interface ComponentProps {
+interface ComponentProps {
     onChange(newValue: string): any,
     prompt?: string,
     value?: string,

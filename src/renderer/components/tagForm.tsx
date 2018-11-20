@@ -2,7 +2,7 @@ import * as React from 'react';
 import TagInput from './tagInput';
 
 
-export interface ComponentProps {
+interface ComponentProps {
     tags: string[],
     onChange(newTags: string[]): any,
     toggled: boolean
