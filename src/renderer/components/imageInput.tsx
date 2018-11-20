@@ -6,7 +6,7 @@ import { Button } from './button';
 
 const dialog: Dialog = remote.dialog;
 
-export interface ImageInputProps {
+export interface ComponentProps {
     onChange(newValue: string): any,
     prompt?: string,
     value?: string,
@@ -16,7 +16,7 @@ export interface ImageInputProps {
     className?: string
 }
 
-export class ImageInput extends React.PureComponent<ImageInputProps, any>{
+export class ImageInput extends React.PureComponent<ComponentProps, any>{
     changeBackgroundImage = (e: React.MouseEvent<HTMLButtonElement>) => {
         dialog.showOpenDialog(remote.getCurrentWindow(), {
             title: this.props.windowTitle,

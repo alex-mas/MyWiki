@@ -6,6 +6,7 @@ import { AppState } from '../store/store';
 import { WikiMetadata, UserDefinedWikiMetadata } from '../store/reducers/wikis';
 import { updateSelectedWikiMetadata } from '../actions/selectedWiki';
 import { WikiForm } from './wikiForm';
+import { getSelectedWiki } from '../selectors/wikis';
 
 const root = document.getElementById('app');
 
@@ -17,9 +18,9 @@ interface ReduxProps {
     currentWiki: WikiMetadata
     updateSelectedWikiMetadata: typeof updateSelectedWikiMetadata;
 }
-type ButtonProps = OwnProps & ReduxProps;
+type ComponentProps = OwnProps & ReduxProps;
 
-export class WikiSettingsButton extends React.Component<ButtonProps, { isFormOpen: boolean }>{
+export class WikiSettingsButton extends React.Component<ComponentProps, { isFormOpen: boolean }>{
     constructor(props: any) {
         super(props);
         this.state = {
@@ -68,7 +69,7 @@ export class WikiSettingsButton extends React.Component<ButtonProps, { isFormOpe
 export default connect(
     (state: AppState, props: OwnProps) => {
         return {
-            currentWiki: state.selectedWiki
+            currentWiki: getSelectedWiki(state)
         }
     },
     {

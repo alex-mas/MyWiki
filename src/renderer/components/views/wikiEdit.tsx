@@ -19,28 +19,28 @@ import WikiHeader from '../wikiHeader';
 import { WikiMetadata } from '../../store/reducers/wikis';
 import { AppData } from '../../store/reducers/appData';
 import WikiView from '../wikiView';
+import { getSelectedWiki } from '../../selectors/wikis';
 
 
 
-export interface WikiEditPageDispatchProps {
+interface DispatchProps {
     loadArticle: LoadArticleActionCreator,
     saveArticle: SaveArticleActionCreator
 }
 
-export interface WikiEditPageOwnProps extends MemoryRouteProps {
+interface OwnProps extends MemoryRouteProps {
 }
 
-export interface WikiEditPageReduxProps {
+interface ReduxProps {
     selectedWiki: WikiMetadata,
     article: ArticleMetaData,
     appData: AppData
 }
 
 
-export interface WikiEditPageProps extends WikiEditPageOwnProps, WikiEditPageReduxProps, WikiEditPageDispatchProps {
-}
+type WikiEditPageProps = OwnProps & ReduxProps & DispatchProps;
 
-export interface WikiEditPageState {
+interface ComponentState {
     editorContent: Value,
     tags: string[],
     areTagsBeingManaged: boolean,
@@ -49,7 +49,7 @@ export interface WikiEditPageState {
 }
 
 
-export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPageState>{
+export class WikiEditPage extends React.Component<WikiEditPageProps, ComponentState>{
     constructor(props: WikiEditPageProps) {
         super(props);
         this.state = {
@@ -204,22 +204,27 @@ export class WikiEditPage extends React.Component<WikiEditPageProps, WikiEditPag
 }
 
 
-const mapStateToProps: MapStateToProps<WikiEditPageReduxProps, WikiEditPageOwnProps, AppState> = (state, props) => {
-    return {
-        selectedWiki: state.selectedWiki,
-        article: getArticle(props.routeParams.article, state.selectedWiki),
-        appData: state.appData
-    };
-}
 
 
 
-export default connect(mapStateToProps, (dispatch, props) => {
-    return {
-        //@ts-ignore
-        loadArticle: (name: string) => dispatch(loadArticle(name)),
-        //@ts-ignore
-        saveArticle: (article: Article) => dispatch(saveArticle(article))
+
+
+export default connect(
+    (state: AppState, props: OwnProps) => {
+        const selectedWiki = getSelectedWiki(state);
+        return {
+            selectedWiki,
+            article: getArticle(props.routeParams.article, selectedWiki),
+            appData: state.appData
+        }
+    },
+    (dispatch, props) => {
+        return {
+            //@ts-ignore
+            loadArticle: (name: string) => dispatch(loadArticle(name)),
+            //@ts-ignore
+            saveArticle: (article: Article) => dispatch(saveArticle(article))
+        }
+
     }
-
-})(WikiEditPage);
+)(WikiEditPage);

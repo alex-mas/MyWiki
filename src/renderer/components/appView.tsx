@@ -16,14 +16,14 @@ interface ReduxProps {
 }
 
 
-export type AppViewProps = OwnProps & ReduxProps;
+type ComponentProps = OwnProps & ReduxProps;
 
 interface State {
 }
 
 
-export class AppView extends React.Component<AppViewProps, State>{
-    constructor(props: AppViewProps) {
+export class AppView extends React.Component<ComponentProps, State>{
+    constructor(props: ComponentProps) {
         super(props);
 
     }

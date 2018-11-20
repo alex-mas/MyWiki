@@ -16,24 +16,25 @@ import { ImageInput } from '../imageInput';
 import WikiHeader from '../wikiHeader';
 import I18String from '@axc/react-components/display/i18string';
 import WikiView from '../wikiView';
+import { getSelectedWiki } from '../../selectors/wikis';
 
-export interface CreateArticlePageDispatchProps {
+
+interface DispatchProps {
     createArticle: CreateArticleActionCreator,
     fsError: FsErrorActionCreator
 }
 
-
-export interface CreateArticlePageStateProps {
+interface ReduxProps {
     selectedWiki: WikiMetadata
 }
 
-export interface CreateArticlePageOwnProps extends MemoryRouteProps {
+interface OwnProps extends MemoryRouteProps {
 }
 
-export type CreateArticlePageProps = CreateArticlePageOwnProps & CreateArticlePageDispatchProps & CreateArticlePageStateProps;
+type ComponentProps = OwnProps & DispatchProps & ReduxProps;
 
 
-export interface CreateArticlePageState {
+interface CreateArticlePageState {
     editorContent: Value,
     background: string,
     name: string,
@@ -41,8 +42,8 @@ export interface CreateArticlePageState {
     areTagsBeingManaged: boolean
 }
 
-export class CreateArticlePage extends React.Component<CreateArticlePageProps, CreateArticlePageState>{
-    constructor(props: CreateArticlePageProps) {
+export class CreateArticlePage extends React.Component<ComponentProps, CreateArticlePageState>{
+    constructor(props: ComponentProps) {
         super(props);
         this.state = {
             editorContent: defaultEditorContents,
@@ -168,10 +169,10 @@ export class CreateArticlePage extends React.Component<CreateArticlePageProps, C
 
 
 
-export default connect<CreateArticlePageStateProps, CreateArticlePageDispatchProps, CreateArticlePageOwnProps, AppState>(
-    (state: AppState, props: CreateArticlePageOwnProps) => {
+export default connect(
+    (state: AppState, props: OwnProps) => {
         return {
-            selectedWiki: state.selectedWiki
+            selectedWiki: getSelectedWiki(state) 
         }
     },
     {

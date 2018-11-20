@@ -6,11 +6,11 @@ import HomeButton from './homeButton';
 import WikiSearchBar from './wikiSearchBar';
 import WikiMenu from './wikiMenu';
 
-export interface WikiHeaderProps {
+interface WikiHeaderProps {
 
 }
 
-export interface WikiHeaderState {
+interface WikiHeaderState {
     isMenuOpen: boolean,
 }
 

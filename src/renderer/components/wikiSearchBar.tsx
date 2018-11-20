@@ -4,29 +4,30 @@ import { getArticleNames } from '../selectors/articles';
 import { AppState } from '../store/store';
 import AutoComplete from '@axc/react-components/interactive/autoComplete';
 import { withHistoryContext, MemoryHistory } from '@axc/react-components/navigation/memoryRouter';
+import { getSelectedWiki } from '../selectors/wikis';
 
-export interface WSBOwnProps {
+interface OwnProps {
     history: MemoryHistory
 }
-export interface WSBDispatchProps {
+interface DispatchProps {
 
 }
 
-export interface WSBDStateProps {
+interface ReduxProps {
     articleNames: string[]
 }
 
-export type WSBProps = WSBDispatchProps & WSBOwnProps & WSBDStateProps;
+type ComponentProps = DispatchProps & OwnProps & ReduxProps;
 
 
-export interface WSBState {
+interface ComponentState {
     value: string
 }
 
 
 
-export class WikiSearchBar extends React.Component<WSBProps, WSBState>{
-    constructor(props: WSBProps) {
+export class WikiSearchBar extends React.Component<ComponentProps, ComponentState>{
+    constructor(props: ComponentProps) {
         super(props);
         this.state = {
             value: ''
@@ -66,10 +67,13 @@ export class WikiSearchBar extends React.Component<WSBProps, WSBState>{
     }
 }
 
-export default withHistoryContext(connect<WSBDStateProps, WSBDispatchProps, WSBOwnProps, AppState>((state, props) => {
-    return {
-        articleNames: getArticleNames(state.selectedWiki)
-    }
-}, {
+export default withHistoryContext(connect(
+    (state: AppState, props) => {
+        return {
+            articleNames: getArticleNames(getSelectedWiki(state))
+        }
+    },
+    {
 
-    })(WikiSearchBar));
+    }
+)(WikiSearchBar));

@@ -1,13 +1,18 @@
 import * as React from 'react';
 
-export interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
+
+
+
+
+
+interface ComponentProps extends React.HTMLProps<HTMLButtonElement> {
     btnType: 'flat' | 'solid';
     theme: 'primary' | 'secondary';
     mode?: 'regular' | 'accent' | 'disabled';
 
 }
 
-export class Button extends React.PureComponent<ButtonProps, any>{
+export class Button extends React.PureComponent<ComponentProps, any>{
     static defaultProps = {
         mode: 'regular'
     }
@@ -54,3 +59,4 @@ export class Button extends React.PureComponent<ButtonProps, any>{
 }
 
 
+export type ButtonProps = ComponentProps;

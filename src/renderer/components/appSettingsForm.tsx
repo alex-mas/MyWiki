@@ -17,7 +17,7 @@ interface OwnProps {
     isOpen: boolean;
 }
 interface ReduxProps {
-    data: AppData,
+    appData: AppData,
     resetAppData: typeof resetAppData,
     setLocale: typeof setLocale,
     setAppBackground: typeof setAppBackground,
@@ -25,16 +25,16 @@ interface ReduxProps {
     setAppAutoSaveInterval: typeof setAppAutoSaveInterval
 }
 
-type SettingsProps = OwnProps & ReduxProps;
+type ComponentProps = OwnProps & ReduxProps;
 
-interface SettingsState {
+interface ComponentState {
     background: string,
     locale: string,
     autoSave: boolean
 }
 
-export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
-    constructor(props: SettingsProps) {
+export class SettingsForm extends React.Component<ComponentProps, ComponentState>{
+    constructor(props: ComponentProps) {
         super(props);
     }
     onLocaleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -71,7 +71,7 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
                         <I18String text='language' format='capitalizeFirst' />
                         <select
                             className='form-input select-input'
-                            value={this.props.data.locale}
+                            value={this.props.appData.locale}
                             onChange={this.onLocaleChange}
                         >
                             {Object.keys(ISO639Locale).map((locale) => {
@@ -87,12 +87,12 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
                         <input
                             type='checkbox'
                             className='form-input checkbox-input'
-                            checked={this.props.data.shouldAutoSave}
+                            checked={this.props.appData.shouldAutoSave}
                             onChange={this.onAutoSaveChange}
                         />
                     </div>
 
-                    {this.props.data.shouldAutoSave ?
+                    {this.props.appData.shouldAutoSave ?
                         <div className='form-field'>
                             <I18String
                                 text='auto save interval'
@@ -102,7 +102,7 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
                                 style={{ width: '50px' }}
                                 className='form-input number-input'
                                 type="number"
-                                value={this.props.data.autoSaveInterval}
+                                value={this.props.appData.autoSaveInterval}
                                 onChange={this.onAutoSaveIntervalChange}
                             />
                             <I18String
@@ -118,7 +118,7 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
                         <ImageInput
                             className='form-input image-input'
                             windowTitle='select App background image'
-                            value={this.props.data.background}
+                            value={this.props.appData.background}
                             onChange={this.onBackgroundChange}
                         >
                             <I18String text='select' format='capitalizeFirst' />
@@ -153,7 +153,7 @@ export class SettingsForm extends React.Component<SettingsProps, SettingsState>{
 export default connect(
     (state: AppState, props: OwnProps) => {
         return {
-            data: state.appData
+            appData: state.appData
         }
     },
     {

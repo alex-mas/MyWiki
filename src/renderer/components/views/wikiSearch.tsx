@@ -10,30 +10,31 @@ import WikiHeader from '../wikiHeader';
 import I18String from '@axc/react-components/display/i18string';
 import { Button } from '../button';
 import WikiView from '../wikiView';
+import { getSelectedWiki } from '../../selectors/wikis';
 
 
 
-export interface ArticleSearchPageDispatchProps {
+interface DispatchProps {
     fsError: FsErrorActionCreator
 }
 
 
-export interface ArticleSearchPageStateProps {
+interface ReduxProps {
     searchResults: string[],
     selectedWiki: WikiMetadata
 }
 
-export interface ArticleSearchPageOwnProps extends RouteProps {
+interface OwnProps extends RouteProps {
 }
 
-export type ArticleSearchPageProps = ArticleSearchPageOwnProps & ArticleSearchPageDispatchProps & ArticleSearchPageStateProps;
+type ComponentProps = OwnProps & DispatchProps & ReduxProps;
 
 
-export interface ArticleSearchPageState {
+interface ComponentState {
 }
 
-export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, ArticleSearchPageState>{
-    constructor(props: ArticleSearchPageProps) {
+export class ArticleSearchPage extends React.Component<ComponentProps, ComponentState>{
+    constructor(props: ComponentProps) {
         super(props);
 
     }
@@ -97,11 +98,12 @@ export class ArticleSearchPage extends React.Component<ArticleSearchPageProps, A
 
 
 
-export default connect<ArticleSearchPageStateProps, ArticleSearchPageDispatchProps, ArticleSearchPageOwnProps, AppState>(
-    (state: AppState, props: ArticleSearchPageOwnProps) => {
+export default connect(
+    (state: AppState, props: OwnProps) => {
+        const selectedWiki = getSelectedWiki(state);
         return {
-            searchResults: getRelevantArticles(props.routeParams.articleName, state.selectedWiki),
-            selectedWiki: state.selectedWiki
+            searchResults: getRelevantArticles(props.routeParams.articleName, selectedWiki),
+            selectedWiki
         }
     },
     {

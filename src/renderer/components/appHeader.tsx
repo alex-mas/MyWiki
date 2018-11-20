@@ -6,15 +6,15 @@ import SettingsForm from './appSettingsForm';
 import { Button } from './button';
 
 
-export interface AppHeaderProps {
+interface ComponentProps {
 
 }
 
-export interface AppHeaderState {
+interface ComponentState {
     isSettingsFormOpen: boolean
 }
 
-class AppHeader extends React.Component<AppHeaderProps, AppHeaderState>{
+class AppHeader extends React.Component<ComponentProps, ComponentState>{
     constructor(props: any) {
         super(props);
         this.state = {

@@ -2,8 +2,11 @@ import * as React from 'react';
 import { clipboard } from 'electron';
 
 
+interface ComponentState{
+    characters: number 
+}
 
-export class DynamicTextInput extends React.Component<any, { characters: number }>{
+export class DynamicTextInput extends React.Component<any, ComponentState>{
     constructor(props: any) {
         super(props);
         this.state = {

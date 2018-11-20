@@ -4,21 +4,20 @@ import { Button } from './button';
 import I18String from '@axc/react-components/display/i18string';
 import Modal from '@axc/react-components/layout/modal';
 
-export type DeletePromptFunction = (component: string | React.ComponentClass<DeletePromptProps, any> | React.FunctionComponentFactory<DeletePromptProps>, componentProps?: any) => Promise<boolean>;
+export type DeletePromptFunction = (component: string | React.ComponentClass<ComponentProps, any> | React.FunctionComponentFactory<ComponentProps>, componentProps?: any) => Promise<boolean>;
 
-interface PromptProps {
+interface ComponentProps {
     title: string;
     onSubmit: PromptFunction;
 }
-export type DeletePromptProps = PromptProps;
 
 
-interface PromptState {
+interface ComponentState {
     isOpen: boolean
 }
 
-export class DeletePrompt extends React.PureComponent<PromptProps, PromptState>{
-    constructor(props: PromptProps) {
+export class DeletePrompt extends React.PureComponent<ComponentProps, ComponentState>{
+    constructor(props: ComponentProps) {
         super(props);
         this.state = {
             isOpen: true,

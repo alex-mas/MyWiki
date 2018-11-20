@@ -5,6 +5,7 @@ import I18String from '@axc/react-components/display/i18string';
 import  WikiSettingsButton  from './wikiSettingsButton';
 import { AppState } from '../store/store';
 import { WikiMetadata } from '../store/reducers/wikis';
+import { getSelectedWiki } from '../selectors/wikis';
 
 
 
@@ -14,9 +15,9 @@ interface OwnProps{
 interface ReduxProps{
     wiki: WikiMetadata
 }
-type WikiMenuProps = OwnProps & ReduxProps;
+type ComponentProps = OwnProps & ReduxProps;
 
-export class WikiMenu extends React.Component<WikiMenuProps, any>{
+export class WikiMenu extends React.Component<ComponentProps, any>{
     render() {
         if (this.props.isOpen) {
             return (
@@ -83,6 +84,6 @@ export class WikiMenu extends React.Component<WikiMenuProps, any>{
 
 export default connect((state: AppState,props)=>{
     return{
-        wiki: state.selectedWiki
+        wiki: getSelectedWiki(state)
     }
 })(WikiMenu);

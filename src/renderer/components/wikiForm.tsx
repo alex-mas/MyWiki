@@ -19,16 +19,16 @@ const accessFile = util.promisify(fs.access);
 const dialog: Dialog = remote.dialog;
 
 
-export interface OwnProps {
-    onSubmit: (value: State)=>any;
+interface OwnProps {
+    onSubmit: (value: ComponentState)=>any;
     onClose: Function;
     initialValues?: WikiMetadata
 }
 
-export interface State extends UserDefinedWikiMetadata {
+interface ComponentState extends UserDefinedWikiMetadata {
 }
 
-export class WikiForm extends React.Component<OwnProps, State>{
+export class WikiForm extends React.Component<OwnProps, ComponentState>{
     constructor(props: OwnProps) {
         super(props);
         if(props.initialValues){

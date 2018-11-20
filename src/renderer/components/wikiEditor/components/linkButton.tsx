@@ -6,8 +6,9 @@ import { hasInlineType, wrapInline,unwrapInline } from '../utilities/inlines';
 import Modal from '@axc/react-components/layout/modal';
 import { hasBlockType } from '../utilities/blocks';
 
+type ComponentProps = EditorPluginContext;
 
-export class LinkButton extends React.Component<EditorPluginContext, any>{
+export class LinkButton extends React.Component<ComponentProps, any>{
     constructor(props: any) {
         super(props);
         this.state = {

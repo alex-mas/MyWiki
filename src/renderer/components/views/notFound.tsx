@@ -5,12 +5,13 @@ import I18String from '@axc/react-components/display/i18string';
 import AppView  from '../appView';
 
 
-export interface NotFoundPageProps extends MemoryRouteProps {
+
+interface OwnProps extends MemoryRouteProps {
 
 }
 
-export class NotFoundPage extends React.Component<NotFoundPageProps, any>{
-    constructor(props: NotFoundPageProps) {
+export class NotFoundPage extends React.Component<OwnProps, any>{
+    constructor(props: OwnProps) {
         super(props);
     }
     componentDidMount() {

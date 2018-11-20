@@ -6,7 +6,16 @@ import { PluginState } from '../../store/reducers/plugins';
 import WikiView  from '../wikiView';
 
 
-export class WikiPluginsPage extends React.Component<{plugins: PluginState}, any>{
+interface OwnProps {
+ 
+}
+interface ReduxProps {
+    plugins: PluginState
+}
+
+type ComponentProps = OwnProps  & ReduxProps;
+
+export class WikiPluginsPage extends React.Component<ComponentProps, any>{
     render() {
         return (
             <WikiView>
@@ -27,7 +36,7 @@ export class WikiPluginsPage extends React.Component<{plugins: PluginState}, any
 }
 
 
-export default connect((state: AppState, props)=>{
+export default connect((state: AppState, props: OwnProps)=>{
     return {
         plugins: state.plugins
     }

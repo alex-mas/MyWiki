@@ -5,12 +5,12 @@ import { EditorPluginContext } from '../wikiEditor';
 import { Block, Data } from 'slate';
 
 
-export interface ImageProps extends RenderNodeProps{
+interface ComponentProps extends RenderNodeProps{
     pluginContext:EditorPluginContext
-}
+} 
 
-export class Image extends React.Component<ImageProps, { width: number, height: number }>{
-    constructor(props: ImageProps) {
+export class Image extends React.Component<ComponentProps, { width: number, height: number }>{
+    constructor(props: ComponentProps) {
         super(props);
     }
     onResizeImage: ResizeCallback = (e, direction, ref, d)=>{

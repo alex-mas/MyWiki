@@ -2,7 +2,7 @@ import * as React from 'react';
 import TagInput from './tagInput';
 
 
-export interface TagFormProps {
+export interface ComponentProps {
     tags: string[],
     onChange(newTags: string[]): any,
     toggled: boolean
@@ -12,7 +12,7 @@ export interface TagFormProps {
 
 
 
-class TagForm extends React.PureComponent<TagFormProps, any>{
+class TagForm extends React.PureComponent<ComponentProps, any>{
     onChangeTag = (newTagValue: string, index: number) => {
         const newTags = this.props.tags.map((tag, currentIndex) => {
             if (currentIndex === index) {

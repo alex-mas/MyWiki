@@ -6,10 +6,11 @@ import { connect } from 'react-redux';
 import { AppState } from '../../../store/store';
 import { WikiMetadata } from '../../../store/reducers/wikis';
 import { shell } from 'electron';
+import { getSelectedWiki } from '../../../selectors/wikis';
 
 
 
-export interface WikiLinkOwnProps {
+export interface OwnProps {
     active: boolean,
     text?: string,
     to: string
@@ -20,13 +21,13 @@ export interface WikiLinkOwnProps {
 }
 
 
-export interface WikiLinkStateProps {
+export interface ReduxProps {
     selectedWiki: WikiMetadata
 }
 
-export type WikiLinkProps = WikiLinkOwnProps & WikiLinkStateProps;
+export type ComponentProps = OwnProps & ReduxProps;
 
-export class WikiLink extends React.Component<WikiLinkProps, any>{
+export class WikiLink extends React.Component<ComponentProps, any>{
     constructor(props: any) {
         super(props);
     }
@@ -78,8 +79,8 @@ export class WikiLink extends React.Component<WikiLinkProps, any>{
 }
 
 
-export default connect((state: AppState, props: WikiLinkOwnProps) => {
+export default connect((state: AppState, props: OwnProps) => {
     return {
-        selectedWiki: state.selectedWiki
+        selectedWiki: getSelectedWiki(state)
     }
 }, undefined)(WikiLink);

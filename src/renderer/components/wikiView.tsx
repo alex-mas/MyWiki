@@ -6,27 +6,28 @@ import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import WikiHeader from '../components/wikiHeader';
 import { WikiMetadata } from '../store/reducers/wikis';
+import { getSelectedWiki } from '../selectors/wikis';
 
 
 
 
-interface WikiViewOwnProps {
+interface OwnProps {
     background?: string
 }
 
-interface WikiViewReduxProps {
+interface ReduxProps {
     selectedWiki: WikiMetadata
 }
 
 
-export type WikiViewProps = WikiViewOwnProps & WikiViewReduxProps;
+export type ComponentProps = OwnProps & ReduxProps;
 
-interface WikiViewState {
+interface ComponentState {
 }
 
 
-export class WikiView extends React.Component<WikiViewProps, WikiViewState>{
-    constructor(props: WikiViewProps) {
+export class WikiView extends React.Component<ComponentProps, ComponentState>{
+    constructor(props: ComponentProps) {
         super(props);
 
     }
@@ -57,6 +58,6 @@ export class WikiView extends React.Component<WikiViewProps, WikiViewState>{
 
 export default connect((state: AppState, props) => {
     return {
-        selectedWiki: state.selectedWiki
+        selectedWiki: getSelectedWiki(state)
     };
 })(WikiView);

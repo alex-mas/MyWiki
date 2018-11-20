@@ -20,29 +20,30 @@ import I18String from '@axc/react-components/display/i18string';
 import WikiView from '../wikiView';
 import { withPrompt, PromptFunction } from '@axc/react-components/interactive/prompt';
 import { DeletePromptFunction, DeletePrompt } from '../deletePrompt';
+import { getSelectedWiki } from '../../selectors/wikis';
 const { dialog } = require('electron').remote
 
 
 
-export interface DispatchProps {
+interface DispatchProps {
     fsError: FsErrorActionCreator,
     loadArticle: LoadArticleActionCreator,
     deleteArticle: DeleteArticleActionCreator
 }
 
-export interface PromptProps {
+interface PromptProps {
     prompt: DeletePromptFunction;
 }
-export interface OwnProps extends MemoryRouteProps {
+interface OwnProps extends MemoryRouteProps {
 }
 
-export interface ReduxProps {
+interface ReduxProps {
     selectedWiki: WikiMetadata,
     article: ArticleMetaData
 }
 
 
-export type PageProps = MemoryRouteProps & ReduxProps & DispatchProps & PromptProps;
+type PageProps = MemoryRouteProps & ReduxProps & DispatchProps & PromptProps;
 
 //  <ReactMarkdown source={fs.readFileSync(path.join(props.selectedWiki.path, 'home.md'), 'utf8')}/>
 export class WikiArticlePage extends React.Component<PageProps, any>{
@@ -87,7 +88,7 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
         }
     }
     deleteArticle = () => {
-        this.props.prompt(DeletePrompt, {title: 'are you sure you want to delete this article?'}).then((response) => {
+        this.props.prompt(DeletePrompt, { title: 'are you sure you want to delete this article?' }).then((response) => {
             if (response) {
                 //@ts-ignore
                 this.props.deleteArticle(this.props.routeParams.article).then(() => {
@@ -165,16 +166,20 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
 }
 
 
-const mapStateToProps: MapStateToProps<ReduxProps, OwnProps, AppState> = (state, props) => {
-    return {
-        selectedWiki: state.selectedWiki,
-        article: getArticle(props.routeParams.article, state.selectedWiki)
-    };
-}
 
 
-export default withPrompt<any>(connect(mapStateToProps, {
-    fsError,
-    loadArticle,
-    deleteArticle
-})(WikiArticlePage));
+
+export default withPrompt<any>(connect(
+    (state:AppState, props:OwnProps) => {
+        const selectedWiki = getSelectedWiki(state);
+        return {
+            selectedWiki,
+            article: getArticle(props.routeParams.article,selectedWiki)
+        };
+    },
+    {
+        fsError,
+        loadArticle,
+        deleteArticle
+    }
+)(WikiArticlePage));

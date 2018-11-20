@@ -5,27 +5,27 @@ import { WikiMetadata } from '../store/reducers/wikis';
 import { selectWiki, SelectWikiActionCreator, removeWiki, loadWiki, LoadWikiActionCreator } from '../actions/wikis';
 import { MemoryHistory, withHistoryContext } from '@axc/react-components/navigation/memoryRouter';
 import { ActionCreator } from 'redux';
-import {withPrompt, PromptComponentProps} from '@axc/react-components/interactive/prompt';
+import { withPrompt, PromptComponentProps } from '@axc/react-components/interactive/prompt';
 import I18String from '@axc/react-components/display/i18string';
 import { Button } from './button';
-import { DeletePrompt, DeletePromptProps, DeletePromptFunction } from './deletePrompt';
+import { DeletePrompt, DeletePromptFunction } from './deletePrompt';
 
-export interface WikiItemOwnProps {
+interface WikiItemOwnProps {
     wiki: WikiMetadata,
     history: MemoryHistory
 }
 
-export interface WikiItemDispatchProps {
+interface WikiItemDispatchProps {
     selectWiki: SelectWikiActionCreator,
     removeWiki: ActionCreator<any>,
     loadWiki: LoadWikiActionCreator
 }
 
-export interface WikiItemPromptProps {
-    prompt:DeletePromptFunction;
+interface WikiItemPromptProps {
+    prompt: DeletePromptFunction;
 }
 
-export type WikiItemProps = WikiItemOwnProps & WikiItemDispatchProps & WikiItemPromptProps;
+type WikiItemProps = WikiItemOwnProps & WikiItemDispatchProps & WikiItemPromptProps;
 
 
 class WikiItem extends React.Component<WikiItemProps, any>{
@@ -40,8 +40,8 @@ class WikiItem extends React.Component<WikiItemProps, any>{
 
     }
     removeWiki = () => {
-        this.props.prompt(DeletePrompt,{title:'do you really wish to remove this wiki?'}).then((response: boolean)=>{
-            if(response){
+        this.props.prompt(DeletePrompt, { title: 'do you really wish to remove this wiki?' }).then((response: boolean) => {
+            if (response) {
                 this.props.removeWiki(this.props.wiki);
             }
         });
@@ -59,14 +59,14 @@ class WikiItem extends React.Component<WikiItemProps, any>{
                         theme='primary'
                         onClick={this.onOpen}
                     >
-                        <I18String text='open'/>
+                        <I18String text='open' />
                     </Button>
                     <Button
                         btnType='flat'
                         theme='primary'
                         onClick={this.removeWiki}
                     >
-                        <I18String text='remove' format='capitalizeFirst'/>
+                        <I18String text='remove' format='capitalizeFirst' />
                     </Button>
                 </div>
             </li>
@@ -75,9 +75,12 @@ class WikiItem extends React.Component<WikiItemProps, any>{
 }
 
 
-//@ts-ignore
-export default withPrompt<any>(withHistoryContext(connect<{}, WikiItemDispatchProps, WikiItemOwnProps, any>(undefined, {
-    selectWiki,
-    removeWiki,
-    loadWiki
-})(WikiItem)));
+
+export default withPrompt<any>(withHistoryContext(connect(
+    undefined,
+    {
+        selectWiki,
+        removeWiki,
+        loadWiki
+    }
+)(WikiItem)));

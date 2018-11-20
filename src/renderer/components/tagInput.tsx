@@ -3,14 +3,14 @@ import DynamicTextInput from "./dynamicTextInput";
 
 
 
-interface TagInputProps {
+interface ComponentProps {
     tag: string,
     index: number,
     onChange(tag: string, key: number): any,
     onRemove(index: number): any
 }
 
-export class TagInput extends React.PureComponent<TagInputProps, any>{
+export class TagInput extends React.PureComponent<ComponentProps, any>{
     onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         this.props.onChange(value, this.props.index);

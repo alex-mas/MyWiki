@@ -14,22 +14,24 @@ import WikiForm from '../wikiForm';
 import AppView from '../appView';
 
 
-export interface HomePageOwnProps {
+interface OwnProps extends MemoryRouteProps{
 
 }
-export interface HomePageReduxProps {
+
+interface ReduxProps {
     appData: AppData;
     wikis: WikiMetadata[];
     createWiki: typeof createWiki;
 }
 
-export type HomePageProps = MemoryRouteProps & HomePageOwnProps & HomePageReduxProps;
-export interface HomePageState {
+type ComponentProps =  OwnProps & ReduxProps;
+
+interface ComponentState {
     shouldRenderWikiForm: boolean;
 }
 
-export class HomePage extends React.Component<HomePageProps, HomePageState>{
-    constructor(props: HomePageProps) {
+export class HomePage extends React.Component<ComponentProps, ComponentState>{
+    constructor(props: ComponentProps) {
         super(props);
         this.state = {
             shouldRenderWikiForm: false
@@ -85,16 +87,16 @@ export class HomePage extends React.Component<HomePageProps, HomePageState>{
 }
 
 
-const mapStateToProps: MapStateToProps<Pick<AppState, 'wikis'>, HomePageProps, AppState> = (state, props) => {
-    return {
-        wikis: state.wikis,
-        appData: state.appData
-    };
-}
 
 
-
-
-export default connect(mapStateToProps, {
-    createWiki
-})(HomePage);
+export default connect(
+    (state: AppState, props) => {
+        return {
+            wikis: state.wikis,
+            appData: state.appData
+        }
+    },
+    {
+        createWiki
+    }
+)(HomePage);

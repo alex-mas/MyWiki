@@ -3,7 +3,7 @@ import { Value } from 'slate';
 
 export type EditorButtonClickHandler = (event: React.MouseEvent<HTMLSpanElement>, type?: string,data?:any) => void;
 
-export interface EditorButtonProps {
+interface ComponentProps {
     icon: string,
     onClick: EditorButtonClickHandler,
     active: boolean,
@@ -11,11 +11,11 @@ export interface EditorButtonProps {
     data?:any
 }
 
-export interface EditorButtonState {
+interface ComponentState {
 
 }
 
-export class EditorButton extends React.Component<EditorButtonProps, EditorButtonState>{
+export class EditorButton extends React.Component<ComponentProps, ComponentState>{
     onClick = (event: React.MouseEvent<HTMLSpanElement>) => {
         const extraArgs = [ this.props.type, this.props.data];
         this.props.onClick(event, ...extraArgs);
