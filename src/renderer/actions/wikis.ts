@@ -19,10 +19,11 @@ export const SELECT_WIKI = 'SELECT_WIKI';
 export const LOAD_WIKI = 'LOAD_WIKI';
 export const LOAD_WIKIS = 'LOAD_WIKIS';
 export const RESET_WIKI = 'RESET_WIKI';
-export const  SET_WIKI_BACKGROUND = 'SET_WIKI_BACKGROUND';
+export const SET_WIKI_BACKGROUND = 'SET_WIKI_BACKGROUND';
 export const SET_WIKI_NAME = 'SET_WIKI_NAME';
 export const SET_WIKI_DESCRIPTION = 'SET_WIKI_DESCRIPTION';
 export const SET_WIKI_DATA = 'SET_WIKI_DATA';
+export const UPDATE_WIKI_METADATA = 'UPDATE_WIKI_METADATA';
 
 
 type WikiAction = Action & { wiki: WikiMetadata };
@@ -100,9 +101,11 @@ export const removeWiki: RemoveWikiActionCreator = (wiki: WikiMetadata) => {
 }
 
 
+
 export type SelectWikiAction = WikiAction;
 export type SelectWikiActionCreator = ActionCreator<ThunkAction<any, AppState, void, SelectWikiAction | ErrorAction>>;
 
+//TODO: Populate articles array here
 export const selectWiki: SelectWikiActionCreator = (id: string) => {
     return async(dispatch, getState) => {
         return new Promise((resolve, reject) => {
@@ -127,6 +130,8 @@ export type LoadWikiAction = ActionWithPayload<{
 }>;
 export type LoadWikiActionCreator = AsyncACreator<[string], LoadWikiAction>;
 
+
+//TODO: Delay populating articles array, so that app doesnt load unnecessary metadata -> faster menu interaction
 export const loadWiki: LoadWikiActionCreator = (id: string) => {
     return async (dispatch, getState) => {
         try {
@@ -194,7 +199,18 @@ export const setWikiDescription: SetWikiDescriptionActionCreator = (id: string, 
 }
 
 
-export type UpdateWikiMetadataAction = ActionWithPayload<{metadata: UserDefinedWikiMetadata}>
+export type UpdateWikiMetadataAction = ActionWithPayload<{id: string,metadata: UserDefinedWikiMetadata}>
+export type UpdateWikiMetadataActionCreator =ACreator<[string,UserDefinedWikiMetadata], UpdateWikiMetadataAction>
+export const updateWikiMetadata: UpdateWikiMetadataActionCreator = (id: string,metadata: UserDefinedWikiMetadata)=>{
+    return {
+        type: UPDATE_WIKI_METADATA,
+        metadata,
+        id
+        
+    }
+}
+
+
 
 
 

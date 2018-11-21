@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware, compose, Dispatch, Store } from 'redux';
+import { createStore, combineReducers, applyMiddleware, compose, Dispatch, Store, Reducer, Middleware } from 'redux';
 import { AnyAction } from "redux";
 import { ThunkAction, ThunkMiddleware } from "redux-thunk";
 import thunk from 'redux-thunk';
@@ -22,6 +22,7 @@ export interface AppState{
 //@ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
+
 export default () => {
     const store: Store<AppState, AnyAction> = createStore(
         combineReducers<AppState, AnyAction>({
@@ -31,7 +32,7 @@ export default () => {
             plugins,
             i18n
         }),
-        composeEnhancers(applyMiddleware(thunk as ThunkMiddleware<AppState>, errorHandler))
+        composeEnhancers(applyMiddleware(thunk, errorHandler))
     );
     return store;
 }

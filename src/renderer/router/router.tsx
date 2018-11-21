@@ -10,7 +10,7 @@ import ArticleSearchPage from '../components/views/wikiSearch';
 import WikiPluginsPage from '../components/views/wikiPlugins';
 
 export type RouteProps = Exclude<MemoryRouteProps, 'history'>;
-//Pick<MemoryRouteProps, "path" | "exact" | "children" | "component">;
+
 
 
 const AppRouter = () => {

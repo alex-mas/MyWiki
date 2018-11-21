@@ -38,7 +38,7 @@ interface ReduxProps {
 }
 
 
-type WikiEditPageProps = OwnProps & ReduxProps & DispatchProps;
+type ComponentProps = OwnProps & ReduxProps & DispatchProps;
 
 interface ComponentState {
     editorContent: Value,
@@ -49,8 +49,8 @@ interface ComponentState {
 }
 
 
-export class WikiEditPage extends React.Component<WikiEditPageProps, ComponentState>{
-    constructor(props: WikiEditPageProps) {
+export class WikiEditPage extends React.Component<ComponentProps, ComponentState>{
+    constructor(props: ComponentProps) {
         super(props);
         this.state = {
             editorContent: Value.fromJSON(JSON.parse('{}')),

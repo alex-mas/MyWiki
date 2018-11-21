@@ -13,3 +13,17 @@ import { Action, AnyAction } from "redux";
 }
 */
 
+
+export interface IReducerHandlers<T,A extends AnyAction> {
+  [key:string]: (state: T, action: A)=>T
+}
+
+export const createReducer = <T, A extends AnyAction>(initialState: T, handlers: IReducerHandlers<T,A>)=>{
+  return (state: T = initialState, action: A)=>{
+    if(handlers[action.type]){
+      return handlers[action.type](state,action);
+    }else{
+      return state;
+    }
+  }
+}

@@ -1,9 +1,6 @@
 import * as React from 'react';
 
 
-
-
-
 const Header = (props: any) => {
     return (
         <div className='wiki-header'>

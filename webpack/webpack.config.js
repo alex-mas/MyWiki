@@ -28,7 +28,6 @@ const getWorkerFiles = ()=>{
 
 module.exports = (env)=>{
 
-  
   const rendererConfig = {
     mode: env.NODE_ENV,
     entry: {
@@ -126,10 +125,6 @@ module.exports = (env)=>{
     },
     devtool: env.NODE_ENV === 'production' ? undefined : 'inline-source-map',
   };
-  
-  
-  
-  //NOTE: actually not needed, it adds innecesarry junk to the file, uncomment if you wish to bundle all backend code into on big file
   
   const mainConfig = {
     mode: env.NODE_ENV,

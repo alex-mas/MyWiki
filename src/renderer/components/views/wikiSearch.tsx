@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { RouteProps } from '../../router/router';
 import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetadata } from '../../store/reducers/wikis';
 import { fsError, FsErrorActionCreator } from '../../actions/errors';
-import { MemoryLink } from '@axc/react-components/navigation/memoryRouter';
+import { MemoryLink, MemoryRouteProps } from '@axc/react-components/navigation/memoryRouter';
 import { getRelevantArticles } from '../../selectors/articles';
-import WikiHeader from '../wikiHeader';
 import I18String from '@axc/react-components/display/i18string';
 import { Button } from '../button';
 import WikiView from '../wikiView';
@@ -24,7 +22,7 @@ interface ReduxProps {
     selectedWiki: WikiMetadata
 }
 
-interface OwnProps extends RouteProps {
+interface OwnProps extends MemoryRouteProps {
 }
 
 type ComponentProps = OwnProps & DispatchProps & ReduxProps;

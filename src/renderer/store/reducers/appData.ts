@@ -1,7 +1,8 @@
 import { Reducer, AnyAction } from "redux";
 import I18String, { ISO639Locale } from '@axc/react-components/display/i18string';
-import { SET_LOCALE, SET_APP_DATA, UPDATE_APP_DATA, RESET_APP_DATA, SET_APP_AUTO_SAVE, SET_APP_AUTO_SAVE_INTERVAL, SET_APP_BACKGROUND } from "../../actions/appData";
+import { SET_LOCALE, SET_APP_DATA, UPDATE_APP_DATA, RESET_APP_DATA, SET_APP_AUTO_SAVE, SET_APP_AUTO_SAVE_INTERVAL, SET_APP_BACKGROUND, SetAppAutoSaveAction } from "../../actions/appData";
 import { SELECT_WIKI, selectWiki } from "../../actions/wikis";
+import { createReducer } from "../reducer";
 
 export interface AppData {
     background: string,
@@ -17,6 +18,8 @@ export const defaultAppData: AppData = {
     shouldAutoSave: false,
     autoSaveInterval: 1
 };
+
+
 
 export const AppDataReducer: Reducer<AppData> = (state: AppData = defaultAppData, action: AnyAction) => {
     switch (action.type) {
