@@ -39,4 +39,3 @@ export type AsyncACreator<P extends any[],A extends Action,R = undefined> = (...
 export type ACreator<P extends any[],A extends Action> = (...args: P) =>A;
 
 
-
