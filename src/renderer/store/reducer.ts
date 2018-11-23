@@ -1,30 +1,21 @@
 import { Action, AnyAction, Reducer, combineReducers } from "redux";
 
-/**
- * TODO: Do something like this but that infers action type so that you get intellisense insided the function
- function createReducer(initialState, handlers) {
-  return function reducer(state = initialState, action) {
-    if (handlers.hasOwnProperty(action.type)) {
-      return handlers[action.type](state, action)
-    } else {
-      return state
-    }
-  }
-}
-*/
 
 export type ReducerContainer<T = {[key: string]: Reducer}> = T;
 
+type ReducerHandler<T, A extends AnyAction = any> = (state:T, action: A)=>T;
 
-export interface ReducerHandlers<T, A extends AnyAction> {
-    [key: string]: (state: T, action: A) => T
+export interface ReducerHandlers<T> {
+    [key: string]: ReducerHandler<T>
 }
 
-export const createReducer = <T, A extends AnyAction>(initialState: T, handlers: ReducerHandlers<T, A>) => {
-    return (state: T = initialState, action: A) => {
+export const createReducer = <T>(initialState: T, handlers: ReducerHandlers<T>) => {
+    return (state: T = initialState, action: AnyAction) => {
         if (handlers[action.type]) {
             return handlers[action.type](state, action);
-        } else {
+        } else if(handlers.default){
+            return handlers.default(state,action);
+        }else{
             return state;
         }
     }
