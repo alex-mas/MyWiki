@@ -25,6 +25,7 @@ import { onRecieveArticleKeywords } from './actions/ml';
 import { AppData } from './store/reducers/appData';
 import { setAppData, saveAppData, loadAppData } from './actions/appData';
 import { Plugins } from './plugins/plugins';
+import { createNotification } from './actions/notifications';
 
 
 export const plugins = new Plugins();
@@ -78,10 +79,15 @@ window.onload = () => {
     store.dispatch(loadAppData());
     //@ts-ignore
     store.dispatch(parsePlugins());
+    store.dispatch(createNotification('Test', 'this is a description', 'face'));
+    store.dispatch(createNotification('Test', 'this is a description', 'face'));
+    store.dispatch(createNotification('Test', 'this is a description', 'face'));
+    store.dispatch(createNotification('Test', 'this is a description', 'face'));
+    store.dispatch(createNotification('Test', 'this is a description', 'face'));
 
 }
 
-window.onbeforeunload =() => {
+window.onbeforeunload = () => {
     saveWikis();
     saveAppData();
 }

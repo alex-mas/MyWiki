@@ -9,6 +9,7 @@ import selectedWiki from './reducers/selectedWiki';
 import plugins, { PluginState } from './reducers/plugins';
 import i18n, { I18N } from './reducers/i18n';
 import { ReducerContainer, dynamicCombine } from './reducer';
+import notifications, { Notification } from './reducers/notifications';
 export type StoreAction = AnyAction | ThunkAction<AnyAction, AppState, any, AnyAction>;
 
 export interface AppState {
@@ -16,6 +17,7 @@ export interface AppState {
     appData: AppData,
     selectedWiki: WikiMetadata,
     plugins: PluginState,
+    notifications: Notification[],
     i18n: I18N,
     [key: string]: any
 }
@@ -34,7 +36,8 @@ export const configureStore = () => {
             appData,
             selectedWiki,
             plugins,
-            i18n
+            i18n,
+            notifications
         }),
         composeEnhancers(applyMiddleware(thunk, errorHandler))
     );
@@ -73,7 +76,8 @@ export default () => {
             appData,
             selectedWiki,
             plugins,
-            i18n
+            i18n,
+            notifications
         }),
         composeEnhancers(applyMiddleware(thunk, errorHandler))
     );

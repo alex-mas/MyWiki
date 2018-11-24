@@ -1,4 +1,4 @@
-import uuid from 'uuid/v4';
+import * as uuid from 'uuid/v4';
 import { ActionWithPayload, ACreator } from '../../utils/typeUtils';
 import { Notification } from '../store/reducers/notifications';
 
@@ -14,7 +14,7 @@ export const MARK_ALL_NOTIFICATIONS_AS_READ = 'MARK_ALL_NOTIFICATIONS_AS_READ';
 
 export type ACreateNotification = ActionWithPayload<{notification:Notification}>
 export type ACreateNotificationCreator =ACreator<[string,string,string], ACreateNotification>
-export const createNofication: ACreateNotificationCreator = (title: string, description: string, icon: string)=>{
+export const createNotification: ACreateNotificationCreator = (title: string, description: string, icon: string)=>{
     return{
         type: CREATE_NOTIFICATION,
         notification:{
@@ -43,7 +43,7 @@ export const removeNotification: ARemoveNotificationCreator = (id:string)=>{
 
 
 export type ARemoveAllNotifications = ActionWithPayload<{}>
-export type ARemoveAllNotificationsCreator =ACreator<[string], ARemoveAllNotifications>
+export type ARemoveAllNotificationsCreator =ACreator<[], ARemoveAllNotifications>
 export const removeAllNotifications: ARemoveAllNotificationsCreator = ()=>{
     return{
         type: REMOVE_ALL_NOTIFICATIONS

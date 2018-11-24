@@ -7,6 +7,7 @@ import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/m
 import WikiHeader from '../components/wikiHeader';
 import { WikiMetadata } from '../store/reducers/wikis';
 import { getSelectedWiki } from '../selectors/wikis';
+import Notifications from './notifications';
 
 
 
@@ -33,11 +34,11 @@ export class WikiView extends React.Component<ComponentProps, ComponentState>{
     }
     getBackground = () => {
         let background;
-        if(this.props.background){
+        if (this.props.background) {
             background = this.props.background;
-        }else if(this.props.selectedWiki.background){
+        } else if (this.props.selectedWiki.background) {
             background = this.props.selectedWiki.background;
-        }else{
+        } else {
             //fallback
         }
         return background;
@@ -46,8 +47,9 @@ export class WikiView extends React.Component<ComponentProps, ComponentState>{
         return (
             <div className='route'>
                 <img className='route__background' src={this.getBackground()} alt="background" />
-                <WikiHeader/>
+                <WikiHeader />
                 {this.props.children}
+                <Notifications />
             </div>
         )
     }

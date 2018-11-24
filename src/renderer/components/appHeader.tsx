@@ -4,6 +4,7 @@ import { withHistoryContext, MemoryHistory, MemoryLink } from '@axc/react-compon
 import HomeButton from './homeButton';
 import SettingsForm from './appSettingsForm';
 import { Button } from './button';
+import Notifications from './notifications';
 
 
 interface ComponentProps {
@@ -19,7 +20,7 @@ class AppHeader extends React.Component<ComponentProps, ComponentState>{
         super(props);
         this.state = {
             isSettingsFormOpen: false
-        }
+        };
 
     }
     componentDidMount() {

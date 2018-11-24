@@ -3,6 +3,7 @@ import { AppState } from '../store/store';
 import { connect} from 'react-redux';
 import AppHeader from './appHeader';
 import { AppData } from '../store/reducers/appData';
+import Notifications from './notifications';
 
 
 
@@ -45,6 +46,7 @@ export class AppView extends React.Component<ComponentProps, State>{
                 <img className='route__background' src={this.getBackground()} alt="background" />
                 <AppHeader />
                 {this.props.children}
+                <Notifications />
             </div>
         )
     }

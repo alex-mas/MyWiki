@@ -86,7 +86,6 @@ export const parsePlugins: ParsePluginActionCreator = () =>{
                     const fileContents = await fsp.readFile(`./plugins/${plugin}/plugin.config.json`, 'utf8');
                     const data: PluginMetaData = JSON.parse(fileContents);
                     data.loaded = false;
-                    debugger;
                     pluginHooks.initialize(data);
                     dispatch(parsePlugin(data));
                     return data;

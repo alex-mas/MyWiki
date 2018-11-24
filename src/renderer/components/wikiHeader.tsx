@@ -5,6 +5,7 @@ import { withHistoryContext, MemoryHistory, MemoryLink } from '@axc/react-compon
 import HomeButton from './homeButton';
 import WikiSearchBar from './wikiSearchBar';
 import WikiMenu from './wikiMenu';
+import Notifications from './notifications';
 
 interface WikiHeaderProps {
 

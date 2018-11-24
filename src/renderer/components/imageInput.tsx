@@ -49,6 +49,7 @@ export class ImageInput extends React.PureComponent<ComponentProps, any>{
                 <Button
                     btnType='flat'
                     theme='primary'
+                    mode='disabled'
                     className={`${className}__prompt`}
                     onClick={this.changeBackgroundImage}
                 >
