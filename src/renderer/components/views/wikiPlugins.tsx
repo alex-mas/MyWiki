@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import { AppState } from '../../store/store';
 import { PluginState } from '../../store/reducers/plugins';
 import WikiView  from '../wikiView';
-
+import { loadPlugin } from '../../actions/plugins';
 
 interface OwnProps {
  
@@ -12,8 +12,10 @@ interface OwnProps {
 interface ReduxProps {
     plugins: PluginState
 }
-
-type ComponentProps = OwnProps  & ReduxProps;
+interface DispatchProps{
+    loadPlugin:typeof loadPlugin;
+}
+type ComponentProps = OwnProps  & ReduxProps & DispatchProps;
 
 export class WikiPluginsPage extends React.Component<ComponentProps, any>{
     render() {
@@ -26,6 +28,7 @@ export class WikiPluginsPage extends React.Component<ComponentProps, any>{
                                 {plugin.name} -  {plugin.version} - {plugin.id} - {plugin.loaded ? 'loaded' : 'not loaded'}
                                 {plugin.description}
                                 Main: {plugin.main}
+                                <button onClick={()=>this.props.loadPlugin(plugin)}>test</button>
                             </div>
                         )
                     })}
@@ -41,5 +44,5 @@ export default connect((state: AppState, props: OwnProps)=>{
         plugins: state.plugins
     }
 }, {
-
+    loadPlugin
 })(WikiPluginsPage);

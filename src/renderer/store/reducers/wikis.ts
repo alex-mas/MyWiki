@@ -11,12 +11,13 @@ export interface WikiMetadata {
     description: string
     id: string,
     articles: ArticleMetaData[],
-    selected: boolean
+    selected: boolean,
+    installedPlugins: String[]
 }
 
 
 
-export type UserDefinedWikiMetadata = Omit<WikiMetadata, 'selected' | 'id' | 'articles'>
+export type UserDefinedWikiMetadata = Omit<WikiMetadata, 'selected' | 'id' | 'articles' |'installedPlugins'>
 export type WikisMetadataState = WikiMetadata[];
 
 const defaultState: WikisMetadataState = [];

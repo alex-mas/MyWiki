@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware, compose, Dispatch, Store, Reducer,Middleware, ReducersMapObject } from 'redux';
 import { AnyAction } from "redux";
-import { ThunkAction, ThunkMiddleware } from "redux-thunk";
+import { ThunkAction, ThunkMiddleware, ThunkDispatch } from "redux-thunk";
 import thunk from 'redux-thunk';
 import errorHandler from './middleware/errorHandler';
 import wikis, { WikiMetadata } from './reducers/wikis';
@@ -26,9 +26,6 @@ export interface AppState {
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 
-
-
-
 export const configureStore = () => {
     const store: Store<AppState, AnyAction> = createStore(
         combineReducers<AppState, AnyAction>({
@@ -41,6 +38,7 @@ export const configureStore = () => {
         }),
         composeEnhancers(applyMiddleware(thunk, errorHandler))
     );
+    store.dispatch = store.dispatch as ThunkDispatch<AppState,undefined,AnyAction>;
     return store;
 }
 
@@ -65,6 +63,9 @@ export class AppStore {
             this.onReducerChange();
         }
     }
+    getStore = ()=>{
+        return this.store;
+    }
 }
 
 
@@ -79,6 +80,7 @@ export default () => {
             i18n,
             notifications
         }),
+        
         composeEnhancers(applyMiddleware(thunk, errorHandler))
     );
     return store;

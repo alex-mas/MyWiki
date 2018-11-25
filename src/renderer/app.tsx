@@ -16,7 +16,7 @@ import AppRouter from './router/router';
 import { loadWikis, loadWiki, saveWikis } from './actions/wikis';
 import { WikiMetadata } from './store/reducers/wikis';
 import { fsError } from './actions/errors';
-import { parsePlugins } from './actions/plugins';
+import { parsePlugins, parsePlugin } from './actions/plugins';
 import I18String, { I18nSystem as _I18nSystem, I18nSystemProps } from '@axc/react-components/display/i18string';
 import { PromptSystem } from '@axc/react-components/interactive/prompt';
 import { AnyAction } from 'redux';
@@ -24,11 +24,11 @@ import { ThreadManager, WorkDistributionStrategy } from '@axc/thread-manager';
 import { onRecieveArticleKeywords } from './actions/ml';
 import { AppData } from './store/reducers/appData';
 import { setAppData, saveAppData, loadAppData } from './actions/appData';
-import { Plugins } from './plugins/plugins';
+import { PluginManager } from './plugins/plugins';
 import { createNotification } from './actions/notifications';
 
 
-export const plugins = new Plugins();
+export const pluginManager = new PluginManager();
 export const store = configureStore();
 export const mlThreads = new ThreadManager(
     './workers/ml.js',
@@ -77,8 +77,10 @@ window.onload = () => {
     store.dispatch(loadWikis());
     //@ts-ignore
     store.dispatch(loadAppData());
+
     //@ts-ignore
     store.dispatch(parsePlugins());
+    
     store.dispatch(createNotification('Test', 'this is a description', 'face'));
     store.dispatch(createNotification('Test', 'this is a description', 'face'));
     store.dispatch(createNotification('Test', 'this is a description', 'face'));

@@ -71,4 +71,25 @@
     i{
         font-size: $size-l;
     }
+    &.button-flat--secondary{
+        .notifications-button__number {
+            position: absolute;
+            top: calc(50% - 7.5px);
+            left: calc(50% - 3.7px);
+            /* align-content: center; */
+            text-align: center;
+            color: black;
+        }
+    }
+    &.button-flat--primary--accent{
+        .notifications-button__number {
+            position: absolute;
+            top: calc(50% - 7.5px);
+            left: calc(50% - 3.7px);
+            text-align: center;
+            color: white;
+        }
+    }
 }
+
+

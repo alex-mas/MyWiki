@@ -4,13 +4,14 @@ import * as fsp from '../../utils/promisify-fs';
 import * as path from 'path';
 import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
-import { fsError, ErrorAction, ErrorActionCode} from "./errors";
+import { fsError, ErrorAction, ErrorActionCode, errorAction} from "./errors";
 import { isPluginLoaded } from "../selectors/plugins";
 import {Action} from 'redux';
 import { isPluginMetaDataValid } from "../validators/plugins";
 import { settle } from "../../utils/promise";
 import { ActionWithPayload, AsyncACreator } from "../../utils/typeUtils";
-import { plugins as pluginHooks } from "../app";
+import { pluginManager } from "../app";
+import { getSelectedWiki } from "../selectors/wikis";
 
 export const LOAD_PLUGIN = 'LOAD_PLUGIN';
 export const UNLOAD_PLUGIN = 'UNLOAD_PLUGIN';
@@ -31,14 +32,16 @@ const _loadPlugin = (plugin: PluginMetaData)=>{
 
 
 export const loadPlugin: LoadPluginActionCreator = (pluginMetaData)=>{
-    return async(dispatch:any, getState: any)=>{
+    return async(dispatch, getState)=>{
         const state = getState();
         if(isPluginLoaded(pluginMetaData.id, state.plugins)){
-            //dispatch error, plugin cant be loaded twice
+            dispatch(errorAction(
+                'plugin is already loaded, can\'t load it twice', 
+                ErrorActionCode.INCORRECT_ACTION
+            ));
         }else{
-            //validate meta data -> if its correct load it, else dispatch error
             if(isPluginMetaDataValid(pluginMetaData)){
-                pluginHooks.load(pluginMetaData.id);
+                pluginManager.load(pluginMetaData.id);
                 return dispatch(_loadPlugin(pluginMetaData));
             }
             
@@ -47,10 +50,7 @@ export const loadPlugin: LoadPluginActionCreator = (pluginMetaData)=>{
 }
 
 export const loadPlugins = ()=>{
-    return(dispatch:any, getState:any)=>{
-        return new Promise(async(resolve,reject)=>{
-           
-        });
+    return async (dispatch:any, getState:any)=>{
     }
 }
 
@@ -83,10 +83,10 @@ export const parsePlugins: ParsePluginActionCreator = () =>{
             const plugins = await fsp.readdir('./plugins');
             const pluginData= await Promise.all(plugins.map(async(plugin)=>{
                 try{
-                    const fileContents = await fsp.readFile(`./plugins/${plugin}/plugin.config.json`, 'utf8');
-                    const data: PluginMetaData = JSON.parse(fileContents);
+                    const fileContents = fsp.readFile(`./plugins/${plugin}/plugin.config.json`, 'utf8');
+                    const data: PluginMetaData = JSON.parse(await fileContents);
                     data.loaded = false;
-                    pluginHooks.initialize(data);
+                    pluginManager.initialize(data);
                     dispatch(parsePlugin(data));
                     return data;
                 }catch(e){

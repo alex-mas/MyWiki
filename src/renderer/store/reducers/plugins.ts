@@ -1,5 +1,5 @@
 import { Reducer, AnyAction } from "redux";
-import { PARSE_PLUGIN } from "../../actions/plugins";
+import { PARSE_PLUGIN, LOAD_PLUGIN } from "../../actions/plugins";
 
 
 export interface Plugin {
@@ -16,7 +16,7 @@ export interface PluginMetaData {
     loaded: boolean
 }
 
-export type PluginState=  PluginMetaData[];
+export type PluginState = PluginMetaData[];
 const defaultPluginState: PluginState = []
 
 
@@ -24,6 +24,18 @@ export const pluginReducer: Reducer<PluginState> = (state: PluginState = default
     switch (action.type) {
         case PARSE_PLUGIN:
             return [...state, action.plugin]
+        case LOAD_PLUGIN:
+            return state.map((plugin) => {
+                if (plugin.id === action.plugin.id) {
+                    return {
+                        ...plugin,
+                        loaded: true
+                    }
+                } else {
+                    return plugin;
+                }
+
+            })
         default:
             return state;
     }

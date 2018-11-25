@@ -11,6 +11,7 @@ import { deleteFolderRecursively } from '../../utils/fsutils';
 import { Article, ArticleMetaData, getArticleMetaData } from "./article";
 import { ActionWithPayload, AsyncACreator, ACreator } from "../../utils/typeUtils";
 import { store } from "../app";
+import { parsePlugins } from "./plugins";
 
 
 export const CREATE_WIKI = 'CREATE_WIKI';
@@ -55,7 +56,8 @@ export const createWiki: CreateWikiActionCreator = (wiki: UserDefinedWikiMetadat
                 background: wiki.background,
                 description: wiki.description,
                 articles: [],
-                selected: false
+                selected: false,
+                installedPlugins: []
             }
             await fsp.mkdir(wikiPath);
             await fsp.mkdir(path.join(wikiPath, 'articles'));
@@ -108,18 +110,19 @@ export type SelectWikiActionCreator = ActionCreator<ThunkAction<any, AppState, v
 //TODO: Populate articles array here
 export const selectWiki: SelectWikiActionCreator = (id: string) => {
     return async(dispatch, getState) => {
-        return new Promise((resolve, reject) => {
-            const state = getState();
-            const wiki = state.wikis.find((wiki) => wiki.id === id);
-            if (wiki) {
-                resolve(dispatch({
-                    type: SELECT_WIKI,
-                    wiki
-                }));
-            } else {
-                reject(dispatch(errorAction(`Wiki id (${id}) provided doesn't mach with any of the wikis tracked by the app`, ErrorActionCode.WRONG_PARAMS)));
-            }
-        })
+        const state = getState();
+        const wiki = state.wikis.find((wiki) => wiki.id === id);
+        if (wiki) {
+            dispatch({
+                type: SELECT_WIKI,
+                wiki
+            });
+            //TODO: Delay parsing plugins until wiki is selected
+            dispatch(parsePlugins());
+        } else {
+            dispatch(errorAction(`Wiki id (${id}) provided doesn't mach with any of the wikis tracked by the app`, ErrorActionCode.WRONG_PARAMS));
+        }
+
 
     }
 }

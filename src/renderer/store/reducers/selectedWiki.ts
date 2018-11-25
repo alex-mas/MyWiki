@@ -14,7 +14,8 @@ const defaultState: WikiMetadata = {
     articles: [],
     background: '../../../resources/images/radiant.png',
     description: '',
-    selected: true
+    selected: true,
+    installedPlugins:[]
 };
 
 export const SelectedWikiReducer: Reducer<WikiMetadata> = (state: WikiMetadata = defaultState, action: AnyAction) => {

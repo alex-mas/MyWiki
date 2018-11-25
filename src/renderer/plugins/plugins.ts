@@ -2,6 +2,9 @@ import * as EventEmitter from 'events';
 import uuid from 'uuid/v4';
 import { PluginMetaData } from '../store/reducers/plugins';
 import * as path from 'path';
+
+
+
 export type Listener = (...args: any[]) => void;
 
 
@@ -19,7 +22,7 @@ class PluginHooks {
 
 
 
-export class Plugins{
+export class PluginManager{
     plugins: PluginHooks[];
     constructor(){
         this.plugins = [];
@@ -39,18 +42,18 @@ export class Plugins{
     }
 
     load = (id:string)=>{
-        this.getPlugin(id).events.emit('load');
+        this.getPlugin(id).events.emit('load',{});
     }
 
     install = (id:string)=>{
-        this.getPlugin(id).events.emit('install');
+        this.getPlugin(id).events.emit('install',{});
     }
 
     unload = (id:string)=>{
-        this.getPlugin(id).events.emit('unload');
+        this.getPlugin(id).events.emit('unload',{});
     }
     uninstall = (id:string)=>{
-        this.getPlugin(id).events.emit('uninstall');
+        this.getPlugin(id).events.emit('uninstall',{});
     }
     
 }
