@@ -11,9 +11,37 @@ export type Listener = (...args: any[]) => void;
 class PluginHooks {
     public id: string;
     public events: EventEmitter;
+    private listeners: EventListener[] = [];
     constructor(id:string){
         this.id = id;
         this.events = new EventEmitter();  
+    }
+    generateEventListener = (event:string,eventListener:  EventListener | ((evt: Event)=>Promise<void>))=>{
+        return(event:Event)=>{
+            const p = eventListener(event);
+            if(p){
+                p.then(()=>{
+                    this.events.emit(`finished-${event}`);
+                })
+                .catch((e)=>{
+                    throw e;
+                });
+            }else{
+                this.events.emit(`finished-${event}`);
+            }
+        }
+    }
+    addEventListener = (event: string, func: (evt: Event)=>Promise<void> | EventListener)=>{
+        if(
+            event !== 'install'     &&
+            event !== 'uninstall'   &&
+            event !== 'load'        &&
+            event !== 'unload'     
+        ){
+            throw new Error('Plugin attempted to register an unauthorized event');
+        }
+        const listener = this.generateEventListener(event,func);
+        this.events.addListener(event,listener);
     }
 }
 

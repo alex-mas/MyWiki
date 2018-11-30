@@ -20,8 +20,7 @@ export const UNINSTALL_PLUGIN = 'UNINSTALL_PLUGIN';
 export const PARSE_PLUGIN = 'PARSE_PLUGIN';
 
 
-export type LoadPluginAction = ActionWithPayload<{plugin: PluginMetaData}>;
-export type LoadPluginActionCreator = AsyncACreator<[PluginMetaData],LoadPluginAction>;
+
 
 const _loadPlugin = (plugin: PluginMetaData)=>{
     return{
@@ -29,8 +28,51 @@ const _loadPlugin = (plugin: PluginMetaData)=>{
         plugin
     }
 }
+const _unloadPlugin = (id: string)=>{
+    return{
+        type: UNLOAD_PLUGIN,
+        id
+    }
+}
+
+const _installPlugin = (id: string)=>{
+    return{
+        type: INSTALL_PLUGIN,
+        id
+    }
+}
+
+const _uninstallPlugin = (id: string)=>{
+    return{
+        type: UNINSTALL_PLUGIN,
+        id
+    }
+}
 
 
+
+export type InstallPluginAction = ActionWithPayload<{plugin: PluginMetaData}>;
+export type InstallPluginActionCreator = AsyncACreator<[string],InstallPluginAction>;
+export const installPlugin: InstallPluginActionCreator = (id: string)=>{
+    return async (dispatch,getState)=>{
+        const plugin = getState().plugins.find((plugin)=>plugin.id===id);
+        if(!plugin){
+            return dispatch(errorAction("Attempted to load a plugin that doesn't exist",ErrorActionCode.INCORRECT_ACTION));
+        }
+        try{
+            pluginManager.install(id);
+            return plugin;
+        }
+        catch(e){
+            dispatch(errorAction(`Error while installing plugin ${plugin.name} - ${plugin.id}`,ErrorActionCode.PLUGIN_RUNTIME_ERROR));
+            throw e;
+        }
+    }
+}
+
+
+export type LoadPluginAction = ActionWithPayload<{plugin: PluginMetaData}>;
+export type LoadPluginActionCreator = AsyncACreator<[PluginMetaData],LoadPluginAction>;
 export const loadPlugin: LoadPluginActionCreator = (pluginMetaData)=>{
     return async(dispatch, getState)=>{
         const state = getState();
@@ -55,12 +97,6 @@ export const loadPlugins = ()=>{
 }
 
 
-export const unloadPlugin = (id: string)=>{
-    return{
-        type: UNLOAD_PLUGIN,
-        id
-    }
-}
 
 
 export const parsePlugin = (pluginMetaData: PluginMetaData) =>{

@@ -16,7 +16,8 @@ export enum ErrorActionCode{
     FS = 1,
     NETWORK = 2,
     WRONG_PARAMS = 3,
-    INCORRECT_ACTION = 4
+    INCORRECT_ACTION = 4,
+    PLUGIN_RUNTIME_ERROR = 5
 }
 
 export const isErrorAction = (obj: AnyAction): obj is ErrorAction=>{
