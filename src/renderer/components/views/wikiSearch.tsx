@@ -88,7 +88,6 @@ export class ArticleSearchPage extends React.Component<ComponentProps, Component
                         {this.props.searchResults.length === 0 ? this.renderNotFoundMessage() : null}
                     </ul>
                 </div>
-
             </WikiView>
         );
     }

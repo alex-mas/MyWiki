@@ -81,12 +81,6 @@ window.onload = () => {
     //@ts-ignore
     store.dispatch(parsePlugins());
     
-    store.dispatch(createNotification('Test', 'this is a description', 'face'));
-    store.dispatch(createNotification('Test', 'this is a description', 'face'));
-    store.dispatch(createNotification('Test', 'this is a description', 'face'));
-    store.dispatch(createNotification('Test', 'this is a description', 'face'));
-    store.dispatch(createNotification('Test', 'this is a description', 'face'));
-
 }
 
 window.onbeforeunload = () => {

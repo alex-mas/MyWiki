@@ -103,9 +103,7 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
     }
     renderArticleNotFound = () => {
         return (
-            <div className='wiki-route'>
-                <img className='wiki-background' src={this.getBackground()} alt="" />
-                <WikiHeader />
+            <WikiView background={this.getBackground()}>
                 <div className='body--article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
@@ -116,12 +114,7 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
                         </div>
                     </div>
                 </div>
-                <div
-                    className='wiki-article__body'
-                >
-                </div>
-
-            </div>
+            </WikiView>
         )
     }
     getBackground = () => {
