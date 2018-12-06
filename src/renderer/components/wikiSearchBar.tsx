@@ -5,6 +5,8 @@ import { AppState } from '../store/store';
 import AutoComplete from '@axc/react-components/interactive/autoComplete';
 import { withHistoryContext, MemoryHistory } from '@axc/react-components/navigation/memoryRouter';
 import { getSelectedWiki } from '../selectors/wikis';
+import { reduxI18nService, i18n} from '../app';
+
 
 interface OwnProps {
     history: MemoryHistory
@@ -57,7 +59,7 @@ export class WikiSearchBar extends React.Component<ComponentProps, ComponentStat
         return (
             <AutoComplete
                 value={this.state.value}
-                placeholder='search article'
+                placeholder={i18n('search article')}
                 getSuggestions={this.getSuggestions}
                 onChange={this.onChange}
                 onSubmit={this.visitArticle}

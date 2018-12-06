@@ -6,7 +6,7 @@ import * as path from 'path';
 import { errorAction, fsError, ErrorAction, ErrorActionCode } from "./errors";
 import { ValueJSON, Value } from "slate";
 import { ActionWithPayload, AsyncACreator, ACreator } from "../../utils/typeUtils";
-import { generateArticleKeywords } from "../services/ml";
+import { mlService } from "../app";
 
 
 export const LOAD_ARTICLE = 'LOAD_ARTICLE';
@@ -81,7 +81,7 @@ export const createArticle: CreateArticleActionCreator = (article) => {
         const wiki = state.selectedWiki;
         console.log('Article about to be created: ',article);
         try {
-            generateArticleKeywords(article);
+            mlService.generateArticleKeywords(article);
             await fsp.writeFile(
                 getArticlePath(wiki, article.name),
                 JSON.stringify(article),
@@ -170,7 +170,7 @@ export const saveArticle: SaveArticleActionCreator = (article: Article) => {
     return async(dispatch, getState) => {
         const selectedWiki = getState().selectedWiki;
         try{
-            generateArticleKeywords(article);
+            mlService.generateArticleKeywords(article);
             await fsp.writeFile(
                 getArticlePath(selectedWiki, article.name),
                 JSON.stringify(article),

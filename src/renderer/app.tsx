@@ -25,16 +25,19 @@ import { AppData } from './store/reducers/appData';
 import { setAppData, saveAppData, loadAppData } from './actions/appData';
 import { PluginManager } from './plugins/plugins';
 import { createNotification, removeNotification } from './actions/notifications';
-import initializeMLService from './services/ml';
+import MLService from './services/ml';
+import ReduxI18N from './services/i18n';
 
 
 export const pluginManager = new PluginManager();
 export const store = configureStore();
-const MLService = initializeMLService(store);
+export const mlService = new MLService(store);
+export const reduxI18nService= new ReduxI18N(store);
+mlService.initialize();
+reduxI18nService.initialize();
+export const i18n = reduxI18nService.traduce;
 
 const appRoot = document.getElementById('app');
-
-
 
 
 
