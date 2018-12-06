@@ -2,9 +2,9 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as fs from 'fs';
 import * as fsp from '../utils/promisify-fs';
-//@ts-ignore
+
+require('animate.css/animate.min.css');
 require('@axc/react-components/styles/axc-styles.css');
-//@ts-ignore
 require('./styles/index.scss');
 
 
@@ -21,31 +21,20 @@ import I18String, { I18nSystem as _I18nSystem, I18nSystemProps } from '@axc/reac
 import { PromptSystem } from '@axc/react-components/interactive/prompt';
 import { AnyAction } from 'redux';
 import { ThreadManager, WorkDistributionStrategy } from '@axc/thread-manager';
-import { onRecieveArticleKeywords } from './actions/ml';
 import { AppData } from './store/reducers/appData';
 import { setAppData, saveAppData, loadAppData } from './actions/appData';
 import { PluginManager } from './plugins/plugins';
-import { createNotification } from './actions/notifications';
+import { createNotification, removeNotification } from './actions/notifications';
+import initializeMLService from './services/ml';
 
 
 export const pluginManager = new PluginManager();
 export const store = configureStore();
-export const mlThreads = new ThreadManager(
-    './workers/ml.js',
-    {
-        amountOfWorkers: 1,
-        distributionStrategy: WorkDistributionStrategy.ROUND_ROBIN
-    }
-);
-
+const MLService = initializeMLService(store);
 
 const appRoot = document.getElementById('app');
 
 
-
-//TODO: get rid of initializing mlThreads middleware here
-
-mlThreads.use(onRecieveArticleKeywords);
 
 
 
@@ -91,6 +80,5 @@ window.onbeforeunload = () => {
 
 
 export default {
-    store,
-    mlThreads
+    store
 }

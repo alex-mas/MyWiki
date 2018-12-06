@@ -6,7 +6,7 @@ import * as path from 'path';
 import { errorAction, fsError, ErrorAction, ErrorActionCode } from "./errors";
 import { ValueJSON, Value } from "slate";
 import { ActionWithPayload, AsyncACreator, ACreator } from "../../utils/typeUtils";
-import { generateArticleKeywords } from "./ml";
+import { generateArticleKeywords } from "../services/ml";
 
 
 export const LOAD_ARTICLE = 'LOAD_ARTICLE';

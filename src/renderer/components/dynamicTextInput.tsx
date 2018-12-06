@@ -45,14 +45,14 @@ export class DynamicTextInput extends React.Component<any, ComponentState>{
     }
     render() {
         //input size grows larger when text size grows if we just specify the character count so we have to adjust it
-        const width = this.state.characters*(1/(1+this.state.characters/250))-2;
+        const width = this.state.characters*(1/(1+this.state.characters/270))-2;
         return (
             <input
                 {...this.props}
                 type="text"
                 onKeyDown={this.onKeyDown}
                 style={{
-                    width: width > 0 ?`${width}ch` : '5ch',
+                    width: width !== undefined ?`${width}ch` : `${this.props.defaultWidth}ch`,
                     ...this.props.style ? this.props.style : {}
                 }}
             />

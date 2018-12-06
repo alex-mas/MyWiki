@@ -10,7 +10,7 @@ import { getSelectedWiki } from '../../../selectors/wikis';
 
 
 
-export interface OwnProps {
+interface OwnProps {
     active: boolean,
     text?: string,
     to: string
@@ -21,11 +21,11 @@ export interface OwnProps {
 }
 
 
-export interface ReduxProps {
+interface ReduxProps {
     selectedWiki: WikiMetadata
 }
 
-export type ComponentProps = OwnProps & ReduxProps;
+type ComponentProps = OwnProps & ReduxProps;
 
 export class WikiLink extends React.Component<ComponentProps, any>{
     constructor(props: any) {

@@ -23,6 +23,7 @@ import { generatePluginID } from './utilities/plugin';
 
 
 
+
 export type WikiEditorPluginCreator = (context: EditorPluginContext) => WikiEditorPlugin;
 
 export interface WikiEditorPlugin extends Plugin {
@@ -32,7 +33,7 @@ export interface WikiEditorPlugin extends Plugin {
 
 export interface EditorPluginContext {
     getContent: () => Value,
-    getEditor: ()=>Editor,
+    getEditor: () => Editor,
     onChange: (change: { operations: any, value: Value }) => any,
     isReadOnly: () => boolean
 }
@@ -45,26 +46,6 @@ export const emptyParagraph: BlockJSON = {
     type: 'paragraph'
 };
 
-export const defaultEditorContents = Value.fromJSON({
-    document: {
-        nodes: [
-            {
-                object: 'block',
-                type: 'paragraph',
-                nodes: [
-                    {
-                        object: 'text',
-                        leaves: [
-                            {
-                                text: 'Insert your content here',
-                            },
-                        ],
-                    },
-                ],
-            },
-        ],
-    },
-});
 
 
 
@@ -165,10 +146,10 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             isReadOnly: this.isReadOnly
         }
     }
-    getEditor = ()=>{
-        if(typeof this.editor === 'object'){
+    getEditor = () => {
+        if (typeof this.editor === 'object') {
             return this.editor.current as Editor;
-        }else{
+        } else {
             throw new Error('attempted to acces editor when its ref is not yet set');
         }
     }
@@ -180,7 +161,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
     }
     getPlugins = () => {
         const pluginContext = this.getPluginContext();
-        const plugins =[
+        const plugins = [
             BoldPlugin(pluginContext),
             ItalicPlugin(pluginContext),
             UnderlinedPlugin(pluginContext),
@@ -195,11 +176,11 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             UndoPlugin(pluginContext),
             RedoPlugin(pluginContext),
             TablePlugin(pluginContext),
-            ...this.props.plugins.map((pluginConstructor)=>{
+            ...this.props.plugins.map((pluginConstructor) => {
                 const plugin = pluginConstructor(pluginContext);
-                if(plugin.id){
+                if (plugin.id) {
                     return plugin;
-                }else{
+                } else {
                     return generatePluginID(plugin);
                 }
             })
@@ -214,7 +195,9 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     ref={this.editor}
                     plugins={this.state.plugins}
                     readOnly={this.props.readOnly}
+                    //@ts-ignore
                     value={this.props.content}
+                    //@ts-ignore
                     onChange={this.props.onChange}
                     className='wiki-editor'
                 />
@@ -237,9 +220,12 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                         ref={this.editor}
                         plugins={this.state.plugins}
                         readOnly={this.props.readOnly}
+                        //@ts-ignore
                         value={this.props.content}
+                        //@ts-ignore
                         onChange={this.props.onChange}
                         className='wiki-editor'
+                        //@ts-ignore
                         schema={schema}
                     />
                 </div>

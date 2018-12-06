@@ -1,6 +1,4 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import AppHeader from '../components/appHeader';
+import * as React from 'react';;
 import ImageInput from '../components/imageInput';
 import I18String, { ISO639Locale } from '@axc/react-components/display/i18string';
 import { withHistoryContext, MemoryHistory } from '@axc/react-components/navigation/memoryRouter';

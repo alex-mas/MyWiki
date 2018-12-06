@@ -5,7 +5,8 @@ import { RouteProps } from '../../router/router';
 import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetadata } from '../../store/reducers/wikis';
-import WikiEditor, { defaultEditorContents } from '../wikiEditor/wikiEditor';
+import WikiEditor from '../wikiEditor/wikiEditor';
+import defaultEditorContents from '../wikiEditor/utilities/defaultValue';
 import { MemoryRouteProps } from '@axc/react-components/navigation/memoryRouter';
 import { Value } from 'slate';
 import { CreateArticleActionCreator, createArticle } from '../../actions/article';
@@ -17,6 +18,7 @@ import WikiHeader from '../wikiHeader';
 import I18String from '@axc/react-components/display/i18string';
 import WikiView from '../wikiView';
 import { getSelectedWiki } from '../../selectors/wikis';
+import DynamicTextInput from '../dynamicTextInput';
 
 
 interface DispatchProps {
@@ -110,9 +112,8 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
                                     {this.props.routeParams.article ?
                                         this.state.name
                                         :
-                                        <input
+                                        <DynamicTextInput
                                             className='wiki-article__header-input'
-                                            type="text"
                                             value={this.state.name}
                                             onChange={this.onNameChange}
                                             placeholder='Article Name'

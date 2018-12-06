@@ -1,11 +1,9 @@
 import * as React from 'react';
-import * as fs from 'fs';
-import * as path from 'path';
-import { RouteProps } from '../../router/router';
 import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
-import WikiEditor, { defaultEditorContents } from '../wikiEditor/wikiEditor';
+import WikiEditor from '../wikiEditor/wikiEditor';
+import defaultEditorContents from '../wikiEditor/utilities/defaultValue';
 import * as ReactMarkdown from 'react-markdown';
 import { Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../../actions/errors';

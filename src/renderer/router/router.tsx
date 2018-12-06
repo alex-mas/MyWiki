@@ -17,11 +17,12 @@ const AppRouter = () => {
     return (
         <Router startingRoute='/' singleRoute>
             <MemoryRoute path='/' exact component={HomePage} />
-            <MemoryRoute path='/wiki/article/:article' exact component={WikiArticlePage} />
+            <MemoryRoute path='/plugins' exact component={()=>'not implementedYet'}/>
+            <MemoryRoute path='/wiki/plugins' exact component={WikiPluginsPage}/>
             <MemoryRoute path='/wiki/edit/:article' exact component={WikiEditPage} />
             <MemoryRoute path='/wiki/create/:article' exact component={CreateArticlePage}/>
+            <MemoryRoute path='/wiki/article/:article' exact component={WikiArticlePage} />
             <MemoryRoute path='/wiki/search/:articleName' exact component={ArticleSearchPage}/>
-            <MemoryRoute path='/wiki/plugins' exact component={WikiPluginsPage}/>
             <MemoryRoute path='' component={NotFoundPage} />
         </Router>
     );
