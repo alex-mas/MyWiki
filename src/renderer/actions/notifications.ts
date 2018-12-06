@@ -22,7 +22,8 @@ export const createNotification: ACreateNotificationCreator = (title: string, de
             title,
             description,
             icon,
-            isRead: false
+            isRead: false,
+            createdAt: Date.now()
         }
 
     }

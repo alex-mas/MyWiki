@@ -5,6 +5,7 @@ import { AppState } from '../store/store';
 import { removeNotification, removeAllNotifications, markNotificationAsRead, markAllNotificationsAsRead } from '../actions/notifications';
 import NotificationList from './notificationList';
 import NotificationsButton from './notificationsButton';
+import RecentNotifications from './recentNotifications';
 
 
 interface OwnProps {
@@ -46,6 +47,9 @@ export class Notifications extends React.Component<Props, State>{
                 />
                 <NotificationList
                     isActive={this.state.shouldDisplayNotifications}
+                />
+                <RecentNotifications
+                    isActive={!this.state.shouldDisplayNotifications}
                 />
             </div>
         )

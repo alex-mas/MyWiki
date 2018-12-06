@@ -18,7 +18,8 @@ export interface Notification {
     title: string,
     description: string,
     icon: string,
-    isRead: boolean
+    isRead: boolean,
+    createdAt: number
 }
 
 export type NotificationState = Notification[];

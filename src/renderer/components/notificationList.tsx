@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Notification } from '../store/reducers/notifications';
 import { AppState } from '../store/store';
 import { removeNotification, removeAllNotifications, markNotificationAsRead, markAllNotificationsAsRead } from '../actions/notifications';
+import NotificationComponent from './notification';
 
 interface ReduxProps {
     notifications: Notification[]
@@ -19,47 +20,6 @@ interface OwnProps {
 }
 type Props = DispatchProps & ReduxProps & OwnProps;
 
-interface NotificationProps {
-    notification: Notification
-    onRemove: (id: string) => any,
-}
-
-
-class NotificationComponent extends React.PureComponent<NotificationProps, any>{
-    onRemove = () => {
-        this.props.onRemove(this.props.notification.id);
-    }
-    render() {
-        const { notification } = this.props;
-        return (
-            <li className='notification'>
-                <div key='icon' className='notification__icon'>
-                    <i className='material-icons'>
-                        {notification.icon}
-                    </i>
-                </div>
-                <div key='contents' className='notification__contents'>
-                    <div className='notification__title'>
-                        {notification.title}
-                    </div>
-                    <div className='notification__description'>
-                        {notification.description}
-                    </div>
-                </div>
-                <div key='actions' className='notification__actions'>
-                    <button
-                        className='notification__action'
-                        onClick={this.onRemove}
-                    >
-                        <i className='material-icons'>
-                            check
-                        </i>
-                    </button>
-                </div>
-            </li>
-        )
-    }
-}
 
 class NotificationList extends React.PureComponent<Props, any>{
     render() {

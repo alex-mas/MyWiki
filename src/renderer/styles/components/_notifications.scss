@@ -23,6 +23,7 @@
     padding: 0.4rem;
     border-radius: 10px;
     box-shadow: $elevation-3p;
+
 }
 
 .notification-list:after{
@@ -93,3 +94,12 @@
 }
 
 
+
+
+.recent-notification{
+    animation: bounceInUp 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.removed-notification{
+    animation: bounceOutDown 0.8s ease-in !important;
+}

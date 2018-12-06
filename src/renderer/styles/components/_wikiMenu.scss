@@ -2,22 +2,39 @@
 
 .wiki-menu__container{
     position: absolute;
-    background-color:var(--theme-primary);
     top: 3rem;
     width: calc(10rem + 9px);
     left: -4rem;
     height: 20vh;
     overflow-y: scroll;
-    animation-name: wikiDropDown;
-    animation-duration: 1s;
-    animation-timing-function: ease-out;
+    &::-webkit-scrollbar{
+        width: 0.5em;
+        height: 0.5em;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 3px;
+        &:hover {
+            background: rgba(255,255,255,0.2);
+        }
+    }
+    &::-webkit-scrollbar-thumb{
+        background-color: rgba(255,255,255,0.5);
+    }
+    &::-webkit-scrollbar-thumb:hover{
+        background-color: rgba(255, 255, 255, 0.8);
+    }
 }
 
-.wiki-menu__list{
+.wiki-menu{
+    width: 100%;
     list-style: none;
     color:black;
     display: flex;
     flex-direction: column;
+    background-color:var(--theme-primary);
+    animation-name: wikiDropDown;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+    overflow-y: hidden;
 }
 
 .wiki-menu__item{
@@ -52,9 +69,9 @@
 
 @keyframes wikiDropDown{
     0%{
-        height: 0vh;
+        height: 0%;
     }
     100%{
-        height: 20vh;
+        height: 100%;
     }
 }

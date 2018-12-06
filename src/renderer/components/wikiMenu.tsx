@@ -22,7 +22,7 @@ export class WikiMenu extends React.Component<ComponentProps, any>{
         if (this.props.isOpen) {
             return (
                 <div className='wiki-menu__container'>
-                    <ul className='wiki-menu__list'>
+                    <ul className='wiki-menu'>
                         <section className='wiki-menu__section'>
                             <li className='wiki-menu__item'>
                                 <MemoryLink
