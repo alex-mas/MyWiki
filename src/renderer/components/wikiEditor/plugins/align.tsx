@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RenderNodeProps, Plugin } from "slate-react";
 import { EditorPluginContext, DEFAULT_NODE } from '../wikiEditor';
 import EditorButton from '../components/editorButton';
-import { Value, } from 'slate';
+import { Value, Editor, } from 'slate';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
 
 
@@ -26,7 +26,7 @@ export const generateAlignmentPlugins = (context: EditorPluginContext) => {
             </div>
         );
     }
-    const onClickButton = (event: React.MouseEvent<HTMLSpanElement>, type: string, data: any) => {
+    const toggleAlign = (event: React.MouseEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLElement>, type: string, data: any) => {
         event.preventDefault()
         const value = context.getContent();
         const editor = context.getEditor();
@@ -120,7 +120,7 @@ export const generateAlignmentPlugins = (context: EditorPluginContext) => {
                 }
                 return (
                     <EditorButton
-                        onClick={onClickButton}
+                        onClick={toggleAlign}
                         active={isActive}
                         icon={`format_align_${alignment}`}
                         type={'align'}
@@ -129,6 +129,19 @@ export const generateAlignmentPlugins = (context: EditorPluginContext) => {
                         }}
                     />
                 );
+            },
+            onKeyDown: (event: React.KeyboardEvent<any>, editor: Editor, next: Function) => {
+                if(event.ctrlKey &&  event.shiftKey &&
+                    (
+                        event.key === 'ArrowRight' || 
+                        event.key === 'ArrowLeft'
+                    )
+                    ){
+                        const direction = event.key.split('Arrow')[1].toLocaleLowerCase();
+                        toggleAlign(event, 'align', {align: direction});
+                }else{
+                    next();
+                }
             }
         }
     });
