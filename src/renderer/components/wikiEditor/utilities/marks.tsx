@@ -28,10 +28,14 @@ export const onClickMarkButton = (context:EditorPluginContext)=>{
         editor.toggleMark({type,data});
     }
 }
+export const toggleMark = (editor: Editor,type:string,data?:any)=>{
+    editor.toggleMark({type,data});
+}
 
 
 export default {
     hasMarkType,
     RenderMark,
-    onClickMarkButton
+    onClickMarkButton,
+    toggleMark
 }

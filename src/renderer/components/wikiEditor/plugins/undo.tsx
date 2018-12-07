@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { RenderNodeProps, Editor } from "slate-react";
+import { RenderNodeProps} from "slate-react";
 import { EditorPluginContext } from '../wikiEditor';
 import EditorButton, { EditorButtonClickHandler } from '../components/editorButton';
-import { Value, BlockProperties } from 'slate';
+import { Value, BlockProperties, Editor} from 'slate';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
 
 
@@ -21,6 +21,13 @@ export const UndoPlugin = (context: EditorPluginContext) => {
                     icon={'undo'}
                 />
             );
+        },
+        onKeyDown: (event: React.KeyboardEvent<any>, editor: Editor, next: Function) => {
+            if(event.ctrlKey && event.key === 'z'){
+                editor.undo();
+            }else{
+                next();
+            }
         }
     };
 }

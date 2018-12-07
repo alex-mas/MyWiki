@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { RenderMarkProps } from "slate-react";
+import { RenderMarkProps} from "slate-react";
 import { EditorPluginContext } from '../wikiEditor';
 import EditorButton from '../components/editorButton';
-import { hasMarkType, RenderMark, onClickMarkButton } from '../utilities/marks';
-import { Value } from 'slate';
+import { hasMarkType, RenderMark, onClickMarkButton, toggleMark } from '../utilities/marks';
+import { Value, Editor  } from 'slate';
 
 
 
@@ -29,7 +29,16 @@ export const BoldPlugin = (context: EditorPluginContext) => {
                     type={'bold'}
                 />
             )
+        },
+        onKeyDown: (event: React.KeyboardEvent<any>, editor: Editor, next: Function) => {
+            if(event.ctrlKey && event.key === 'b'){
+                debugger;
+                toggleMark(editor,'bold');
+            }else{
+                next();
+            }
         }
+
     }
 }
 
