@@ -33,8 +33,6 @@ export const pluginManager = new PluginManager();
 export const store = configureStore();
 export const mlService = new MLService(store);
 export const reduxI18nService= new ReduxI18N(store);
-mlService.initialize();
-reduxI18nService.initialize();
 export const i18n = reduxI18nService.traduce;
 
 const appRoot = document.getElementById('app');

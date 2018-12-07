@@ -42,8 +42,14 @@
     width: 8rem;
 }
 
-.form__action--primary{
+
+.form__action{
     height: $size-ml;
-    width: $size-xxl;
-    align-self: center;
+    width: fit-content;
+}
+
+.form__actions{
+    display: flex;
+    justify-content: space-around;
+    padding-top: $size-s;
 }

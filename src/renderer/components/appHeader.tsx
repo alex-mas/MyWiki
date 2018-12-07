@@ -60,7 +60,10 @@ class AppHeader extends React.Component<ComponentProps, ComponentState>{
                     >
                         <i className='material-icons'>settings</i>
                     </button>
-                    <SettingsForm isOpen={this.state.isSettingsFormOpen} onClose={this.closeSettings} />
+                    <SettingsForm
+                        isOpen={this.state.isSettingsFormOpen}
+                        onClose={this.closeSettings}
+                    />
                 </div>
             </Header>
         )

@@ -20,7 +20,7 @@ const dialog: Dialog = remote.dialog;
 
 
 interface OwnProps {
-    onSubmit: (value: ComponentState)=>any;
+    onSubmit: (value: ComponentState) => any;
     onClose: Function;
     initialValues?: WikiMetadata
 }
@@ -31,14 +31,14 @@ interface ComponentState extends UserDefinedWikiMetadata {
 export class WikiForm extends React.Component<OwnProps, ComponentState>{
     constructor(props: OwnProps) {
         super(props);
-        if(props.initialValues){
+        if (props.initialValues) {
             this.state = {
                 name: props.initialValues.name,
                 description: props.initialValues.description,
                 background: props.initialValues.background
             }
 
-        }else{
+        } else {
             this.state = {
                 name: undefined,
                 description: undefined,
@@ -80,7 +80,7 @@ export class WikiForm extends React.Component<OwnProps, ComponentState>{
                 </div>
                 <div className='form__field'>
                     <div className='form__field__label'>
-                        <I18String text='choose a background image' format='capitalizeFirst'/>
+                        <I18String text='choose a background image' format='capitalizeFirst' />
                         <img className='form__image-preview' src={this.state.background} />
                     </div>
                     <ImageInput
@@ -92,14 +92,17 @@ export class WikiForm extends React.Component<OwnProps, ComponentState>{
                     />
 
                 </div>
-                <Button
-                    btnType='solid'
-                    theme='primary'
-                    className='form__action--primary'
-                    type='submit'
-                >
-                    <I18String text='submit' format='capitalizeFirst' />
-                </Button>
+                <div className='form__actions'>
+                    <Button
+                        btnType='solid'
+                        theme='primary'
+                        className='form__action'
+                        type='submit'
+                    >
+                        <I18String text='submit' format='capitalizeFirst' />
+                    </Button>
+                </div>
+
             </form>
         );
 

@@ -9,8 +9,6 @@ export class ReduxI18N extends ReduxService<AppState>{
     constructor(store:Store<AppState>){
         super(store);
         this.traductions = store.getState().i18n;
-    }
-    initialize(){
         this.store.subscribe(()=>{
             const state = this.store.getState();
             if(this.traductions !== state.i18n){

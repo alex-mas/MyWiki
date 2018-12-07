@@ -12,8 +12,6 @@ export class MLService extends ReduxService<AppState> {
     private serviceRunner: ThreadManager;
     constructor(store: Store<AppState>) {
         super(store);
-    }
-    initialize() {
         this.serviceRunner = new ThreadManager(
             './workers/ml.js',
             {

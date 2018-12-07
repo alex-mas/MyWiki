@@ -29,7 +29,7 @@ export class NotificationComponent extends React.PureComponent<ComponentProps, C
         }), () => {
             setTimeout(() => {
                 this.props.onRemove(this.props.notification.id);
-            }, 500);
+            }, 400);
         });
     }
     render() {

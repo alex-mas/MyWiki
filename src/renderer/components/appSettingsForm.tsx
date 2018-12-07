@@ -7,11 +7,13 @@ import { AppData } from '../store/reducers/appData';
 import { AppState } from '../store/store';
 import { resetAppData, setLocale, setAppBackground, setAppAutoSave, setAppAutoSaveInterval } from '../actions/appData';
 import { ActionCreator } from 'redux';
+import Modal from '@axc/react-components/layout/modal';
+import { Button } from './button';
 
 
 
 interface OwnProps {
-    onClose: Function;
+    onClose: () => void;
     isOpen: boolean;
 }
 interface ReduxProps {
@@ -62,10 +64,14 @@ export class SettingsForm extends React.Component<ComponentProps, ComponentState
         this.props.onClose();
     }
     render() {
-        if (this.props.isOpen) {
-            return (
-                <form className='settings-form'>
-                    <div className='form-field'>
+        return (
+            <Modal
+                isOpen={this.props.isOpen}
+                onClose={this.props.onClose}
+                className='modal'
+            >
+                <form className='form'>
+                    <div className='form__field'>
                         <I18String text='language' format='capitalizeFirst' />
                         <select
                             className='form-input select-input'
@@ -79,7 +85,7 @@ export class SettingsForm extends React.Component<ComponentProps, ComponentState
                             })}
                         </select>
                     </div>
-                    <div className='form-field'>
+                    <div className='form__field'>
 
                         <I18String text='auto save articles' format='capitalizeFirst' />
                         <input
@@ -91,7 +97,7 @@ export class SettingsForm extends React.Component<ComponentProps, ComponentState
                     </div>
 
                     {this.props.appData.shouldAutoSave ?
-                        <div className='form-field'>
+                        <div className='form__field'>
                             <I18String
                                 text='auto save interval'
                                 format='capitalizeFirst'
@@ -111,7 +117,7 @@ export class SettingsForm extends React.Component<ComponentProps, ComponentState
                         :
                         null
                     }
-                    <div className='form-field'>
+                    <div className='form__field'>
                         <I18String text='background image' format='capitalizeFirst' />
                         <ImageInput
                             className='form-input image-input'
@@ -122,28 +128,31 @@ export class SettingsForm extends React.Component<ComponentProps, ComponentState
                             <I18String text='select' format='capitalizeFirst' />
                         </ImageInput>
                     </div>
-                    <div className='form-actions'>
-                        <button
-                            className='form-action--primary'
+                    <div className='form__actions'>
+                        <Button
+                            btnType='solid'
+                            theme='primary'
                             type='button'
+                            className='form__action'
                             onClick={this.onConfirmChanges}
                         >
                             <I18String text='confirm' format='capitalizeFirst' />
-                        </button>
-                        <button
-                            className='form-action--secondary'
+                        </Button>
+                        <Button
+                            btnType='flat'
+                            theme='primary'
+                            mode='accent'
                             type='button'
+                            className='form__action'
                             onClick={this.onResetValues}
                         >
                             <I18String text='reset' format='capitalizeFirst' />
-                        </button>
+                        </Button>
                     </div>
                 </form>
-            )
-        } else {
-            return null;
-        }
+            </Modal>
 
+        )
     }
 }
 

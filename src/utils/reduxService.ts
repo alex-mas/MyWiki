@@ -8,9 +8,6 @@ export class ReduxService<S = any, A extends Action<any> = AnyAction> {
     constructor(store: Store<S,A>){
         this.store = readOnly<Store<S,A>>(store);
     }
-    initialize(){
-        
-    }
 }
 
 export default ReduxService;
