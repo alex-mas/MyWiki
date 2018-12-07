@@ -7,6 +7,7 @@ import { ErrorAction, fsError } from "./errors";
 import * as fsp from '../../utils/promisify-fs';
 import { ActionWithPayload, ACreator, AsyncACreator} from "../../utils/typeUtils";
 import { store } from "../app";
+import { createNotification } from "./notifications";
 
 
 export const SET_APP_DATA = 'SET_APP_DATA';
@@ -73,8 +74,8 @@ export const setLocale: SetLocaleActionCreator = (locale: ISO639Locale) => {
             const localeData = JSON.parse(fileContents);
             return dispatch(_setLocale(locale, localeData));
         } catch (e) {
-            dispatch(_setLocale(ISO639Locale.en, {}));
             dispatch(fsError('error fetching locale data'));
+            dispatch(createNotification('sorry', 'requested language isn\'t available', 'warning'))
             throw e;
         }
     }

@@ -3,6 +3,7 @@ import { remote, Dialog, OpenDialogOptions } from 'electron';
 import * as path from 'path';
 import I18String from '@axc/react-components/display/i18string';
 import { Button } from './button';
+import { i18n } from '../app';
 
 const dialog: Dialog = remote.dialog;
 
@@ -16,10 +17,12 @@ interface ComponentProps {
     className?: string
 }
 
+
+
 export class ImageInput extends React.PureComponent<ComponentProps, any>{
     changeBackgroundImage = (e: React.MouseEvent<HTMLButtonElement>) => {
         dialog.showOpenDialog(remote.getCurrentWindow(), {
-            title: this.props.windowTitle,
+            title: i18n(this.props.windowTitle),
             filters: [{
                 name: 'images',
                 extensions: ['jpg', 'jpeg', 'gif', 'png', 'apng', 'svg', 'bmp', '.webp']

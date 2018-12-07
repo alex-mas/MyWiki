@@ -2,6 +2,7 @@ import { AppState } from "../renderer/store/store";
 import { ThunkAction } from "redux-thunk";
 import { ActionCreator, Action } from "redux";
 import { ErrorAction } from "../renderer/actions/errors";
+import { ACreateNotification } from "../renderer/actions/notifications";
 
 export type ReactInstanciable<T = any> = React.ComponentClass<T> | React.SFCFactory<T>;
 
@@ -34,7 +35,7 @@ export type ActionWithPayload<P> = Action<string> & P;
  * 
  * 
  */
-export type AsyncACreator<P extends any[],A extends Action,R = undefined> = (...args: P) =>ThunkAction<R extends undefined | void | null ? undefined | void : Promise<R>,AppState, void, ErrorAction | A>
+export type AsyncACreator<P extends any[],A extends Action,R = undefined> = (...args: P) =>ThunkAction<R extends undefined | void | null ? undefined | void : Promise<R>,AppState, void, ErrorAction | A | ACreateNotification>
 
 export type ACreator<P extends any[],A extends Action> = (...args: P) =>A;
 

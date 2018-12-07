@@ -30,5 +30,8 @@
     "wiki name": "nombre de la wiki",
     "wiki description": "descripción de la wiki",
     "choose image": "escoge la imagen",
-    "search article": "Buscar artículo"
+    "search article": "Buscar artículo",
+    "error": "error",
+    "requested language isn't available": "el idioma escojido no esta disponible",
+    "sorry": "disculpe las molestias"
 }

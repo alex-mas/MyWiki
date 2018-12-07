@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Notification } from "../store/reducers/notifications";
+import I18String from '@axc/react-components/display/i18string';
 
 
 
@@ -7,7 +8,7 @@ import { Notification } from "../store/reducers/notifications";
 interface ComponentProps {
     notification: Notification
     onRemove: (id: string) => any,
-    className?:string
+    className?: string
 }
 
 interface ComponentState {
@@ -15,30 +16,30 @@ interface ComponentState {
 }
 
 
-export class NotificationComponent extends React.PureComponent<ComponentProps,ComponentState>{
-    constructor(props: ComponentProps){
+export class NotificationComponent extends React.PureComponent<ComponentProps, ComponentState>{
+    constructor(props: ComponentProps) {
         super(props);
         this.state = {
             removing: false
         }
     }
     onRemove = () => {
-        this.setState(()=>({
+        this.setState(() => ({
             removing: true
-        }),()=>{
-            setTimeout(()=>{
+        }), () => {
+            setTimeout(() => {
                 this.props.onRemove(this.props.notification.id);
-            },500);
+            }, 500);
         });
     }
     render() {
         const { notification } = this.props;
         let className = 'notification';
-    
-        if(this.props.className){
+
+        if (this.props.className) {
             className += ' ' + this.props.className;
         }
-        if(this.state.removing){
+        if (this.state.removing) {
             className += ' removed-notification';
         }
         return (
@@ -50,10 +51,10 @@ export class NotificationComponent extends React.PureComponent<ComponentProps,Co
                 </div>
                 <div key='contents' className='notification__contents'>
                     <div className='notification__title'>
-                        {notification.title}
+                        <I18String text={notification.title} format='capitalizeFirst' />
                     </div>
                     <div className='notification__description'>
-                        {notification.description}
+                        <I18String text={notification.description} format='capitalizeFirst' />
                     </div>
                 </div>
                 <div key='actions' className='notification__actions'>

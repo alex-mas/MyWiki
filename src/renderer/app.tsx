@@ -22,7 +22,7 @@ import { PromptSystem } from '@axc/react-components/interactive/prompt';
 import { AnyAction } from 'redux';
 import { ThreadManager, WorkDistributionStrategy } from '@axc/thread-manager';
 import { AppData } from './store/reducers/appData';
-import { setAppData, saveAppData, loadAppData } from './actions/appData';
+import { setAppData, saveAppData, loadAppData, setLocale } from './actions/appData';
 import { PluginManager } from './plugins/plugins';
 import { createNotification, removeNotification } from './actions/notifications';
 import MLService from './services/ml';
@@ -74,6 +74,7 @@ window.onload = () => {
     store.dispatch(parsePlugins());
     
 }
+
 
 window.onbeforeunload = () => {
     saveWikis();
