@@ -10,7 +10,7 @@ import { errorAction, fsError, ErrorAction, ErrorActionCode } from "./errors";
 import { deleteFolderRecursively } from '../../utils/fsutils';
 import { Article, ArticleMetaData, getArticleMetaData } from "./article";
 import { ActionWithPayload, AsyncACreator, ACreator } from "../../utils/typeUtils";
-import { store } from "../app";
+import { store as AppStore } from "../app";
 import { parsePlugins } from "./plugins";
 
 
@@ -246,6 +246,7 @@ export type SaveWikisActionCreator = AsyncACreator<any, SaveWikisAction, void>;
 
 
 export const saveWikis = ()=>{
+    const store = AppStore.getStore();
     const wikis = store.getState().wikis;
     wikis.forEach(async (wiki, index) => {
         if (wiki) {

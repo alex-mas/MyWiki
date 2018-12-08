@@ -26,17 +26,19 @@ export interface AppState {
 //@ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
+const defaultReducers = {
+    wikis,
+    appData,
+    selectedWiki,
+    plugins,
+    i18n,
+    notifications
+}
+
 
 export const configureStore = () => {
     const store: Store<AppState, AnyAction> = createStore(
-        combineReducers<AppState, AnyAction>({
-            wikis,
-            appData,
-            selectedWiki,
-            plugins,
-            i18n,
-            notifications
-        }),
+        combineReducers<AppState, AnyAction>(defaultReducers),
         composeEnhancers(applyMiddleware(thunk, errorHandler))
     );
     store.dispatch = store.dispatch as ThunkDispatch<AppState,undefined,AnyAction>;
@@ -46,17 +48,16 @@ export const configureStore = () => {
 export class AppStore {
     private readonly store: Store<AppState>;
     private pluginReducers: ReducerContainer = {};
-    private defaultReducers: ReducerContainer = {};
+    private defaultReducers: ReducerContainer = defaultReducers;
     private currentState: AppState;
-    constructor(defaultReducers: ReducerContainer, middleware: Middleware[]) {
+    constructor() {
         this.store = readOnly(configureStore());
-        this.defaultReducers = defaultReducers;
     }
     onReducerChange = () => {
         this.store.replaceReducer(dynamicCombine(this.defaultReducers, this.pluginReducers));
     }
     isReducerKeyValid = (key: string) => {
-        return true;
+        return !this.pluginReducers[key] && !this.defaultReducers[key];
     }
     registerReducer = <T extends S, S>(key: string, reducer: Reducer<T>) => {
         if (this.isReducerKeyValid(key)) {
@@ -71,18 +72,5 @@ export class AppStore {
 
 
 
-export default () => {
-    const store: Store<AppState, AnyAction> = createStore(
-        combineReducers<AppState, AnyAction>({
-            wikis,
-            appData,
-            selectedWiki,
-            plugins,
-            i18n,
-            notifications
-        }),
-        
-        composeEnhancers(applyMiddleware(thunk, errorHandler))
-    );
-    return store;
-}
+
+export default AppStore

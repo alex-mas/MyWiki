@@ -6,7 +6,7 @@ import { AppState } from "../store/store";
 import { ErrorAction, fsError } from "./errors";
 import * as fsp from '../../utils/promisify-fs';
 import { ActionWithPayload, ACreator, AsyncACreator} from "../../utils/typeUtils";
-import { store } from "../app";
+import { store as AppStore } from "../app";
 import { createNotification } from "./notifications";
 
 
@@ -134,6 +134,7 @@ export const loadAppData: LoadAppDataActionCreator = ()=>{
 
 
 export const saveAppData = ()=>{
+    const store = AppStore.getStore();
     const appData = store.getState().appData;
     if(appData){
         fsp.writeFile('./appConfig/app.config.json', JSON.stringify(appData), 'utf8')

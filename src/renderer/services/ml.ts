@@ -5,13 +5,13 @@ import ThreadManager, { WorkDistributionStrategy } from "@axc/thread-manager";
 import { setArticleKeywords } from "../actions/ml";
 import { Store } from "redux";
 import ReduxService from "../../utils/reduxService";
-import { AppState } from "../store/store";
+import AppStore, { AppState } from "../store/store";
 
 
 export class MLService extends ReduxService<AppState> {
     private serviceRunner: ThreadManager;
-    constructor(store: Store<AppState>) {
-        super(store);
+    constructor(store: AppStore) {
+        super(store.getStore());
         this.serviceRunner = new ThreadManager(
             './workers/ml.js',
             {

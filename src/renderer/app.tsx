@@ -10,7 +10,7 @@ require('./styles/index.scss');
 
 
 import { Provider, connect } from 'react-redux';
-import configureStore, { AppState } from './store/store';
+import AppStore, { AppState } from './store/store';
 
 import AppRouter from './router/router';
 import { loadWikis, loadWiki, saveWikis } from './actions/wikis';
@@ -31,7 +31,7 @@ import { load, unload } from './actions/appLifecycle';
 
 
 export const pluginManager = new PluginManager();
-export const store = configureStore();
+export const store = new AppStore();
 export const mlService = new MLService(store);
 export const reduxI18nService = new ReduxI18NService(store);
 export const i18n = reduxI18nService.traduce;
@@ -51,7 +51,7 @@ const I18nSystem = connect((state: AppState, props) => {
 
 
 const App = (
-    <Provider store={store}>
+    <Provider store={store.getStore()}>
         <I18nSystem>
             <PromptSystem>
                 <AppRouter />
@@ -64,21 +64,21 @@ ReactDOM.render(App, appRoot);
 
 
 window.onload = () => {
-    store.dispatch(load());
+    store.getStore().dispatch(load());
     //TODO: refactor this calls into reducer persistors.
     //@ts-ignore
-    store.dispatch(loadWikis());
+    store.getStore().dispatch(loadWikis());
     //@ts-ignore
-    store.dispatch(loadAppData());
+    store.getStore().dispatch(loadAppData());
 
     //@ts-ignore
-    store.dispatch(parsePlugins());
+    store.getStore().dispatch(parsePlugins());
 
 }
 
 
 window.onbeforeunload = () => {
-    store.dispatch(unload());
+    store.getStore().dispatch(unload());
     //TODO: refactor this calls into reducer persistors.
     saveWikis();
     saveAppData();
