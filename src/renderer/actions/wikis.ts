@@ -118,7 +118,7 @@ export const selectWiki: SelectWikiActionCreator = (id: string) => {
                 wiki
             });
             //TODO: Delay parsing plugins until wiki is selected
-            dispatch(parsePlugins());
+            //dispatch(parsePlugins());
         } else {
             dispatch(errorAction(`Wiki id (${id}) provided doesn't mach with any of the wikis tracked by the app`, ErrorActionCode.WRONG_PARAMS));
         }

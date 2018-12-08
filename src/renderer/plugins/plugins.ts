@@ -2,6 +2,8 @@ import * as EventEmitter from 'events';
 import uuid from 'uuid/v4';
 import { PluginMetaData } from '../store/reducers/plugins';
 import * as path from 'path';
+import { store } from '../app';
+import { createNotification } from '../actions/notifications';
 
 
 
