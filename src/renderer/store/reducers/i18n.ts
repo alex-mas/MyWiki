@@ -2,20 +2,23 @@ import { Reducer, AnyAction } from "redux";
 import I18String, {ISO639Locale, LocaleLayout} from '@axc/react-components/display/i18string';
 //@ts-ignore
 import _cloneDeep from 'lodash.clonedeep';
-import { SET_LOCALE } from "../../actions/appData";
+import { SET_LOCALE, ASetLocale } from "../../actions/appData";
+import { createReducer } from "../../../utils/reducer";
 const cloneDeep: <T>(any:T)=>T = _cloneDeep;
 
 export type I18N = LocaleLayout;
 
 const defaultState: I18N = {};
 
-export const I18NReducer: Reducer<I18N> = (state: I18N = defaultState, action: AnyAction) =>{
-    switch(action.type){
-        case SET_LOCALE:
+
+export const I18NReducer = createReducer<I18N>(
+    defaultState,
+    {
+        [SET_LOCALE]: (state, action: ASetLocale)=>{
             return action.localeData;
-        default:
-            return state;
+        }
     }
-}
+)
+
 
 export default I18NReducer;

@@ -4,6 +4,7 @@ import { ArticleMetaData, Article, SAVE_ARTICLE, CREATE_ARTICLE, DELETE_ARTICLE 
 import { SELECT_WIKI, SET_WIKI_BACKGROUND, SET_WIKI_NAME, SET_WIKI_DESCRIPTION } from "../../actions/wikis";
 import { SET_ARTICLE_KEYWORDS } from "../../actions/ml";
 import { SET_SELECTED_WIKI_BACKGROUND, SET_SELECTED_WIKI_DESCRIPTION, SET_SELECTED_WIKI_NAME, UPDATE_SELECTED_WIKI_METADATA } from "../../actions/selectedWiki";
+import { createReducer } from "../../../utils/reducer";
 
 
 
@@ -18,33 +19,41 @@ const defaultState: WikiMetadata = {
     installedPlugins:[]
 };
 
-export const SelectedWikiReducer: Reducer<WikiMetadata> = (state: WikiMetadata = defaultState, action: AnyAction) => {
-    switch (action.type) {
-        case SELECT_WIKI:
+
+
+export const selectedWikiReducer = createReducer<WikiMetadata>(
+    defaultState,
+    {
+        [SELECT_WIKI]: (state, action)=>{
             return {
                 ...action.wiki
             };
-        case UPDATE_SELECTED_WIKI_METADATA:
+        },
+        [UPDATE_SELECTED_WIKI_METADATA]: (state, action)=>{
             return{
                 ...state,
                 ...action.metadata
             }
-        case SET_SELECTED_WIKI_BACKGROUND:
+        },
+        [SET_SELECTED_WIKI_BACKGROUND]: (state, action)=>{
             return {
                 ...state,
                 background: action.background
             }
-        case SET_SELECTED_WIKI_DESCRIPTION:
+        },
+        [SET_SELECTED_WIKI_DESCRIPTION]: (state, action)=>{
             return {
                 ...state,
                 background: action.description
             }
-        case SET_SELECTED_WIKI_NAME:
+        },
+        [SET_SELECTED_WIKI_NAME]: (state, action)=>{
             return {
                 ...state,
                 background: action.name
             }
-        case SET_ARTICLE_KEYWORDS:
+        },
+        [ SET_ARTICLE_KEYWORDS]: (state, action)=>{
             console.log('setting keywords of', action.article, 'to: ', action.keywords);
             return {
                 ...state,
@@ -59,8 +68,8 @@ export const SelectedWikiReducer: Reducer<WikiMetadata> = (state: WikiMetadata =
                     }
                 })
             }
-
-        case SAVE_ARTICLE:
+        },
+        [SAVE_ARTICLE]: (state, action)=>{
             return {
                 ...state,
                 articles: state.articles.map((article) => {
@@ -71,19 +80,22 @@ export const SelectedWikiReducer: Reducer<WikiMetadata> = (state: WikiMetadata =
                     }
                 })
             }
-        case CREATE_ARTICLE:
+        },
+        [CREATE_ARTICLE]: (state, action)=>{
             return {
                 ...state,
                 articles: [...state.articles, action.article]
             }
-        case DELETE_ARTICLE:
+        },
+        [DELETE_ARTICLE]: (state, action)=>{
             return {
                 ...state,
                 articles: state.articles.filter((article) => article.name !== action.name)
             }
-        default:
-            return state;
+        }
     }
-}
+)
 
-export default SelectedWikiReducer;
+
+
+export default selectedWikiReducer;

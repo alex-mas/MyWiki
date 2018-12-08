@@ -3,6 +3,7 @@ import { ArticleMetaData } from "../../actions/article";
 import { SET_SELECTED_WIKI_BACKGROUND, SET_SELECTED_WIKI_DESCRIPTION, SET_SELECTED_WIKI_NAME, UPDATE_SELECTED_WIKI_METADATA } from "../../actions/selectedWiki";
 import { CREATE_WIKI, LOAD_WIKI, LOAD_WIKIS, REMOVE_WIKI, RESET_WIKI, SET_WIKI_BACKGROUND, SET_WIKI_DESCRIPTION, SET_WIKI_NAME, SELECT_WIKI } from "../../actions/wikis";
 import { Omit } from "../../../utils/typeUtils";
+import { createReducer } from "../../../utils/reducer";
 
 
 export interface WikiMetadata {
@@ -23,9 +24,10 @@ export type WikisMetadataState = WikiMetadata[];
 const defaultState: WikisMetadataState = [];
 
 
-export const WikisMetadataReducer: Reducer<WikisMetadataState> = (state: WikisMetadataState = defaultState, action: AnyAction) => {
-    switch (action.type) {
-        case UPDATE_SELECTED_WIKI_METADATA:
+export const WikisMetadataReducer = createReducer<WikisMetadataState>(
+    defaultState,
+    {
+        [UPDATE_SELECTED_WIKI_METADATA]:(state,action)=>{
             return state.map((wikiMetaData) => {
                 debugger;
                 if (wikiMetaData.selected) {
@@ -37,7 +39,8 @@ export const WikisMetadataReducer: Reducer<WikisMetadataState> = (state: WikisMe
                     return wikiMetaData;
                 }
             });
-        case SET_SELECTED_WIKI_BACKGROUND:
+        },
+        [SET_SELECTED_WIKI_BACKGROUND]:(state,action)=>{
             return state.map((wikiMetaData) => {
                 if (wikiMetaData.selected) {
                     return {
@@ -48,7 +51,8 @@ export const WikisMetadataReducer: Reducer<WikisMetadataState> = (state: WikisMe
                     return wikiMetaData;
                 }
             });
-        case SET_SELECTED_WIKI_DESCRIPTION:
+        },
+        [SET_SELECTED_WIKI_DESCRIPTION]:(state,action)=>{
             return state.map((wikiMetaData) => {
                 if (wikiMetaData.selected) {
                     return {
@@ -59,7 +63,8 @@ export const WikisMetadataReducer: Reducer<WikisMetadataState> = (state: WikisMe
                     return wikiMetaData;
                 }
             });
-        case SET_SELECTED_WIKI_NAME:
+        },
+        [SET_SELECTED_WIKI_NAME]:(state,action)=>{
             return state.map((wikiMetaData) => {
                 if (wikiMetaData.selected) {
                     return {
@@ -70,7 +75,8 @@ export const WikisMetadataReducer: Reducer<WikisMetadataState> = (state: WikisMe
                     return wikiMetaData;
                 }
             });
-        case SET_WIKI_BACKGROUND:
+        },
+        [SET_WIKI_BACKGROUND]:(state,action)=>{
             return state.map((wikiMetaData) => {
                 if (wikiMetaData.id === action.id) {
                     return {
@@ -81,7 +87,8 @@ export const WikisMetadataReducer: Reducer<WikisMetadataState> = (state: WikisMe
                     return wikiMetaData;
                 }
             });
-        case SET_WIKI_NAME:
+        },
+        [SET_WIKI_NAME]:(state,action)=>{
             return state.map((wikiMetaData) => {
                 if (wikiMetaData.id === action.id) {
                     return {
@@ -92,7 +99,8 @@ export const WikisMetadataReducer: Reducer<WikisMetadataState> = (state: WikisMe
                     return wikiMetaData;
                 }
             });
-        case SET_WIKI_DESCRIPTION:
+        },
+        [SET_WIKI_DESCRIPTION]:(state,action)=>{
             return state.map((wikiMetaData) => {
                 if (wikiMetaData.id === action.id) {
                     return {
@@ -103,17 +111,23 @@ export const WikisMetadataReducer: Reducer<WikisMetadataState> = (state: WikisMe
                     return wikiMetaData;
                 }
             });
-        case CREATE_WIKI:
+        },
+        [CREATE_WIKI]:(state,action)=>{
             return [...state, action.wiki];
-        case REMOVE_WIKI:
+        },
+        [REMOVE_WIKI]:(state,action)=>{
             return state.filter((wikiMetaData) => wikiMetaData.id !== action.wiki.id);
-        case RESET_WIKI:
+        },
+        [RESET_WIKI]:(state,action)=>{
             return defaultState;
-        case LOAD_WIKI:
+        },
+        [LOAD_WIKI]:(state,action)=>{
             return [...state, action.wiki];
-        case LOAD_WIKIS:
+        },
+        [LOAD_WIKIS]:(state,action)=>{
             return action.wikis;
-        case SELECT_WIKI:
+        },
+        [SELECT_WIKI]:(state,action)=>{
             return state.map((wiki)=>{
                 if(wiki.id === action.wiki.id){
                     return {
@@ -127,9 +141,8 @@ export const WikisMetadataReducer: Reducer<WikisMetadataState> = (state: WikisMe
                     }
                 }
             })
-        default:
-            return state;
+        }
     }
-}
+)
 
 export default WikisMetadataReducer;
