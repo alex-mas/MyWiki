@@ -8,8 +8,9 @@ import appData, { AppData } from './reducers/appData';
 import selectedWiki from './reducers/selectedWiki';
 import plugins, { PluginState } from './reducers/plugins';
 import i18n, { I18N } from './reducers/i18n';
-import { ReducerContainer, dynamicCombine } from './reducer';
+import { ReducerContainer, dynamicCombine } from '../../utils/reducer';
 import notifications, { Notification } from './reducers/notifications';
+import readOnly from '../../utils/readonly';
 export type StoreAction = AnyAction | ThunkAction<AnyAction, AppState, any, AnyAction>;
 
 export interface AppState {
@@ -43,12 +44,12 @@ export const configureStore = () => {
 }
 
 export class AppStore {
-    private store: Store<AppState>;
+    private readonly store: Store<AppState>;
     private pluginReducers: ReducerContainer = {};
     private defaultReducers: ReducerContainer = {};
     private currentState: AppState;
     constructor(defaultReducers: ReducerContainer, middleware: Middleware[]) {
-        this.store = configureStore();
+        this.store = readOnly(configureStore());
         this.defaultReducers = defaultReducers;
     }
     onReducerChange = () => {

@@ -3,7 +3,7 @@
 
 export const readOnly = <T extends object>(obj: T)=>{
     return new Proxy(obj,{
-        set: ()=>{
+        set: function(){
             throw new Error(`${obj.constructor.name} can't be mutated as its readonly`);
         }
     });

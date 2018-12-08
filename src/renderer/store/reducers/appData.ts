@@ -1,8 +1,8 @@
 import { Reducer, AnyAction } from "redux";
 import I18String, { ISO639Locale } from '@axc/react-components/display/i18string';
-import { SET_LOCALE, SET_APP_DATA, UPDATE_APP_DATA, RESET_APP_DATA, SET_APP_AUTO_SAVE, SET_APP_AUTO_SAVE_INTERVAL, SET_APP_BACKGROUND, SetAppAutoSaveAction } from "../../actions/appData";
+import { SET_LOCALE, SET_APP_DATA, UPDATE_APP_DATA, RESET_APP_DATA, SET_APP_AUTO_SAVE, SET_APP_AUTO_SAVE_INTERVAL, SET_APP_BACKGROUND, ASetAppAutoSave, ASetAppAutoSaveInterval, ASetLocale, ASetAppBg, ASetAppData } from "../../actions/appData";
 import { SELECT_WIKI, selectWiki } from "../../actions/wikis";
-import { createReducer } from "../reducer";
+import { createReducer } from "../../../utils/reducer";
 
 export interface AppData {
     background: string,
@@ -21,40 +21,42 @@ export const defaultAppData: AppData = {
 
 
 
-export const AppDataReducer: Reducer<AppData> = (state: AppData = defaultAppData, action: AnyAction) => {
-    switch (action.type) {
-        case SET_APP_AUTO_SAVE:
+export const AppDataReducer = createReducer<AppData>(
+    defaultAppData,
+    {
+        [SET_APP_AUTO_SAVE]: (state,action: ASetAppAutoSave)=>{
             return {
                 ...state,
                 shouldAutoSave: action.shouldAutoSave
             }
-        case SET_APP_AUTO_SAVE_INTERVAL:
+        },
+        [SET_APP_AUTO_SAVE_INTERVAL]: (state,action: ASetAppAutoSaveInterval)=>{
             return {
                 ...state,
                 autoSaveInterval: action.autoSaveInterval
             }
-        case SET_LOCALE:
+        },
+        [SET_LOCALE]: (state,action: ASetLocale)=>{
             return {
                 ...state,
-                locale: action.locale
+                locale: action.locale as ISO639Locale
             };
-        case SET_APP_BACKGROUND:
+        },
+        [SET_APP_BACKGROUND]:(state,action: ASetAppBg)=>{
             return{
                 ...state,
                 background: action.background
             }
-        case SET_APP_DATA:
+        },
+        [SET_APP_DATA]:(state,action: ASetAppData)=>{
             return action.data;
-        case UPDATE_APP_DATA:
-            return {
-                ...state,
-                ...action.data
-            };
-        case RESET_APP_DATA:
+        },
+        [RESET_APP_DATA]:(state,action: ASetAppData)=>{
             return defaultAppData;
-        default:
-            return state;
+        },
+       
     }
-}
+);
+
 
 export default AppDataReducer;

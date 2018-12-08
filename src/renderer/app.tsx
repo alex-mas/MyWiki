@@ -26,13 +26,14 @@ import { setAppData, saveAppData, loadAppData, setLocale } from './actions/appDa
 import { PluginManager } from './plugins/plugins';
 import { createNotification, removeNotification } from './actions/notifications';
 import MLService from './services/ml';
-import ReduxI18N from './services/i18n';
+import ReduxI18NService from './services/i18n';
+import { load, unload } from './actions/appLifecycle';
 
 
 export const pluginManager = new PluginManager();
 export const store = configureStore();
 export const mlService = new MLService(store);
-export const reduxI18nService= new ReduxI18N(store);
+export const reduxI18nService = new ReduxI18NService(store);
 export const i18n = reduxI18nService.traduce;
 
 const appRoot = document.getElementById('app');
@@ -63,6 +64,8 @@ ReactDOM.render(App, appRoot);
 
 
 window.onload = () => {
+    store.dispatch(load());
+    //TODO: refactor this calls into reducer persistors.
     //@ts-ignore
     store.dispatch(loadWikis());
     //@ts-ignore
@@ -70,11 +73,13 @@ window.onload = () => {
 
     //@ts-ignore
     store.dispatch(parsePlugins());
-    
+
 }
 
 
 window.onbeforeunload = () => {
+    store.dispatch(unload());
+    //TODO: refactor this calls into reducer persistors.
     saveWikis();
     saveAppData();
 }

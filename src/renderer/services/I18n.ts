@@ -4,19 +4,19 @@ import readOnly from '../../utils/readonly';
 import ReduxService from '../../utils/reduxService';
 import { I18N } from '../store/reducers/i18n';
 
-export class ReduxI18N extends ReduxService<AppState>{
-    traductions: I18N;
+export class ReduxI18NService extends ReduxService<AppState>{
+    private traductions: I18N;
     constructor(store:Store<AppState>){
         super(store);
-        this.traductions = store.getState().i18n;
+        this.traductions = readOnly(store.getState().i18n);
         this.store.subscribe(()=>{
             const state = this.store.getState();
             if(this.traductions !== state.i18n){
-                this.traductions = state.i18n;
+                this.traductions = readOnly(state.i18n);
             }
         });
     }
-    traduce = (string:string)=>{
+    public traduce = (string:string)=>{
         const traduction = this.traductions[string];
         if(traduction){
             return traduction;
@@ -26,4 +26,4 @@ export class ReduxI18N extends ReduxService<AppState>{
 }
 
 
-export default ReduxI18N;
+export default ReduxI18NService;

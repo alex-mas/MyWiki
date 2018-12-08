@@ -32,7 +32,6 @@ export const BoldPlugin = (context: EditorPluginContext) => {
         },
         onKeyDown: (event: React.KeyboardEvent<any>, editor: Editor, next: Function) => {
             if(event.ctrlKey && event.key === 'b'){
-                debugger;
                 toggleMark(editor,'bold');
             }else{
                 next();

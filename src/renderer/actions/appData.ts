@@ -21,10 +21,10 @@ export const SET_APP_AUTO_SAVE_INTERVAL = 'SHOULD_AUTO_SAVE_INTERVAL';
 
 
 
-export type AppDataAction = ActionWithPayload<{data: AppData}>;
-export type AppDataActionCreator = AsyncACreator<[AppData],AppDataAction>
+export type ASetAppData = ActionWithPayload<{data: AppData}>;
+export type SetAppDataActionCreator = AsyncACreator<[AppData],ASetAppData>
 
-export const setAppData: AppDataActionCreator = (newData) => {
+export const setAppData: SetAppDataActionCreator = (newData) => {
     return(dispatch, getState)=>{
         dispatch(setLocale(newData.locale));
         dispatch({
@@ -35,8 +35,8 @@ export const setAppData: AppDataActionCreator = (newData) => {
 }
 
 
-export type ResetAppDataAction = Action<string>;
-export type ResetAppDataActionCreator = AsyncACreator<any, ResetAppDataAction>
+export type AResetAppData = Action<string>;
+export type ResetAppDataActionCreator = AsyncACreator<any, AResetAppData>
 
 
 export const resetAppData: ResetAppDataActionCreator = () => {
@@ -51,11 +51,11 @@ export const resetAppData: ResetAppDataActionCreator = () => {
 
 
 
-export type SetLocaleAction = ActionWithPayload<{
+export type ASetLocale = ActionWithPayload<{
     locale: string,
     localeData: LocaleLayout
 }>;
-export type SetLocaleActionCreator = AsyncACreator<[ISO639Locale],SetLocaleAction, SetLocaleAction>
+export type SetLocaleActionCreator = AsyncACreator<[ISO639Locale],ASetLocale, ASetLocale>
 
 const _setLocale = (locale: ISO639Locale, localeData: LocaleLayout) => {
     return {
@@ -81,8 +81,8 @@ export const setLocale: SetLocaleActionCreator = (locale: ISO639Locale) => {
     }
 }
 
-export type SetAppBgAction = ActionWithPayload<{ background: string }>;
-export type SetAppBgActionCreator = ACreator<[string],SetAppBgAction>;
+export type ASetAppBg = ActionWithPayload<{ background: string }>;
+export type SetAppBgActionCreator = ACreator<[string],ASetAppBg>;
 
 export const setAppBackground: SetAppBgActionCreator = (background: string) => {
     return {
@@ -92,8 +92,8 @@ export const setAppBackground: SetAppBgActionCreator = (background: string) => {
 }
 
 
-export type SetAppAutoSaveAction = ActionWithPayload<{ shouldAutoSave: boolean }>;
-export type SetAppAutoSaveCreator = ACreator<[boolean],SetAppAutoSaveAction>;
+export type ASetAppAutoSave = ActionWithPayload<{ shouldAutoSave: boolean }>;
+export type SetAppAutoSaveCreator = ACreator<[boolean],ASetAppAutoSave>;
 
 export const setAppAutoSave: SetAppAutoSaveCreator = (shouldAutoSave:boolean ) => {
     return {
@@ -102,8 +102,8 @@ export const setAppAutoSave: SetAppAutoSaveCreator = (shouldAutoSave:boolean ) =
     };
 }
 
-export type SetAppAutoSaveIntervalAction = ActionWithPayload<{ autoSaveInterval: number }>;
-export type SetAppAutoSaveIntervalCreator = ACreator<[number],SetAppAutoSaveIntervalAction>;
+export type ASetAppAutoSaveInterval = ActionWithPayload<{ autoSaveInterval: number }>;
+export type SetAppAutoSaveIntervalCreator = ACreator<[number],ASetAppAutoSaveInterval>;
 
 export const setAppAutoSaveInterval: SetAppAutoSaveIntervalCreator = (autoSaveInterval:number ) => {
     return {
@@ -113,9 +113,9 @@ export const setAppAutoSaveInterval: SetAppAutoSaveIntervalCreator = (autoSaveIn
 }
 
 
-export type LoadAppDataAction = Action<string>;
+export type ALoadAppData = Action<string>;
 
-export type LoadAppDataActionCreator = AsyncACreator<any,LoadAppDataAction,void>
+export type LoadAppDataActionCreator = AsyncACreator<any,ALoadAppData,void>
 
 export const loadAppData: LoadAppDataActionCreator = ()=>{
     return async (dispatch,getState)=>{

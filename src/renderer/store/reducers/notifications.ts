@@ -1,5 +1,5 @@
 import { Reducer, AnyAction } from "redux";
-import { createReducer } from "../reducer";
+import { createReducer } from "../../../utils/reducer";
 import { 
     CREATE_NOTIFICATION, 
     ACreateNotification, 
