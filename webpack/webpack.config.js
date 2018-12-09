@@ -8,7 +8,9 @@ const workerOutputFolder = './dist/app/workers';
 const outputFolder = './dist/app/';
 const readdir = promisify(fs.readdir);
 
-
+if(!fs.existsSync('./dist')){
+  fs.mkdirSync('./dist');
+}
 if(!fs.existsSync(outputFolder)){
   fs.mkdirSync(outputFolder);
 }
