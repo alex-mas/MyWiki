@@ -7,8 +7,8 @@ import { I18N } from '../store/reducers/i18n';
 export class ReduxI18NService extends ReduxService<AppState>{
     private traductions: I18N;
     constructor(store: AppStore) {
-        super(store.getStore());
-        this.traductions = readOnly(store.getStore().getState().i18n);
+        super(store.get());
+        this.traductions = readOnly(store.get().getState().i18n);
         this.store.subscribe(() => {
             const state = this.store.getState();
             if (this.traductions !== state.i18n) {

@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware, compose, Dispatch, Store, Reducer,Middleware, ReducersMapObject } from 'redux';
+import { createStore, combineReducers, applyMiddleware, compose, Dispatch, Store, Reducer,Middleware, ReducersMapObject, Action } from 'redux';
 import { AnyAction } from "redux";
 import { ThunkAction, ThunkMiddleware, ThunkDispatch } from "redux-thunk";
 import thunk from 'redux-thunk';
@@ -46,7 +46,7 @@ export const configureStore = () => {
 }
 
 export class AppStore {
-    private readonly store: Store<AppState>;
+    readonly store: Store<AppState>;
     private pluginReducers: ReducerContainer = {};
     private defaultReducers: ReducerContainer = defaultReducers;
     private currentState: AppState;
@@ -59,14 +59,29 @@ export class AppStore {
     isReducerKeyValid = (key: string) => {
         return !this.pluginReducers[key] && !this.defaultReducers[key];
     }
-    registerReducer = <T extends S, S>(key: string, reducer: Reducer<T>) => {
+    /**
+     * Registers  new reducer in the given key of app state given that the key doesnt clash without any existing reducer
+     */
+    registerReducer = <T extends any>(key: string, reducer: Reducer<T>) => {
         if (this.isReducerKeyValid(key)) {
             this.pluginReducers[key] = reducer;
             this.onReducerChange();
+            return true;
+        }else{
+            return false;
         }
     }
-    getStore = ()=>{
+    get = ()=>{
         return this.store;
+    }
+    /**
+     * Wrapper over redux store to validate actions, designed to prevent plugins from accidentaly
+     * dispatching actions that would mess up with app state. 
+     * 
+     */
+    dispatch = <A extends Action<any> = AnyAction>(action: A)=>{
+        //TODO: validate the action first
+        return this.store.dispatch(action);
     }
 }
 

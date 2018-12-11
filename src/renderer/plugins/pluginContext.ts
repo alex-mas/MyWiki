@@ -1,5 +1,6 @@
-import { AnyAction } from "redux";
+import { AnyAction, Reducer } from "redux";
 import { AppState } from "../store/store";
+
 
 
 
@@ -26,15 +27,20 @@ export interface InstallPluginContext extends PluginContext{
 export interface LoadPluginContext extends PluginContext {
     /**
      * Adds a new key to the state of the app, so that plugins can have state integrated with the rest of the app state.
+     * Return value answers the question: Was the reducer registered on the store?
      */
-    registerReducer(): void;
-    /**
-     * View will be accesible via the menu inside the wiki
-     */
+    registerReducer<T extends any>(key: string, reducer: Reducer<T>): boolean;
+    
     registerView(): void;
+    /**
+     * menu buttons registered by this method will render after app menus and each plugin will have a category with all the buttons
+     */
+    registerMenuButton(): void;
     /**
      * Slatejs plugin
      */
     registerEditorPlugin():void;
+
+
 
 }

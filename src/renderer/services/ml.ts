@@ -11,7 +11,7 @@ import AppStore, { AppState } from "../store/store";
 export class MLService extends ReduxService<AppState> {
     private serviceRunner: ThreadManager;
     constructor(store: AppStore) {
-        super(store.getStore());
+        super(store.get());
         this.serviceRunner = new ThreadManager(
             './workers/ml.js',
             {

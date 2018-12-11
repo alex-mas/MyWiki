@@ -30,8 +30,9 @@ import ReduxI18NService from './services/i18n';
 import { load, unload } from './actions/appLifecycle';
 
 
-export const pluginManager = new PluginManager();
+
 export const store = new AppStore();
+export const pluginManager = new PluginManager(store);
 export const mlService = new MLService(store);
 export const reduxI18nService = new ReduxI18NService(store);
 export const i18n = reduxI18nService.traduce;
@@ -51,7 +52,7 @@ const I18nSystem = connect((state: AppState, props) => {
 
 
 const App = (
-    <Provider store={store.getStore()}>
+    <Provider store={store.get()}>
         <I18nSystem>
             <PromptSystem>
                 <AppRouter />
@@ -64,21 +65,21 @@ ReactDOM.render(App, appRoot);
 
 
 window.onload = () => {
-    store.getStore().dispatch(load());
+    store.get().dispatch(load());
     //TODO: refactor this calls into reducer persistors.
     //@ts-ignore
-    store.getStore().dispatch(loadWikis());
+    store.get().dispatch(loadWikis());
     //@ts-ignore
-    store.getStore().dispatch(loadAppData());
+    store.get().dispatch(loadAppData());
 
     //@ts-ignore
-    store.getStore().dispatch(parsePlugins());
+    store.get().dispatch(parsePlugins());
 
 }
 
 
 window.onbeforeunload = () => {
-    store.getStore().dispatch(unload());
+    store.get().dispatch(unload());
     //TODO: refactor this calls into reducer persistors.
     saveWikis();
     saveAppData();

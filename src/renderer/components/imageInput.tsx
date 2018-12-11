@@ -31,6 +31,7 @@ export class ImageInput extends React.PureComponent<ComponentProps, any>{
         },
             (filePaths: string[]) => {
                 if (filePaths.length === 1) {
+                    debugger;
                     const imagePath = path.relative(__dirname, filePaths[0]);
                     this.props.onChange(imagePath);
                 }

@@ -1,5 +1,4 @@
-
-
+import memoize from './memoize';
 
 export const readOnly = <T extends object>(obj: T)=>{
     return new Proxy(obj,{
@@ -9,4 +8,4 @@ export const readOnly = <T extends object>(obj: T)=>{
     });
 }
 
-export default readOnly;
+export default memoize(readOnly);
