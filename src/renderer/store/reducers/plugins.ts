@@ -1,11 +1,24 @@
 import { Reducer, AnyAction } from "redux";
 import { PARSE_PLUGIN, LOAD_PLUGIN, ParsePluginAction } from "../../actions/plugins";
 import { createReducer } from "../../../utils/reducer";
+import { WikiEditorPlugin } from "../../components/wikiEditor/wikiEditor";
 
 
 export interface Plugin {
     id: string
+}
 
+export interface PluginMenuAction {
+    onClick: React.MouseEvent<HTMLLIElement>,
+    icon: string,
+    text:string
+}
+
+export interface PluginView {
+    component: React.ComponentClass<any> | React.SFC<any> | string | any;
+    path: string,
+    exact:boolean,
+    exactParams: boolean
 }
 
 export interface PluginMetaData {
@@ -14,7 +27,13 @@ export interface PluginMetaData {
     name: string,
     version: string,
     description: string,
-    loaded: boolean
+    loaded: boolean,
+    //TODO: implement actions to add and remove the diferent components of plugin data
+    data: {
+        menuButtons: PluginMenuAction[],
+        editorPlugins: WikiEditorPlugin[],
+        views: PluginView[]
+    }
 }
 
 export type PluginState = PluginMetaData[];

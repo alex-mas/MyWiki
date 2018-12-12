@@ -121,6 +121,11 @@ export const parsePlugins: ParsePluginActionCreator = () =>{
                 try{
                     const fileContents = fsp.readFile(`./plugins/${plugin}/plugin.config.json`, 'utf8');
                     const data: PluginMetaData = JSON.parse(await fileContents);
+                    data.data ={
+                        views: [],
+                        editorPlugins: [],
+                        menuButtons: []
+                    }
                     data.loaded = false;
                     pluginManager.initialize(data);
                     dispatch(parsePlugin(data));

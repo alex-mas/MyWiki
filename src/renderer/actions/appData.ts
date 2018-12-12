@@ -134,7 +134,7 @@ export const loadAppData: LoadAppDataActionCreator = ()=>{
 
 
 export const saveAppData = ()=>{
-    const store = AppStore.getStore();
+    const store = AppStore.get();
     const appData = store.getState().appData;
     if(appData){
         fsp.writeFile('./appConfig/app.config.json', JSON.stringify(appData), 'utf8')

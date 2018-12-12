@@ -1,12 +1,14 @@
 import * as EventEmitter from 'events';
 import uuid from 'uuid/v4';
-import { PluginMetaData } from '../store/reducers/plugins';
+import { PluginMetaData, PluginView, PluginMenuAction } from '../store/reducers/plugins';
 import * as path from 'path';
 import { store } from '../app';
 import { createNotification } from '../actions/notifications';
 import AppStore from '../store/store';
 import readOnly from '../../utils/readonly';
 import { PluginContext, LoadPluginContext, InstallPluginContext } from './pluginContext';
+import { registerPluginView, registerMenuAction, registerEditorPlugin } from '../actions/pluginData';
+import { WikiEditorPlugin } from '../components/wikiEditor/wikiEditor';
 
 
 
@@ -50,21 +52,24 @@ export class PluginManager {
     getPlugin = (id: string) => {
         return this.plugins.find((plugin) => plugin.id === id);
     }
-    getPluginContext = () => {
+    getPluginContext = (id:string) => {
         return {
             notify: (...args: [string, string, string]) => this.store.get().dispatch(createNotification(...args)),
             dispatch: this.store.dispatch,
             getState: this.store.get().getState
         }
     }
-    getInstallPluginContext = () => {
+    getInstallPluginContext = (id: string) => {
         //TODO: add instll only context to the return object
-        const pluginContext = this.getPluginContext();
+        const pluginContext = this.getPluginContext(id);
         return pluginContext;
     }
-    getLoadPluginContext = () => {
-        const pluginContext: any = this.getPluginContext();
+    getLoadPluginContext = (id:string) => {
+        const pluginContext: any = this.getPluginContext(id);
         pluginContext.registerReducer = this.store.registerReducer;
+        pluginContext.registerView = (view: PluginView)=>this.store.get().dispatch(registerPluginView(id,view));
+        pluginContext.registerMenuButton = (action:PluginMenuAction)=>this.store.get().dispatch(registerMenuAction(id,action));
+        pluginContext.registerEditorPlugin = (plugin: WikiEditorPlugin)=>this.store.get().dispatch(registerEditorPlugin(id, plugin))
         return pluginContext as LoadPluginContext;
     }
     initialize(metaData: PluginMetaData) {
@@ -78,10 +83,10 @@ export class PluginManager {
 
 
     install = (id: string) => {
-        this.getPlugin(id).emit('install', this.getInstallPluginContext());
+        this.getPlugin(id).emit('install', this.getInstallPluginContext(id));
     }
     load = (id: string) => {
-        this.getPlugin(id).emit('load', this.getLoadPluginContext());
+        this.getPlugin(id).emit('load', this.getLoadPluginContext(id));
     }
 
 }

@@ -1,5 +1,7 @@
 import { AnyAction, Reducer } from "redux";
 import { AppState } from "../store/store";
+import { PluginView, PluginMenuAction } from "../store/reducers/plugins";
+import { WikiEditorPlugin } from "../components/wikiEditor/wikiEditor";
 
 
 
@@ -31,16 +33,14 @@ export interface LoadPluginContext extends PluginContext {
      */
     registerReducer<T extends any>(key: string, reducer: Reducer<T>): boolean;
     
-    registerView(): void;
+    registerView(view:PluginView): void;
     /**
      * menu buttons registered by this method will render after app menus and each plugin will have a category with all the buttons
      */
-    registerMenuButton(): void;
+    registerMenuAction(menuButton:PluginMenuAction): void;
     /**
      * Slatejs plugin
      */
-    registerEditorPlugin():void;
-
-
+    registerEditorPlugin(plugin:WikiEditorPlugin):void;
 
 }
