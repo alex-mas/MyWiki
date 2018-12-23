@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { MemoryLink } from '@axc/react-components/navigation/memoryRouter';
+import { Link } from 'react-router-dom';
 
 
 export class HomeButton extends React.Component<any, any>{
     render() {
         return (
-            <MemoryLink
+            <Link
                 to='/'
                 className='wiki-header__home-btn'
             >
                 <img className='wiki-header__home-btn__image' src='resources/images/appIcon.png'/>
-            </MemoryLink>
+            </Link>
         )
 
     }

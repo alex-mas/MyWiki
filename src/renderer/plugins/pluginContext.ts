@@ -18,6 +18,7 @@ export interface PluginContext {
      * 
      */ 
     getState():Partial<AppState>;
+    navigateTo(path:string):void;
 }
 
 

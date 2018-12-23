@@ -3,16 +3,18 @@ import { RouteProps } from '../router/router';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetadata } from '../store/reducers/wikis';
 import { selectWiki, SelectWikiActionCreator, removeWiki, loadWiki, LoadWikiActionCreator } from '../actions/wikis';
-import { MemoryHistory, withHistoryContext } from '@axc/react-components/navigation/memoryRouter';
 import { ActionCreator } from 'redux';
-import { withPrompt, PromptComponentProps } from '@axc/react-components/interactive/prompt';
-import I18String from '@axc/react-components/display/i18string';
+import { withPrompt, PromptComponentProps } from '@axc/react-components/prompt';
+import I18String from '@axc/react-components/i18string';
 import { Button } from './button';
 import { DeletePrompt, DeletePromptFunction } from './deletePrompt';
+import {withRouter, RouteComponentProps} from 'react-router-dom';
+import { MemoryHistory } from 'history';
 
-interface WikiItemOwnProps {
-    wiki: WikiMetadata,
-    history: MemoryHistory
+
+
+interface WikiItemOwnProps extends RouteComponentProps{
+    wiki: WikiMetadata
 }
 
 interface WikiItemDispatchProps {
@@ -28,14 +30,14 @@ interface WikiItemPromptProps {
 type WikiItemProps = WikiItemOwnProps & WikiItemDispatchProps & WikiItemPromptProps;
 
 
-class WikiItem extends React.Component<WikiItemProps, any>{
+export class WikiItem extends React.Component<WikiItemProps, any>{
     constructor(props: WikiItemProps) {
         super(props);
     }
     onOpen = () => {
-        //@ts-ignore
+         //@ts-ignore
         this.props.selectWiki(this.props.wiki.id).then(() => {
-            this.props.history.pushState('/wiki/article/home');
+            this.props.history.push('/wiki/article/home');
         }).catch((e: NodeJS.ErrnoException) => console.warn('Error while loading wiki: ', e));
 
     }
@@ -76,11 +78,12 @@ class WikiItem extends React.Component<WikiItemProps, any>{
 
 
 
-export default withPrompt<any>(withHistoryContext(connect(
+export default withPrompt<any>(withRouter(connect(
     undefined,
     {
         selectWiki,
         removeWiki,
         loadWiki
     }
+     //@ts-ignore
 )(WikiItem)));

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Notification } from '../store/reducers/notifications';
-import { AppState } from '../store/store';
-import { removeNotification, removeAllNotifications, markNotificationAsRead, markAllNotificationsAsRead } from '../actions/notifications';
+import {markAllNotificationsAsRead } from '../actions/notifications';
 import NotificationList from './notificationList';
 import NotificationsButton from './notificationsButton';
 import RecentNotifications from './recentNotifications';

@@ -2,6 +2,7 @@ import { Reducer, AnyAction } from "redux";
 import { PARSE_PLUGIN, LOAD_PLUGIN, ParsePluginAction } from "../../actions/plugins";
 import { createReducer } from "../../../utils/reducer";
 import { WikiEditorPlugin } from "../../components/wikiEditor/wikiEditor";
+import { REGISTER_MENU_ACTION, REGISTER_PLUGIN_VIEW, REGISTER_EDITOR_PLUGIN } from "../../actions/pluginData";
 
 
 export interface Plugin {
@@ -9,7 +10,7 @@ export interface Plugin {
 }
 
 export interface PluginMenuAction {
-    onClick: React.MouseEvent<HTMLLIElement>,
+    onClick: React.MouseEventHandler<HTMLAnchorElement>,
     icon: string,
     text:string
 }
@@ -30,7 +31,7 @@ export interface PluginMetaData {
     loaded: boolean,
     //TODO: implement actions to add and remove the diferent components of plugin data
     data: {
-        menuButtons: PluginMenuAction[],
+        menuActions: PluginMenuAction[],
         editorPlugins: WikiEditorPlugin[],
         views: PluginView[]
     }
@@ -57,6 +58,54 @@ export const pluginReducer = createReducer<PluginState>(
                     return plugin;
                 }
             });
+        },
+        [REGISTER_MENU_ACTION]: (state, action: any)=>{
+            return state.map((plugin)=>{
+                if(action.id === plugin.id){
+                    const updatedPlugin = {
+                        ...plugin
+                    }
+                    updatedPlugin.data = {
+                        ...plugin.data,
+                        menuActions:  [...plugin.data.menuActions, action.menuAction]
+                    }
+                    return updatedPlugin;
+                }else{
+                    return plugin;
+                }
+            })
+        },
+        [REGISTER_PLUGIN_VIEW]: (state, action: any)=>{
+            return state.map((plugin)=>{
+                if(action.id === plugin.id){
+                    const updatedPlugin = {
+                        ...plugin
+                    }
+                    updatedPlugin.data = {
+                        ...plugin.data,
+                        views:  [...plugin.data.views, action.view]
+                    }
+                    return updatedPlugin;
+                }else{
+                    return plugin;
+                }
+            })
+        },
+        [REGISTER_EDITOR_PLUGIN]: (state, action: any)=>{
+            return state.map((plugin)=>{
+                if(action.id === plugin.id){
+                    const updatedPlugin = {
+                        ...plugin
+                    }
+                    updatedPlugin.data = {
+                        ...plugin.data,
+                        editorPlugins:  [...plugin.data.editorPlugins, action.plugin]
+                    }
+                    return updatedPlugin;
+                }else{
+                    return plugin;
+                }
+            })
         }
     }
 );

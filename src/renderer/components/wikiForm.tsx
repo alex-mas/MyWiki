@@ -1,16 +1,10 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { WikisMetadataReducer, WikiMetadata, UserDefinedWikiMetadata } from '../store/reducers/wikis';
-import { remote, Dialog, OpenDialogOptions } from 'electron';
+import { WikiMetadata, UserDefinedWikiMetadata } from '../store/reducers/wikis';
+import { remote, Dialog } from 'electron';
 import * as fs from 'fs';
 import * as util from 'util';
-import * as path from 'path';
-import { fsError, FsErrorActionCreator } from '../actions/errors';
-import { createWiki, CreateWikiActionCreator } from '../actions/wikis';
-import { MemoryHistory, withHistoryContext } from '@axc/react-components/navigation/memoryRouter';
-import { encode } from 'punycode';
 import { ImageInput } from './imageInput';
-import I18String from '@axc/react-components/display/i18string';
+import I18String from '@axc/react-components/i18string';
 import { Button } from './button';
 
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
-import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
+import { RouteProps } from '@axc/react-components/historyRouter';
 import WikiEditor from '../wikiEditor/wikiEditor';
 import { Value } from 'slate';
 import { loadArticle, LoadArticleActionCreator, Article, saveArticle, SaveArticleActionCreator, ArticleMetaData } from '../../actions/article';
@@ -13,6 +13,7 @@ import { WikiMetadata } from '../../store/reducers/wikis';
 import { AppData } from '../../store/reducers/appData';
 import WikiView from '../wikiView';
 import { getSelectedWiki } from '../../selectors/wikis';
+import { RouteComponentProps } from 'react-router';
 
 
 
@@ -21,7 +22,7 @@ interface DispatchProps {
     saveArticle: SaveArticleActionCreator
 }
 
-interface OwnProps extends MemoryRouteProps {
+interface OwnProps extends RouteComponentProps<{article:string}>{
 }
 
 interface ReduxProps {
@@ -57,10 +58,10 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
     componentDidMount() {
         const appTitle = document.getElementById('pageTitle');
         if (appTitle.innerText !== this.props.selectedWiki.name) {
-            appTitle.innerText = `${this.props.selectedWiki.name} - editing@${this.props.routeParams.article}`;
+            appTitle.innerText = `${this.props.selectedWiki.name} - editing@${this.props.match.params.article}`;
         }
         //@ts-ignore
-        this.props.loadArticle(this.props.routeParams.article ? this.props.routeParams.article : 'home').then((article: Article) => {
+        this.props.loadArticle(this.props.match.params.article ? this.props.match.params.article : 'home').then((article: Article) => {
             console.log('loaded article to edit');
             console.log(article);
             console.log(article.content);
@@ -98,7 +99,7 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
     saveChanges = () => {
         console.log('Saved changes');
         return this.props.saveArticle({
-            name: this.props.routeParams.article,
+            name: this.props.match.params.article,
             tags: this.state.tags,
             content: this.state.editorContent.toJSON(),
             background: this.state.background,
@@ -108,11 +109,11 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
     saveChangesAndRedirect = () => {
         //@ts-ignore
         this.saveChanges().then(() => {
-            this.props.history.pushState(`/wiki/article/${this.props.routeParams.article}`);
+            this.props.history.push(`/wiki/article/${this.props.match.params.article}`);
         }).catch((e: string) => console.warn(e));
     }
     discardChanges = () => {
-        this.props.history.pushState('/wiki/article/home');
+        this.props.history.push('/wiki/article/home');
     }
     onChangeTags = (newTags: string[]) => {
         this.setState(() => ({
@@ -144,7 +145,7 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
         }));
     }
     render() {
-        const article = this.props.routeParams.article;
+        const article = this.props.match.params.article;
         return (
             <WikiView background={this.getBackground()}>
                 <div className='body--article'>
@@ -207,7 +208,7 @@ export default connect(
         const selectedWiki = getSelectedWiki(state);
         return {
             selectedWiki,
-            article: getArticle(props.routeParams.article, selectedWiki),
+            article: getArticle(props.match.params.article, selectedWiki),
             appData: state.appData
         }
     },

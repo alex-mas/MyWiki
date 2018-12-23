@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { PromptFunction } from '@axc/react-components/interactive/prompt';
+import { PromptFunction } from '@axc/react-components/prompt';
 import { Button } from './button';
-import I18String from '@axc/react-components/display/i18string';
-import Modal from '@axc/react-components/layout/modal';
+import I18String from '@axc/react-components/i18string';
+import Modal from '@axc/react-components/modal';
 
 export type DeletePromptFunction = (component: string | React.ComponentClass<ComponentProps, any> | React.FunctionComponentFactory<ComponentProps>, componentProps?: any) => Promise<boolean>;
 

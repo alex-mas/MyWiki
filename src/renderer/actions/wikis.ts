@@ -246,7 +246,7 @@ export type SaveWikisActionCreator = AsyncACreator<any, SaveWikisAction, void>;
 
 
 export const saveWikis = ()=>{
-    const store = AppStore.getStore();
+    const store = AppStore.get();
     const wikis = store.getState().wikis;
     wikis.forEach(async (wiki, index) => {
         if (wiki) {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MemoryLink } from '@axc/react-components/navigation/memoryRouter';
+import { Link } from 'react-router-dom';
 import { RenderAttributes } from 'slate-react';
 import { doesArticleExist } from '../../../selectors/articles';
 import { connect } from 'react-redux';
@@ -52,13 +52,13 @@ export class WikiLink extends React.Component<ComponentProps, any>{
                 let to = `/wiki/${exists ? 'article' : 'create'}/${this.props.to}`
                 return (
                     <span {...this.props.attributes}>
-                        <MemoryLink
-                            to={to}
-                            text={this.props.text ? this.props.text : undefined}
+                        <Link
+                            to={to} 
                             className={exists ? 'wiki-link' : 'wiki-link--undone'}
                         >
+                            {this.props.text ? this.props.text : undefined}
                             {this.props.children}
-                        </MemoryLink>
+                        </Link>
                     </span>
                 );
             }

@@ -2,14 +2,15 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { getArticleNames } from '../selectors/articles';
 import { AppState } from '../store/store';
-import AutoComplete from '@axc/react-components/interactive/autoComplete';
-import { withHistoryContext, MemoryHistory } from '@axc/react-components/navigation/memoryRouter';
+import AutoComplete from '@axc/react-components/autoComplete';
+import { withHistory, History } from '@axc/react-components/historyRouter';
 import { getSelectedWiki } from '../selectors/wikis';
 import { reduxI18nService, i18n} from '../app';
+import { withRouter, RouteComponentProps } from 'react-router';
+import { MemoryHistory } from 'history';
 
 
-interface OwnProps {
-    history: MemoryHistory
+interface OwnProps extends RouteComponentProps{
 }
 interface DispatchProps {
 
@@ -50,9 +51,9 @@ export class WikiSearchBar extends React.Component<ComponentProps, ComponentStat
         const value = this.validateInput(val);
         const matchingArticles = this.props.articleNames.filter((article) => article.includes(value));
         if (matchingArticles.length === 1 && matchingArticles[0] === value) {
-            this.props.history.pushState(`/wiki/article/${value}`);
+            this.props.history.push(`/wiki/article/${value}`);
         } else {
-            this.props.history.pushState(`/wiki/search/${value}`);
+            this.props.history.push(`/wiki/search/${value}`);
         }
     }
     render() {
@@ -69,13 +70,11 @@ export class WikiSearchBar extends React.Component<ComponentProps, ComponentStat
     }
 }
 
-export default withHistoryContext(connect(
+export default connect(
     (state: AppState, props) => {
         return {
             articleNames: getArticleNames(getSelectedWiki(state))
         }
     },
-    {
-
-    }
-)(WikiSearchBar));
+    undefined
+)(withRouter(WikiSearchBar));

@@ -7,7 +7,7 @@ import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetadata } from '../../store/reducers/wikis';
 import WikiEditor from '../wikiEditor/wikiEditor';
 import defaultEditorContents from '../wikiEditor/utilities/defaultValue';
-import { MemoryRouteProps } from '@axc/react-components/navigation/memoryRouter';
+import { RouteComponentProps } from 'react-router-dom';
 import { Value } from 'slate';
 import { CreateArticleActionCreator, createArticle } from '../../actions/article';
 import { fsError, FsErrorActionCreator } from '../../actions/errors';
@@ -15,22 +15,22 @@ import Header from '../header';
 import TagForm from '../tagForm';
 import { ImageInput } from '../imageInput';
 import WikiHeader from '../wikiHeader';
-import I18String from '@axc/react-components/display/i18string';
+import I18String from '@axc/react-components/i18string';
 import WikiView from '../wikiView';
 import { getSelectedWiki } from '../../selectors/wikis';
 import DynamicTextInput from '../dynamicTextInput';
 
 
 interface DispatchProps {
-    createArticle: CreateArticleActionCreator,
-    fsError: FsErrorActionCreator
+    createArticle: typeof createArticle,
+    fsError: typeof fsError
 }
 
 interface ReduxProps {
     selectedWiki: WikiMetadata
 }
 
-interface OwnProps extends MemoryRouteProps {
+interface OwnProps extends RouteComponentProps<{article:string}>{
 }
 
 type ComponentProps = OwnProps & DispatchProps & ReduxProps;
@@ -49,7 +49,7 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
         super(props);
         this.state = {
             editorContent: defaultEditorContents,
-            name: this.props.routeParams.article,
+            name: this.props.match.params.article,
             background: undefined,
             tags: [],
             areTagsBeingManaged: false
@@ -90,11 +90,11 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
             //@ts-ignore
         }).then(() => {
             console.log('created article');
-            this.props.history.pushState(`/wiki/article/${this.state.name}`);
+            this.props.history.push(`/wiki/article/${this.state.name}`);
         });
     }
     discardChanges = () => {
-        this.props.history.back();
+        this.props.history.goBack();
     }
     onBackgroundChange = (newBackground: string) => {
         this.setState(() => ({
@@ -109,7 +109,7 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
                         <div className='wiki-article__header__section'>
                             <h1 className='wiki-article__title'>
                                 <I18String text='creating' format='capitalizeFirst' />:
-                                    {this.props.routeParams.article ?
+                                    {this.props.match.params.article ?
                                         this.state.name
                                         :
                                         <DynamicTextInput
@@ -180,6 +180,7 @@ export default connect(
         fsError,
         createArticle
     }
+    //@ts-ignore
 )(CreateArticlePage);
 
 

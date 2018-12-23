@@ -1,4 +1,4 @@
-import { PluginMenuButton, PluginView } from "../store/reducers/plugins";
+import { PluginView, PluginMenuAction } from "../store/reducers/plugins";
 import { WikiEditorPlugin } from "../components/wikiEditor/wikiEditor";
 
 
@@ -7,11 +7,11 @@ export const REGISTER_MENU_ACTION = 'REGISTER_MENU_ACTION';
 export const REGISTER_PLUGIN_VIEW = 'REGISTER_PLUGIN_VIEW';
 
 
-export const registerMenuAction = (id: string, menu:PluginMenuButton)=>{
+export const registerMenuAction = (id: string, menuAction:PluginMenuAction)=>{
     return{
         type: REGISTER_MENU_ACTION,
         id,
-        menu
+        menuAction
     }
 }
 

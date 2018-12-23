@@ -1,6 +1,6 @@
 import * as React from 'react';
-import I18String from '@axc/react-components/display/i18string';
-import { Modal } from '@axc/react-components/layout/modal';
+import I18String from '@axc/react-components/i18string';
+import { Modal } from '@axc/react-components/modal';
 import { connect } from 'react-redux';
 import { AppState } from '../store/store';
 import { WikiMetadata, UserDefinedWikiMetadata } from '../store/reducers/wikis';

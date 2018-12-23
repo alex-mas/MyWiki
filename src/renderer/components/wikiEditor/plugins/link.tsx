@@ -5,7 +5,7 @@ import EditorButton from '../components/editorButton';
 import { Value, Editor } from 'slate';
 import { RenderBlock, hasBlockType, onClickBlockButton } from '../utilities/blocks';
 import { hasInlineType, wrapInline, unwrapInline } from '../utilities/inlines';
-import Modal from '@axc/react-components/layout/modal';
+import Modal from '@axc/react-components/modal';
 import LinkButton from '../components/linkButton';
 import WikiLink from '../components/wikiLink';
 

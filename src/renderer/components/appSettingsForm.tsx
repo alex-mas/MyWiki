@@ -1,13 +1,12 @@
 import * as React from 'react';;
 import ImageInput from '../components/imageInput';
-import I18String, { ISO639Locale } from '@axc/react-components/display/i18string';
-import { withHistoryContext, MemoryHistory } from '@axc/react-components/navigation/memoryRouter';
+import I18String, { ISO639Locale } from '@axc/react-components/i18string';
 import { connect } from 'react-redux';
 import { AppData } from '../store/reducers/appData';
 import { AppState } from '../store/store';
 import { resetAppData, setLocale, setAppBackground, setAppAutoSave, setAppAutoSaveInterval } from '../actions/appData';
 import { ActionCreator } from 'redux';
-import Modal from '@axc/react-components/layout/modal';
+import Modal from '@axc/react-components/modal';
 import { Button } from './button';
 
 
@@ -170,4 +169,5 @@ export default connect(
         setAppAutoSave,
         setAppAutoSaveInterval
     }
+     //@ts-ignore
 )(SettingsForm);

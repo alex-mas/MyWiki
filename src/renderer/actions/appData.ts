@@ -1,6 +1,6 @@
 import { AppData, defaultAppData } from "../store/reducers/appData";
 import { Action, ActionCreator, AnyAction } from "redux";
-import { LocaleLayout, ISO639Locale } from "@axc/react-components/display/i18string";
+import { LocaleLayout, ISO639Locale } from "@axc/react-components/i18string";
 import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
 import { ErrorAction, fsError } from "./errors";

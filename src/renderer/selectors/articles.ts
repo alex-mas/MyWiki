@@ -23,7 +23,7 @@ const parseSearch = (rawSerach: string)=>{
  * 
  * 
  */
-export const getRelevantArticles= (search:string, selectedWiki: WikiMetadata): string[]=>{
+export const getRelevantArticles= (search:string = "", selectedWiki: WikiMetadata): string[]=>{
     const parsedSearch = parseSearch(search);
     const regularMatches = selectedWiki.articles.filter((article)=>{
         if(

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { remote, Dialog, OpenDialogOptions } from 'electron';
 import * as path from 'path';
-import I18String from '@axc/react-components/display/i18string';
+import I18String from '@axc/react-components/i18string';
 import { Button } from './button';
 import { i18n } from '../app';
 
@@ -31,7 +31,6 @@ export class ImageInput extends React.PureComponent<ComponentProps, any>{
         },
             (filePaths: string[]) => {
                 if (filePaths.length === 1) {
-                    debugger;
                     const imagePath = path.relative(__dirname, filePaths[0]);
                     this.props.onChange(imagePath);
                 }

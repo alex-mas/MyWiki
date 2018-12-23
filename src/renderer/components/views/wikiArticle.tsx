@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
-import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
+import { Link } from 'react-router-dom';
 import WikiEditor from '../wikiEditor/wikiEditor';
 import defaultEditorContents from '../wikiEditor/utilities/defaultValue';
 import * as ReactMarkdown from 'react-markdown';
@@ -14,11 +14,12 @@ import { getArticle } from '../../selectors/articles';
 import { WikiMetadata } from '../../store/reducers/wikis';
 import WikiHeader from '../wikiHeader';
 import HomeButton from '../homeButton';
-import I18String from '@axc/react-components/display/i18string';
+import I18String from '@axc/react-components/i18string';
 import WikiView from '../wikiView';
-import { withPrompt, PromptFunction } from '@axc/react-components/interactive/prompt';
+import { withPrompt, PromptFunction } from '@axc/react-components/prompt';
 import { DeletePromptFunction, DeletePrompt } from '../deletePrompt';
 import { getSelectedWiki } from '../../selectors/wikis';
+import { RouteComponentProps } from 'react-router';
 const { dialog } = require('electron').remote
 
 
@@ -32,7 +33,7 @@ interface DispatchProps {
 interface PromptProps {
     prompt: DeletePromptFunction;
 }
-interface OwnProps extends MemoryRouteProps {
+interface OwnProps extends RouteComponentProps<{article:string}> {
 }
 
 interface ReduxProps {
@@ -41,7 +42,7 @@ interface ReduxProps {
 }
 
 
-type PageProps = MemoryRouteProps & ReduxProps & DispatchProps & PromptProps;
+type PageProps = OwnProps & ReduxProps & DispatchProps & PromptProps;
 
 //  <ReactMarkdown source={fs.readFileSync(path.join(props.selectedWiki.path, 'home.md'), 'utf8')}/>
 export class WikiArticlePage extends React.Component<PageProps, any>{
@@ -54,10 +55,10 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
     componentDidMount() {
         const appTitle = document.getElementById('pageTitle');
         if (appTitle.innerText !== this.props.selectedWiki.name) {
-            appTitle.innerText = `${this.props.selectedWiki.name}@${this.props.routeParams.article}`;
+            appTitle.innerText = `${this.props.selectedWiki.name}@${this.props.match.params.article}`;
         }
         //@ts-ignore
-        this.props.loadArticle(this.props.routeParams.article).then((article: Article) => {
+        this.props.loadArticle(this.props.match.params.article).then((article: Article) => {
             this.setState(() => ({
                 content: article.content ? Value.fromJSON(article.content) : defaultEditorContents,
                 fileExists: article.content ? true : false
@@ -70,9 +71,9 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
         })
     }
     componentDidUpdate(prevProps: PageProps, prevState: any) {
-        if (this.props.routeParams.article !== prevProps.routeParams.article) {
+        if (this.props.match.params.article !== prevProps.match.params.article) {
             //@ts-ignore
-            this.props.loadArticle(this.props.routeParams.article).then((article: Article) => {
+            this.props.loadArticle(this.props.match.params.article).then((article: Article) => {
                 this.setState(() => ({
                     content: article.content ? Value.fromJSON(article.content) : defaultEditorContents,
                     fileExists: article.content ? true : false
@@ -89,8 +90,8 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
         this.props.prompt(DeletePrompt, { title: 'are you sure you want to delete this article?' }).then((response) => {
             if (response) {
                 //@ts-ignore
-                this.props.deleteArticle(this.props.routeParams.article).then(() => {
-                    this.props.history.pushState('/wiki/article/home');
+                this.props.deleteArticle(this.props.match.params.article).then(() => {
+                    this.props.history.push('/wiki/article/home');
                 });
             }
         });
@@ -107,7 +108,7 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
                         <div className='wiki-article__header__section'>
                             <h1 className='wiki-article__title'> <I18String text='article not found' format='capitalizeFirst' /></h1>
                             <div className='wiki-article__actions'>
-                                <MemoryLink to={`/wiki/create/${this.props.routeParams.article}`}><i className="material-icons">add</i></MemoryLink>
+                                <Link to={`/wiki/create/${this.props.match.params.article}`}><i className="material-icons">add</i></Link>
                             </div>
                         </div>
                     </div>
@@ -125,7 +126,7 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
         return background;
     }
     render() {
-        const article = this.props.routeParams.article;
+        const article = this.props.match.params.article;
         if (this.state.fileExists) {
             return (
                 <WikiView background={this.getBackground()}>
@@ -135,7 +136,7 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
                                 <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
                                 <div className='wiki-article__actions'>
                                     {article !== 'home' ? <button onClick={this.deleteArticle}><i className='material-icons'>delete_forever</i></button> : null}
-                                    <MemoryLink to={`/wiki/edit/${article}`}><i className='material-icons'>create</i></MemoryLink>
+                                    <Link to={`/wiki/edit/${article}`}><i className='material-icons'>create</i></Link>
                                 </div>
                             </div>
                         </div>
@@ -160,12 +161,12 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
 
 
 
-export default withPrompt<any>(connect(
+export default withPrompt<PageProps>(connect(
     (state:AppState, props:OwnProps) => {
         const selectedWiki = getSelectedWiki(state);
         return {
             selectedWiki,
-            article: getArticle(props.routeParams.article,selectedWiki)
+            article: getArticle(props.match.params.article,selectedWiki)
         };
     },
     {
@@ -173,4 +174,5 @@ export default withPrompt<any>(connect(
         loadArticle,
         deleteArticle
     }
+     //@ts-ignore
 )(WikiArticlePage));

@@ -124,7 +124,7 @@ export const parsePlugins: ParsePluginActionCreator = () =>{
                     data.data ={
                         views: [],
                         editorPlugins: [],
-                        menuButtons: []
+                        menuActions: []
                     }
                     data.loaded = false;
                     pluginManager.initialize(data);

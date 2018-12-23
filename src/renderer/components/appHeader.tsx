@@ -1,10 +1,7 @@
 import * as React from 'react';
 import Header from './header';
-import { withHistoryContext, MemoryHistory, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
 import HomeButton from './homeButton';
 import SettingsForm from './appSettingsForm';
-import { Button } from './button';
-import Notifications from './notifications';
 
 
 interface ComponentProps {

@@ -19,8 +19,20 @@ module.exports = (pluginHooks)=>{
         context.notify('Reducer registered',`value is ${state.helloWorld}`,'sentiment_very_satisfied');
         console.log('the following state should contain a helloWorld property', state);
         context.dispatch({type: 'pluginTestAction', payload: 'just a regular string'});
-        context.notify('Dispatched',`value is ${context.getState().helloWorld}`,'sentiment_very_satisfied');
-
+        context.notify(
+            'Dispatched',
+            `value is ${context.getState().helloWorld}`,
+            'sentiment_very_satisfied'
+        );
+        context.registerMenuAction({
+        onClick: ()=>context.navigateTo('pluginView/testView'),
+            text: "plugin1",
+            icon: "face"
+        });
+        context.registerView({
+            path: 'testView',
+            component: ()=>"Hello world"
+        });
     });
     pluginHooks.addListener('install',(InstallContext)=>{
         console.log('plugin is being installed',InstallContext);

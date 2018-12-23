@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Editor as SlateEditor, RenderNodeProps, RenderMarkProps, Plugin } from 'slate-react';
-import { Value, Data, Schema, Block, Editor, BlockJSON } from 'slate';
+import { Value, Data, Block, Editor, BlockJSON, SchemaProperties } from 'slate';
 import { connect } from 'react-redux';
 import { remote, Dialog } from 'electron';
 
@@ -64,7 +64,7 @@ export const BUTTON_INLINE_TYPES: any[] = [
 
 
 
-const schema: Schema = {
+const schema: SchemaProperties = {
     //@ts-ignore
     nodes: {
         paragraph: function (props: RenderNodeProps) {

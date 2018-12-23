@@ -4,17 +4,17 @@ import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetadata, UserDefinedWikiMetadata } from '../../store/reducers/wikis';
 import Wiki from '../wikiItem';
-import { MemoryRouteProps, MemoryLink } from '@axc/react-components/navigation/memoryRouter';
-import Modal from '@axc/react-components/layout/modal';
+import Modal from '@axc/react-components/modal';
 import AppHeader from '../appHeader';
 import { AppData } from '../../store/reducers/appData';
 import { Button } from '../button';
 import { createWiki } from '../../actions/wikis';
 import WikiForm from '../wikiForm';
 import AppView from '../appView';
+import { RouteComponentProps } from 'react-router';
 
 
-interface OwnProps extends MemoryRouteProps{
+interface OwnProps extends RouteComponentProps{
 
 }
 
@@ -49,7 +49,7 @@ export class HomePage extends React.Component<ComponentProps, ComponentState>{
     createWiki = (metaData: UserDefinedWikiMetadata) => {
         event.preventDefault();
         this.props.createWiki(metaData);
-        this.props.history.pushState('/');
+        this.props.history.push('/');
     }
     render() {
         return (

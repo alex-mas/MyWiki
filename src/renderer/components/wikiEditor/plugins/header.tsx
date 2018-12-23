@@ -51,7 +51,6 @@ export const generateHeaderPlugins = (context: EditorPluginContext) => {
                         event.stopPropagation();
                         const current = value.blocks.get(value.blocks.size -2);
                         const previous = value.previousBlock;
-                        debugger;
                         if(current.type === type && current.text === ''){
                             const key = current.key;
                             editor.removeNodeByKey(key);

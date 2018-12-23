@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Notification } from "../store/reducers/notifications";
-import I18String from '@axc/react-components/display/i18string';
+import I18String from '@axc/react-components/i18string';
 
 
 

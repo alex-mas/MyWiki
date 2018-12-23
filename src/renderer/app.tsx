@@ -17,8 +17,8 @@ import { loadWikis, loadWiki, saveWikis } from './actions/wikis';
 import { WikiMetadata } from './store/reducers/wikis';
 import { fsError } from './actions/errors';
 import { parsePlugins, parsePlugin } from './actions/plugins';
-import I18String, { I18nSystem as _I18nSystem, I18nSystemProps } from '@axc/react-components/display/i18string';
-import { PromptSystem } from '@axc/react-components/interactive/prompt';
+import I18String, { I18nSystem as _I18nSystem, I18nSystemProps } from '@axc/react-components/i18string';
+import { PromptSystem } from '@axc/react-components/prompt';
 import { AnyAction } from 'redux';
 import { ThreadManager, WorkDistributionStrategy } from '@axc/thread-manager';
 import { AppData } from './store/reducers/appData';
@@ -28,6 +28,7 @@ import { createNotification, removeNotification } from './actions/notifications'
 import MLService from './services/ml';
 import ReduxI18NService from './services/i18n';
 import { load, unload } from './actions/appLifecycle';
+import { MemoryHistory } from '@axc/react-components/memoryHistory';
 
 
 
@@ -36,6 +37,12 @@ export const pluginManager = new PluginManager(store);
 export const mlService = new MLService(store);
 export const reduxI18nService = new ReduxI18NService(store);
 export const i18n = reduxI18nService.traduce;
+
+export const appHistory = new MemoryHistory({
+    url:'/',
+    title:undefined, 
+    state:undefined
+});
 
 const appRoot = document.getElementById('app');
 
@@ -55,7 +62,7 @@ const App = (
     <Provider store={store.get()}>
         <I18nSystem>
             <PromptSystem>
-                <AppRouter />
+                <AppRouter history={appHistory}/>
             </PromptSystem>
         </I18nSystem>
     </Provider>

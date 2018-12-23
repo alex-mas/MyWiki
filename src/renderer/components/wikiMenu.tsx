@@ -1,19 +1,22 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { MemoryLink } from '@axc/react-components/navigation/memoryRouter';
-import I18String from '@axc/react-components/display/i18string';
-import  WikiSettingsButton  from './wikiSettingsButton';
+import { Link } from 'react-router-dom';
+import I18String from '@axc/react-components/i18string';
+import WikiSettingsButton from './wikiSettingsButton';
 import { AppState } from '../store/store';
 import { WikiMetadata } from '../store/reducers/wikis';
 import { getSelectedWiki } from '../selectors/wikis';
+import { getPluginMenuActions } from '../selectors/plugins';
+import { PluginMenuAction } from '../store/reducers/plugins';
 
 
 
-interface OwnProps{
+interface OwnProps {
     isOpen: boolean
 }
-interface ReduxProps{
-    wiki: WikiMetadata
+interface ReduxProps {
+    wiki: WikiMetadata,
+    pluginsActions: PluginMenuAction[][]
 }
 type ComponentProps = OwnProps & ReduxProps;
 
@@ -25,7 +28,7 @@ export class WikiMenu extends React.Component<ComponentProps, any>{
                     <ul className='wiki-menu'>
                         <section className='wiki-menu__section'>
                             <li className='wiki-menu__item'>
-                                <MemoryLink
+                                <Link
                                     className='wiki-menu__link'
                                     to='/wiki/article/home'
                                 >
@@ -33,16 +36,16 @@ export class WikiMenu extends React.Component<ComponentProps, any>{
                                         home
                                     </i>
                                     <I18String text='home' />
-                                </MemoryLink>
+                                </Link>
                             </li>
                             <li className='wiki-menu__item'>
-                                <WikiSettingsButton 
+                                <WikiSettingsButton
                                     className='wiki-menu__link'
                                     wikiID={this.props.wiki.id}
                                 />
                             </li>
                             <li className='wiki-menu__item'>
-                                <MemoryLink
+                                <Link
                                     className='wiki-menu__link'
                                     to='/wiki/plugins'
                                 >
@@ -50,12 +53,12 @@ export class WikiMenu extends React.Component<ComponentProps, any>{
                                         extension
                                     </i>
                                     <I18String text='plugins' />
-                                </MemoryLink>
+                                </Link>
                             </li>
                         </section>
                         <section className='wiki-menu__section'>
                             <li className='wiki-menu__item'>
-                                <MemoryLink
+                                <Link
                                     className='wiki-menu__link'
                                     to='/wiki/articles'
                                 >
@@ -63,13 +66,33 @@ export class WikiMenu extends React.Component<ComponentProps, any>{
                                         subject
                                     </i>
                                     <I18String text='articles' />
-                                </MemoryLink>
+                                </Link>
                             </li>
 
                         </section>
-                        <section className='wiki-menu__section--last'>
-                            <I18String text='plugin defined actions' format='capitalizeFirst'/>
-                        </section>
+                        {
+                            this.props.pluginsActions.map((pluginActions) => {
+                                return (
+                                    <section className='wiki-menu__section'>
+                                        {pluginActions.map((action) => {
+                                            return (
+                                                <li className='wiki-menu__item'>
+                                                    <a
+                                                        className='wiki-menu__link'
+                                                        onClick={action.onClick}
+                                                    >
+                                                        <i className='material-icons'>
+                                                            {action.icon}
+                                                        </i>
+                                                        <I18String text={action.text} format='capitalizeFirst' />
+                                                    </a>
+                                                </li>
+                                            )
+                                        })}
+                                    </section>
+                                )
+                            })
+                        }
                     </ul>
                 </div>
 
@@ -82,8 +105,9 @@ export class WikiMenu extends React.Component<ComponentProps, any>{
 
 
 
-export default connect((state: AppState,props)=>{
-    return{
-        wiki: getSelectedWiki(state)
+export default connect((state: AppState, props) => {
+    return {
+        wiki: getSelectedWiki(state),
+        pluginsActions: getPluginMenuActions(state)
     }
 })(WikiMenu);
