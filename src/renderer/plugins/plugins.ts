@@ -9,7 +9,7 @@ import readOnly from '../../utils/readonly';
 import { PluginContext, LoadPluginContext, InstallPluginContext } from './pluginContext';
 import { registerPluginView, registerMenuAction, registerEditorPlugin } from '../actions/pluginData';
 import { WikiEditorPlugin } from '../components/wikiEditor/wikiEditor';
-import { appHistory } from '../router/router';
+import { history } from '../router/router';
 
 
 
@@ -58,7 +58,7 @@ export class PluginManager {
             notify: (...args: [string, string, string]) => this.store.get().dispatch(createNotification(...args)),
             dispatch: this.store.dispatch,
             getState: this.store.get().getState,
-            navigateTo: (path:string, title:string,state:any)=>appHistory.pushState(path)
+            getHistory: ()=>history
         }
     }
     getInstallPluginContext = (id: string) => {

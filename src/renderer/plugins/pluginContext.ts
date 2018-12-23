@@ -2,6 +2,7 @@ import { AnyAction, Reducer } from "redux";
 import { AppState } from "../store/store";
 import { PluginView, PluginMenuAction } from "../store/reducers/plugins";
 import { WikiEditorPlugin } from "../components/wikiEditor/wikiEditor";
+import { MemoryHistory } from "history";
 
 
 
@@ -18,7 +19,7 @@ export interface PluginContext {
      * 
      */ 
     getState():Partial<AppState>;
-    navigateTo(path:string):void;
+    getHistory(): MemoryHistory;
 }
 
 

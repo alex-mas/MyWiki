@@ -24,15 +24,19 @@ module.exports = (pluginHooks)=>{
             `value is ${context.getState().helloWorld}`,
             'sentiment_very_satisfied'
         );
-        context.registerMenuAction({
-        onClick: ()=>context.navigateTo('pluginView/testView'),
-            text: "plugin1",
-            icon: "face"
-        });
         context.registerView({
             path: 'testView',
             component: ()=>"Hello world"
         });
+        context.registerMenuAction({
+            onClick: ()=>{
+                debugger;
+                context.getHistory().push('/pluginView/testView');
+            },
+            text: "plugin1",
+            icon: "face"
+        });
+
     });
     pluginHooks.addListener('install',(InstallContext)=>{
         console.log('plugin is being installed',InstallContext);

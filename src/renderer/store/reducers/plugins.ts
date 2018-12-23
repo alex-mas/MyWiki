@@ -3,6 +3,7 @@ import { PARSE_PLUGIN, LOAD_PLUGIN, ParsePluginAction } from "../../actions/plug
 import { createReducer } from "../../../utils/reducer";
 import { WikiEditorPlugin } from "../../components/wikiEditor/wikiEditor";
 import { REGISTER_MENU_ACTION, REGISTER_PLUGIN_VIEW, REGISTER_EDITOR_PLUGIN } from "../../actions/pluginData";
+import { RouteProps } from "react-router-dom";
 
 
 export interface Plugin {
@@ -15,11 +16,7 @@ export interface PluginMenuAction {
     text:string
 }
 
-export interface PluginView {
-    component: React.ComponentClass<any> | React.SFC<any> | string | any;
-    path: string,
-    exact:boolean,
-    exactParams: boolean
+export interface PluginView  extends RouteProps{
 }
 
 export interface PluginMetaData {
@@ -76,6 +73,7 @@ export const pluginReducer = createReducer<PluginState>(
             })
         },
         [REGISTER_PLUGIN_VIEW]: (state, action: any)=>{
+            debugger;
             return state.map((plugin)=>{
                 if(action.id === plugin.id){
                     const updatedPlugin = {

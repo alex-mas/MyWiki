@@ -30,27 +30,67 @@ type RouterProps = OwnProps & ReduxProps;
 
 export class AppRouter extends React.PureComponent<RouterProps, any>{
     render() {
+        console.log(history.location);
         return (
             <Router history={history}>
                 <Switch>
-                    <Route path='/' exact component={HomePage} />
-                    <Route path='/plugins' exact render={() => 'not implementedYet'} />
-                    <Route path='/wiki/plugins' exact component={WikiPluginsPage} />
-                    <Route path='/wiki/edit/:article' exact component={WikiEditPage} />
-                    <Route path='/wiki/create/:article?' exact component={CreateArticlePage} />
-                    <Route path='/wiki/article/:article' exact component={WikiArticlePage} />
-                    <Route path='/wiki/search/:articleName?' exact component={ArticleSearchPage} />
-                    <Route path='' component={NotFoundPage} />
+                    <Route
+                        key='/'
+                        path='/'
+                        exact
+                        component={HomePage}
+                    />
+                    <Route
+                        key='/plugins'
+                        path='/plugins'
+                        exact
+                        render={() => 'not implementedYet'}
+                    />
+                    <Route
+                   key='/wiki/plugins'
+                        path='/wiki/plugins'
+                        exact
+                        component={WikiPluginsPage}
+                    />
+                    <Route
+                   key='/wiki/edit/:article'
+                        path='/wiki/edit/:article'
+                        exact
+                        component={WikiEditPage}
+                    />
+                    <Route
+                    key='/wiki/create/:article?'
+                        path='/wiki/create/:article?'
+                        exact
+                        component={CreateArticlePage}
+                    />
+                    <Route
+                    key='/wiki/article/:article'
+                        path='/wiki/article/:article'
+                        exact
+                        component={WikiArticlePage}
+                    />
+                    <Route
+                    key='/wiki/search/:articleName?'
+                        path='/wiki/search/:articleName?'
+                        exact
+                        component={ArticleSearchPage}
+                    />
                     {this.props.views.map((view) => {
+                        debugger;
                         return (
                             <Route
+                            key={`/pluginView/${view.path}`}
                                 path={`/pluginView/${view.path}`}
                                 exact={view.exact}
-                                exactParams={view.exactParams}
                                 component={view.component}
                             />
                         );
                     })}
+                    <Route
+                        path=''
+                        component={NotFoundPage}
+                    />
                 </Switch>
             </Router>
         )
