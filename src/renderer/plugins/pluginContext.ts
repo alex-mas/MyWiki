@@ -1,7 +1,7 @@
 import { AnyAction, Reducer } from "redux";
 import { AppState } from "../store/store";
 import { PluginView, PluginMenuAction } from "../store/reducers/plugins";
-import { WikiEditorPlugin } from "../components/wikiEditor/wikiEditor";
+import { WikiEditorPluginCreator } from "../components/wikiEditor/wikiEditor";
 import { MemoryHistory } from "history";
 
 
@@ -43,6 +43,5 @@ export interface LoadPluginContext extends PluginContext {
     /**
      * Slatejs plugin
      */
-    registerEditorPlugin(plugin:WikiEditorPlugin):void;
-
+    registerEditorPlugin(plugin:WikiEditorPluginCreator):void;
 }

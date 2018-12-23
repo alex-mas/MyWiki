@@ -1,7 +1,7 @@
 import { Reducer, AnyAction } from "redux";
 import { PARSE_PLUGIN, LOAD_PLUGIN, ParsePluginAction } from "../../actions/plugins";
 import { createReducer } from "../../../utils/reducer";
-import { WikiEditorPlugin } from "../../components/wikiEditor/wikiEditor";
+import { WikiEditorPluginCreator } from "../../components/wikiEditor/wikiEditor";
 import { REGISTER_MENU_ACTION, REGISTER_PLUGIN_VIEW, REGISTER_EDITOR_PLUGIN } from "../../actions/pluginData";
 import { RouteProps } from "react-router-dom";
 
@@ -29,7 +29,7 @@ export interface PluginMetaData {
     //TODO: implement actions to add and remove the diferent components of plugin data
     data: {
         menuActions: PluginMenuAction[],
-        editorPlugins: WikiEditorPlugin[],
+        editorPlugins: WikiEditorPluginCreator[],
         views: PluginView[]
     }
 }

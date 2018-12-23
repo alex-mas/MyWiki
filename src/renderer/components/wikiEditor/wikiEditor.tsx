@@ -20,6 +20,8 @@ import UndoPlugin from './plugins/undo';
 import RedoPlugin from './plugins/redo';
 import TablePlugin from './plugins/tables';
 import { generatePluginID } from './utilities/plugin';
+import { getEditorPlugins } from '../../selectors/plugins';
+import { AppState } from '../../store/store';
 
 
 
@@ -193,7 +195,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                 <SlateEditor
                     //@ts-ignore
                     ref={this.editor}
-                    plugins={this.state.plugins}
+                    plugins={this.getPlugins()}
                     readOnly={this.props.readOnly}
                     //@ts-ignore
                     value={this.props.content}
@@ -206,7 +208,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             return (
                 <div>
                     <div key='editor__actions' className='editor__actions'>
-                        {this.state.plugins.map((plugin: WikiEditorPlugin) => {
+                        {this.getPlugins().map((plugin: WikiEditorPlugin) => {
                             if (plugin.Button) {
                                 return <plugin.Button key={plugin.id} />;
                             } else {
@@ -218,7 +220,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                         key='wiki-editor'
                         //@ts-ignore
                         ref={this.editor}
-                        plugins={this.state.plugins}
+                        plugins={this.getPlugins()}
                         readOnly={this.props.readOnly}
                         //@ts-ignore
                         value={this.props.content}
@@ -238,8 +240,8 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
 
 export const defaultPlugins: WikiEditorPluginCreator[] = [];
 
-export default connect((state, props) => {
+export default connect((state: AppState, props) => {
     return {
-        plugins: defaultPlugins
+        plugins: getEditorPlugins(state)
     }
 })(WikiEditor);

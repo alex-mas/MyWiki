@@ -1,5 +1,6 @@
 import { PluginState, PluginView, PluginMenuAction } from "../store/reducers/plugins";
 import { AppState } from "../store/store";
+import { WikiEditorPluginCreator } from "../components/wikiEditor/wikiEditor";
 
 
 
@@ -17,6 +18,16 @@ export const getPluginViews = (state:AppState)=>{
         pluginViews = pluginViews.concat(plugin.data.views);
     });
     return pluginViews;
+}
+
+export const getEditorPlugins = (state:AppState)=>{
+    const plugins = state.plugins;
+    let editorPlugins: WikiEditorPluginCreator[] = [];
+    plugins.forEach((plugin)=>{
+        console.log(plugin);
+        editorPlugins = editorPlugins.concat(plugin.data.editorPlugins);
+    });
+    return editorPlugins;
 }
 
 
