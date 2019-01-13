@@ -13,21 +13,21 @@ Electron application that allows you to create local wikis with ease.
     * Spanish
     * Catalan
 * ML powered search bar
-
-
-### Planned Features
-##### General Features
 * Plugin system
     * Editor plugins
     * Wiki plugins
+
+### Planned Features
+##### General Features
+* More plugin features
 * Export/import wikis
 * Support for more languages
 
 ##### Editor/Article Features
 * Customizable text color
 * Costumizable text size
-* Embeded youtube videos
-* Link to articles in other wikis
+* Embeded youtube & local videos
+* Link to articles in other local wikis
 * Save text style presets and apply them to selection
 * Absolutely positioned elements that make text wrap
 
@@ -43,7 +43,7 @@ Electron application that allows you to create local wikis with ease.
 
 2- 
 ```sh
-$ git pull [whatever]
+$ git pull https://github.com/alex-mas/MyWiki.git
 $ npm install
 $ npm run build
 ```

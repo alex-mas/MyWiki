@@ -12,6 +12,7 @@ export const generateHeaderPlugins = (context: EditorPluginContext) => {
     const renderHeader = (HeaderComponent: string) => {
         return (props: RenderNodeProps) => {
             const { children, node, attributes } = props;
+            //@ts-ignore
             return <HeaderComponent className='wiki-editor__header'{...attributes}>{children}</HeaderComponent>;
         }
     }

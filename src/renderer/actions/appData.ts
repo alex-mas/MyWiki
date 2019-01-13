@@ -120,7 +120,8 @@ export type LoadAppDataActionCreator = AsyncACreator<any,ALoadAppData,void>
 export const loadAppData: LoadAppDataActionCreator = ()=>{
     return async (dispatch,getState)=>{
         try{
-            const appDataContents = await fsp.readFile('./appConfig/app.config.json', 'utf8');
+            //when app is build this doesnt exist, so create it.
+            const appDataContents = await fsp.readFile('./config/app.config.json', 'utf8');
             const appData: AppData = JSON.parse(appDataContents);
             //@ts-ignore
             dispatch(setAppData(appData));
@@ -137,7 +138,7 @@ export const saveAppData = ()=>{
     const store = AppStore.get();
     const appData = store.getState().appData;
     if(appData){
-        fsp.writeFile('./appConfig/app.config.json', JSON.stringify(appData), 'utf8')
+        fsp.writeFile('./config/app.config.json', JSON.stringify(appData), 'utf8')
         .then(()=>{
 
         })

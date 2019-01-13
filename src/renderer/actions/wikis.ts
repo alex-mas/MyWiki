@@ -223,6 +223,7 @@ export type LoadWikisActionCreator = AsyncACreator<any, LoadWikisAction, void>;
 export const loadWikis: LoadWikisActionCreator = ()=>{
     return async(dispatch, getState)=>{
         try {
+            //TODO: when building the app this folder is not created so it throws an error
             const files = await fsp.readdir('./wikis');
             files.forEach(async (file) => {
                 try {
@@ -234,7 +235,6 @@ export const loadWikis: LoadWikisActionCreator = ()=>{
             });
         } catch (e) {
             dispatch(fsError('Error loading wiki meta-data'));
-            throw e;
         }
     }
 }

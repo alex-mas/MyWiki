@@ -41,7 +41,6 @@ export class WikiMenu extends React.Component<ComponentProps, any>{
                             <li className='wiki-menu__item'>
                                 <WikiSettingsButton
                                     className='wiki-menu__link'
-                                    wikiID={this.props.wiki.id}
                                 />
                             </li>
                             <li className='wiki-menu__item'>
@@ -60,7 +59,7 @@ export class WikiMenu extends React.Component<ComponentProps, any>{
                             <li className='wiki-menu__item'>
                                 <Link
                                     className='wiki-menu__link'
-                                    to='/wiki/articles'
+                                    to='/wiki/search/'
                                 >
                                     <i className='material-icons'>
                                         subject

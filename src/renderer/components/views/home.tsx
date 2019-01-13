@@ -48,6 +48,7 @@ export class HomePage extends React.Component<ComponentProps, ComponentState>{
     }
     createWiki = (metaData: UserDefinedWikiMetadata) => {
         event.preventDefault();
+        this.toggleWikiForm();
         this.props.createWiki(metaData);
         this.props.history.push('/');
     }

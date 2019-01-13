@@ -29,6 +29,7 @@ import MLService from './services/ml';
 import ReduxI18NService from './services/i18n';
 import { load, unload } from './actions/appLifecycle';
 import { MemoryHistory } from '@axc/react-components/memoryHistory';
+import { createMemoryHistory } from 'history';
 
 
 
@@ -38,11 +39,6 @@ export const mlService = new MLService(store);
 export const reduxI18nService = new ReduxI18NService(store);
 export const i18n = reduxI18nService.traduce;
 
-export const appHistory = new MemoryHistory({
-    url:'/',
-    title:undefined, 
-    state:undefined
-});
 
 const appRoot = document.getElementById('app');
 
@@ -62,7 +58,7 @@ const App = (
     <Provider store={store.get()}>
         <I18nSystem>
             <PromptSystem>
-                <AppRouter history={appHistory}/>
+                <AppRouter/>
             </PromptSystem>
         </I18nSystem>
     </Provider>

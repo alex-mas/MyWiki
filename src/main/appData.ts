@@ -10,11 +10,11 @@ export interface WindowConfig {
 
 export const getWindowConfig: () => Promise<WindowConfig | undefined> = async () => {
     try {
-        const appConfigExists = await fsp.exists('./appConfig');
+        const appConfigExists = await fsp.exists('./config');
         if(!appConfigExists){
-            await fsp.mkdir('./appConfig');
+            await fsp.mkdir('./config');
         }
-        const fileContents = await fsp.readFile('./appConfig/window.config.json', 'utf8');
+        const fileContents = await fsp.readFile('./config/window.config.json', 'utf8');
         const windowConfig: WindowConfig = JSON.parse(fileContents);
         return windowConfig;
     } catch (e) {
@@ -36,5 +36,5 @@ export const saveWindowConfig = (window: Electron.BrowserWindow) => {
             ...window.getBounds()
         };
     }
-    return fsp.writeFile('./appConfig/window.config.json', JSON.stringify(windowConfig), 'utf8');
+    return fsp.writeFile('./config/window.config.json', JSON.stringify(windowConfig), 'utf8');
 }

@@ -116,6 +116,7 @@ export type ParsePluginActionCreator = () => ThunkAction<Promise<PluginMetaData[
 export const parsePlugins: ParsePluginActionCreator = () =>{
     return async(dispatch,getState)=>{
         try{
+            //create it if it doesnt exixst, else it throws.
             const plugins = await fsp.readdir('./plugins');
             const pluginData= await Promise.all(plugins.map(async(plugin)=>{
                 try{

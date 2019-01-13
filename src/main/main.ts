@@ -12,7 +12,6 @@ let mainWindow: Electron.BrowserWindow;
 
 
 console.log('Node env: ', process.env.NODE_ENV);
-
 app.on("ready", async () => {
     console.log('app ready');
     let windowConfig = await getWindowConfig();
@@ -68,9 +67,10 @@ app.on("ready", async () => {
         //@ts-ignore
         loadingWindow = null;
     })
-    if (process.env.ENV === "development") {
+    mainWindow.webContents.openDevTools();
+    /*if (process.env.ENV === "development") {
         mainWindow.webContents.openDevTools();
-    }
+    }*/
 });
 
 

@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { AppState } from '../store/store';
 import { getPluginViews } from '../selectors/plugins';
 import { PluginView } from '../store/reducers/plugins';
+import WikiView  from '../components/wikiView';
 
 export type RouteProps = Exclude<RouteProps, 'history'>;
 
@@ -21,7 +22,7 @@ export type RouteProps = Exclude<RouteProps, 'history'>;
 export const history = createMemoryHistory();
 
 interface OwnProps {
-    history: History;
+
 }
 interface ReduxProps {
     views: PluginView[]
@@ -47,31 +48,31 @@ export class AppRouter extends React.PureComponent<RouterProps, any>{
                         render={() => 'not implementedYet'}
                     />
                     <Route
-                   key='/wiki/plugins'
+                        key='/wiki/plugins'
                         path='/wiki/plugins'
                         exact
                         component={WikiPluginsPage}
                     />
                     <Route
-                   key='/wiki/edit/:article'
+                        key='/wiki/edit/:article'
                         path='/wiki/edit/:article'
                         exact
                         component={WikiEditPage}
                     />
                     <Route
-                    key='/wiki/create/:article?'
+                        key='/wiki/create/:article?'
                         path='/wiki/create/:article?'
                         exact
                         component={CreateArticlePage}
                     />
                     <Route
-                    key='/wiki/article/:article'
+                        key='/wiki/article/:article'
                         path='/wiki/article/:article'
                         exact
                         component={WikiArticlePage}
                     />
                     <Route
-                    key='/wiki/search/:articleName?'
+                        key='/wiki/search/:articleName?'
                         path='/wiki/search/:articleName?'
                         exact
                         component={ArticleSearchPage}
@@ -80,10 +81,10 @@ export class AppRouter extends React.PureComponent<RouterProps, any>{
                         debugger;
                         return (
                             <Route
-                            key={`/pluginView/${view.path}`}
+                                key={`/pluginView/${view.path}`}
                                 path={`/pluginView/${view.path}`}
                                 exact={view.exact}
-                                component={view.component}
+                                component={(props: any)=><WikiView ><view.component {...props}/></WikiView>}
                             />
                         );
                     })}
