@@ -30,6 +30,7 @@ Electron application that allows you to create local wikis with ease.
 * Link to articles in other local wikis
 * Save text style presets and apply them to selection
 * Absolutely positioned elements that make text wrap
+* Embed images with anotations
 
 ### Tech Stack
 

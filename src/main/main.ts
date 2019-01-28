@@ -67,10 +67,9 @@ app.on("ready", async () => {
         //@ts-ignore
         loadingWindow = null;
     })
-    mainWindow.webContents.openDevTools();
-    /*if (process.env.ENV === "development") {
+    if (process.env.ENV === "development") {
         mainWindow.webContents.openDevTools();
-    }*/
+    }
 });
 
 

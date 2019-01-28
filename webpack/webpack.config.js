@@ -42,6 +42,9 @@ module.exports = (env)=>{
     resolve: {
       extensions: [".ts", ".tsx", ".js" , ".jsx"]
     },
+    externals: [
+      /(require\("\w+"\))/
+    ],
     node: {
       __dirname: false
     },

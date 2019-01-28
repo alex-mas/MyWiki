@@ -3,4 +3,5 @@ dist/*
 yarn-error.log
 wikis/*
 config/*
-.vscode/*   
+.vscode/*
+plugins/testPlugin/node_modules/*

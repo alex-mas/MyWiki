@@ -3,7 +3,8 @@ import { Value } from 'slate';
 
 export type EditorButtonClickHandler = (event: React.MouseEvent<HTMLSpanElement>, type?: string,data?:any) => void;
 
-interface ComponentProps {
+
+export interface ComponentProps {
     icon: string,
     onClick: EditorButtonClickHandler,
     active: boolean,
@@ -11,16 +12,22 @@ interface ComponentProps {
     data?:any
 }
 
+export type EditorButtonProps = ComponentProps;
+
 interface ComponentState {
 
 }
 
 export class EditorButton extends React.Component<ComponentProps, ComponentState>{
     onClick = (event: React.MouseEvent<HTMLSpanElement>) => {
+        debugger;
+        event.preventDefault();
+        event.stopPropagation();
         const extraArgs = [ this.props.type, this.props.data];
         this.props.onClick(event, ...extraArgs);
     }
     render() {
+        console.log("re-rendering editor button");
         return (
             <i
                 className={`material-icons ${this.props.active ? 'editor-btn' : 'editor-btn--inactive'}`}

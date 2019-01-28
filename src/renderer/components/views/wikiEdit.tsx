@@ -93,6 +93,7 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
     }
 
     onChange = (change: { operations: any, value: Value }) => {
+        console.log("about to chage editor's value", change);
         const editorContent = change.value;
         this.setState(() => ({ editorContent }));
     }

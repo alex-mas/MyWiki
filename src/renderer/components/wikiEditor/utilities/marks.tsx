@@ -23,7 +23,9 @@ export const RenderMark = (type: string, fn: (props:RenderMarkProps)=>React.Reac
 
 export const onClickMarkButton = (context:EditorPluginContext)=>{
     return(event: React.MouseEvent<HTMLSpanElement>, type: string, data:any)=>{
+        console.log("clicking mark button");
         event.preventDefault();
+        event.stopPropagation();
         const editor = context.getEditor();
         editor.toggleMark({type,data});
     }

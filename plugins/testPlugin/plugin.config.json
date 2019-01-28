@@ -1,7 +1,7 @@
 {
 	"id": "gbblesasdk34sd9dkef",
 	"name": "testPlugin",
-	"main": "dist/main.js",
+	"main": "dist/plugin.js",
 	"description": "a plugin to test the system",
 	"version": "0.0.1"
 }

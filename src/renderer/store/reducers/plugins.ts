@@ -2,7 +2,7 @@ import { Reducer, AnyAction } from "redux";
 import { PARSE_PLUGIN, LOAD_PLUGIN, ParsePluginAction } from "../../actions/plugins";
 import { createReducer } from "../../../utils/reducer";
 import { WikiEditorPluginCreator } from "../../components/wikiEditor/wikiEditor";
-import { REGISTER_MENU_ACTION, REGISTER_PLUGIN_VIEW, REGISTER_EDITOR_PLUGIN } from "../../actions/pluginData";
+import { REGISTER_MENU_ACTION, REGISTER_PLUGIN_VIEW, REGISTER_EDITOR_PLUGIN, registerEditorPlugin } from "../../actions/pluginData";
 import { RouteProps } from "react-router-dom";
 
 

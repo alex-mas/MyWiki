@@ -1,5 +1,5 @@
 import { PluginView, PluginMenuAction } from "../store/reducers/plugins";
-import { WikiEditorPlugin } from "../components/wikiEditor/wikiEditor";
+import { WikiEditorPluginCreator } from "../components/wikiEditor/wikiEditor";
 
 
 export const REGISTER_EDITOR_PLUGIN = 'REGISTER_EDITOR_PLUGIN';
@@ -23,7 +23,7 @@ export const registerPluginView = (id:string, view: PluginView)=>{
     }
 }
 
-export const registerEditorPlugin = (id:string, plugin: WikiEditorPlugin)=>{
+export const registerEditorPlugin = (id:string, plugin: WikiEditorPluginCreator)=>{
     return {
         type: REGISTER_EDITOR_PLUGIN,
         id,

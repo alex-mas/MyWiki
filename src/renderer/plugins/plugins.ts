@@ -8,7 +8,7 @@ import AppStore from '../store/store';
 import readOnly from '../../utils/readonly';
 import { PluginContext, LoadPluginContext, InstallPluginContext } from './pluginContext';
 import { registerPluginView, registerMenuAction, registerEditorPlugin } from '../actions/pluginData';
-import { WikiEditorPlugin } from '../components/wikiEditor/wikiEditor';
+import { WikiEditorPluginCreator } from '../components/wikiEditor/wikiEditor';
 import { history } from '../router/router';
 
 
@@ -58,7 +58,7 @@ export class PluginManager {
             notify: (...args: [string, string, string]) => this.store.get().dispatch(createNotification(...args)),
             dispatch: this.store.dispatch,
             getState: this.store.get().getState,
-            getHistory: ()=>history
+            getHistory: ()=>history,
         }
     }
     getInstallPluginContext = (id: string) => {
@@ -71,7 +71,7 @@ export class PluginManager {
         pluginContext.registerReducer = this.store.registerReducer;
         pluginContext.registerView = (view: PluginView)=>this.store.get().dispatch(registerPluginView(id,view));
         pluginContext.registerMenuAction = (action:PluginMenuAction)=>this.store.get().dispatch(registerMenuAction(id,action));
-        pluginContext.registerEditorPlugin = (plugin: WikiEditorPlugin)=>this.store.get().dispatch(registerEditorPlugin(id, plugin))
+        pluginContext.registerEditorPlugin = (plugin: WikiEditorPluginCreator)=>this.store.get().dispatch(registerEditorPlugin(id, plugin))
         return pluginContext as LoadPluginContext;
     }
     initialize(metaData: PluginMetaData) {

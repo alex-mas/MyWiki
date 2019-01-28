@@ -14,7 +14,7 @@ import { RouteComponentProps } from 'react-router';
 
 
 interface OwnProps {
-    component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
+    component: React.ComponentType<any>
 }
 
 interface ReduxProps {

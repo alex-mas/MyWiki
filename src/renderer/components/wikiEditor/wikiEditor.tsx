@@ -22,6 +22,7 @@ import TablePlugin from './plugins/tables';
 import { generatePluginID } from './utilities/plugin';
 import { getEditorPlugins } from '../../selectors/plugins';
 import { AppState } from '../../store/store';
+import TextColorPlugin from './plugins/textColor';
 
 
 
@@ -52,18 +53,6 @@ export const emptyParagraph: BlockJSON = {
 
 
 export const DEFAULT_NODE = 'paragraph';
-
-
-export const BUTTON_NODE_TYPES: { type: string, icon: string, data: any }[] = [
-]
-
-
-
-
-export const BUTTON_INLINE_TYPES: any[] = [
-
-];
-
 
 
 const schema: SchemaProperties = {
@@ -178,6 +167,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             UndoPlugin(pluginContext),
             RedoPlugin(pluginContext),
             TablePlugin(pluginContext),
+            TextColorPlugin(pluginContext),
             ...this.props.plugins.map((pluginConstructor) => {
                 const plugin = pluginConstructor(pluginContext);
                 if (plugin.id) {
@@ -190,16 +180,15 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         return plugins;
     }
     render() {
+        console.log("re-rendering editor");
         if (this.props.readOnly) {
             return (
                 <SlateEditor
                     //@ts-ignore
                     ref={this.editor}
-                    plugins={this.getPlugins()}
+                    plugins={this.state.plugins}
                     readOnly={this.props.readOnly}
-                    //@ts-ignore
                     value={this.props.content}
-                    //@ts-ignore
                     onChange={this.props.onChange}
                     className='wiki-editor'
                 />
@@ -221,14 +210,11 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                         key='wiki-editor'
                         //@ts-ignore
                         ref={this.editor}
-                        plugins={this.getPlugins()}
+                        plugins={this.state.plugins}
                         readOnly={this.props.readOnly}
-                        //@ts-ignore
                         value={this.props.content}
-                        //@ts-ignore
                         onChange={this.props.onChange}
                         className='wiki-editor'
-                        //@ts-ignore
                         schema={schema}
                     />
                 </div>

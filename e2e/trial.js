@@ -1,12 +1,29 @@
 
 const Application = require("spectron").Application;
+const electron = require("electron");
+const path = require("path");
+
+const electronPath = path.join(__dirname,"..","node_modules",".bin","electron.cmd");
+
+console.log("running");
+const appPath = path.join(__dirname,"..","dist","app");
+
+console.log(appPath);
 const app = new Application({
-        path: './dist/win-unpacked/mywiki.exe',
-        startTimeout: 50000
+    path: electronPath,
+    args: [appPath],
+    startTimeout:37000
 });
 
+console.log("app instantiated");
 
-(async ()=>{
-    const started = await app.start();
-    console.log(app.client.getTitle() === "MyWiki");
+(()=>{
+    console.log("about to start app");
+    app.start().then((application)=>{
+        console.log("application started");
+        application.client.waitUntilWindowLoaded(10000).then(()=>{
+            console.log(application.client.getTitle() === "MyWiki");
+        })
+    });
+
 })();
