@@ -30,7 +30,9 @@
     "start-nobuild": "electron dist/app/main.js",
     "test": "npm run webpack:prod && jest",
     "test-nobuild": "jest",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "e2e": "npm run webpack:prod && jest ./test/e2e",
+    "unit": "npm run webpack:prod && jest ./test/unit"
   },
   "author": "axc",
   "license": "ISC",
@@ -47,6 +49,8 @@
     "@types/slate-plain-serializer": "^0.6.1",
     "@types/slate-react": "^0.20.1",
     "@types/uuid": "^3.4.4",
+    "@types/react-color": "^2.14.0",
+    "@types/react-syntax-highlighter": "^10.1.0",
     "chai": "^4.2.0",
     "concurrently": "^4.0.1",
     "css-loader": "^1.0.1",
@@ -67,11 +71,8 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
-    "redux-thunk": "^2.3.0",
-    "slate-react": "^0.21.12",
     "@axc/react-components": "^0.2.5",
     "@axc/thread-manager": "^0.1.0",
-    "@types/react-color": "^2.14.0",
     "animate.css": "^3.7.0",
     "express": "^4.16.3",
     "history": "^4.7.2",
@@ -87,13 +88,16 @@
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
+    "react-syntax-highlighter": "^10.1.2",
     "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0",
     "reset-css": "^4.0.1",
     "retext": "^6.0.0",
     "retext-keywords": "^4.0.2",
     "showdown": "^1.8.6",
     "slate": "^0.44.4",
     "slate-plain-serializer": "^0.6.28",
+    "slate-react": "^0.21.12",
     "uuid": "^3.3.2"
   }
 }

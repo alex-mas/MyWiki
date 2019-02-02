@@ -31,7 +31,9 @@ export class WikiLink extends React.Component<ComponentProps, any>{
     constructor(props: any) {
         super(props);
     }
-    openOutLink = () => {
+    openOutLink = (e: React.MouseEvent<HTMLSpanElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
         const href = this.props.to;
         shell.openExternal(href);
     }
@@ -40,9 +42,12 @@ export class WikiLink extends React.Component<ComponentProps, any>{
             if (this.props.isOutLink) {
                 //create a link that on click opens a browser with the url providedd. if its http or opens the relevant article if it refers to another wiki.
                 return (
-                    <span onClick={this.openOutLink}{...this.props.attributes}>
-                        <a href=''>
-                            {this.props.text}
+                    <span
+                        {...this.props.attributes}
+                        className='wiki-link'
+                    >
+                        <a href='' onClick={this.openOutLink} className='wiki-link'>
+                            {this.props.text ? this.props.text : null}
                             {this.props.children}
                         </a>
                     </span>
@@ -51,12 +56,15 @@ export class WikiLink extends React.Component<ComponentProps, any>{
                 const exists = doesArticleExist(this.props.to, this.props.selectedWiki);
                 let to = `/wiki/${exists ? 'article' : 'create'}/${this.props.to}`
                 return (
-                    <span {...this.props.attributes}>
+                    <span
+                        className={exists ? 'wiki-link' : 'wiki-link--undone'}
+                        {...this.props.attributes}
+                    >
                         <Link
-                            to={to} 
+                            to={to}
                             className={exists ? 'wiki-link' : 'wiki-link--undone'}
                         >
-                            {this.props.text ? this.props.text : undefined}
+                            {this.props.text ? this.props.text : null}
                             {this.props.children}
                         </Link>
                     </span>
@@ -65,7 +73,10 @@ export class WikiLink extends React.Component<ComponentProps, any>{
 
         } else {
             return (
-                <span {...this.props.attributes}>
+                <span
+                    {...this.props.attributes}
+                    className='wiki-link'
+                >
                     <a href=''>
                         {this.props.text}
                         {this.props.children}

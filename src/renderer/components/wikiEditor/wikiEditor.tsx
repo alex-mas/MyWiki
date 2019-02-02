@@ -197,7 +197,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             return (
                 <div>
                     <div key='editor__actions' className='editor__actions'>
-                        {this.getPlugins().map((plugin: WikiEditorPlugin) => {
+                        {this.state.plugins.map((plugin: WikiEditorPlugin) => {
                             if (plugin.Button) {
                                 //@ts-ignore
                                 return <plugin.Button key={plugin.id} />;

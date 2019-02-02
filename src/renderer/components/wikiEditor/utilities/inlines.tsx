@@ -6,18 +6,23 @@ import { RenderMarkProps } from "slate-react";
 export const hasInlineType = (content: Value, type: string) => {
     return content.inlines.some(inline => inline.type === type);
 }
-  
+
 export const wrapInline = (editor: Editor, type: string, data?: any) => {
-    editor.wrapInline({
-        type,
-        data: data ? data : {}
-    });
+    editor.wrapInline({type,data});
     editor.moveToEnd();
 };
 
     
-export const unwrapInline = (editor: Editor, type: string) => {
-    editor.unwrapInline(type);
+export const unwrapInline = (editor: Editor, type: string,data?:any) => {
+    editor.unwrapInline({type,data});
+}
+
+export const toggleInline = (editor:Editor, type:string, data?: any)=>{
+    if(hasInlineType(editor.value,type)){
+        unwrapInline(editor,type,data);
+    }else{
+        wrapInline(editor,type,data);
+    }
 }
 
 
