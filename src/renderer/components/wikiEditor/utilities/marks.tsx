@@ -33,6 +33,12 @@ export const onClickMarkButton = (context:EditorPluginContext)=>{
 export const toggleMark = (editor: Editor,type:string,data?:any)=>{
     editor.toggleMark({type,data});
 }
+export const overrideMark = (editor:Editor, type:string,data?:any)=>{
+    if(hasMarkType(editor.value,type)){
+        editor.removeMark({type,data});
+    }
+    toggleMark(editor,type,data);
+}
 
 
 export default {
