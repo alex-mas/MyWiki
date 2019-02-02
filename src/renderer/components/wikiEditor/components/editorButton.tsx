@@ -20,7 +20,6 @@ interface ComponentState {
 
 export class EditorButton extends React.Component<ComponentProps, ComponentState>{
     onClick = (event: React.MouseEvent<HTMLSpanElement>) => {
-        debugger;
         event.preventDefault();
         event.stopPropagation();
         const extraArgs = [ this.props.type, this.props.data];
