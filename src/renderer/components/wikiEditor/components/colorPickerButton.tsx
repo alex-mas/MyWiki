@@ -4,6 +4,7 @@ import { SketchPicker, ColorChangeHandler} from "react-color";
 import { Omit } from "../../../../utils/typeUtils";
 import { EditorPluginContext } from "../wikiEditor";
 import { hasMarkType, onClickMarkButton, toggleMark } from "../utilities/marks";
+import { unwrapInline, toggleInline } from '../utilities/inlines';
 
 interface OwnProps{
     context: EditorPluginContext
@@ -62,9 +63,8 @@ export class ColorPickerButton extends React.Component<ComponentProps,ComponentS
         };
     }
     onStartPicking =(event: React.MouseEvent<HTMLSpanElement>, type?: string,data?:any)=>{
-        debugger;
         if(this.props.active){
-            toggleMark(this.props.context.getEditor(),type,data);
+            unwrapInline(this.props.context.getEditor(),type,data);
             return;
         }
         this.setState(()=>({
@@ -72,7 +72,7 @@ export class ColorPickerButton extends React.Component<ComponentProps,ComponentS
         }));
     }
     onFinishPicking: ColorChangeHandler = (color)=>{
-        toggleMark(this.props.context.getEditor(),'colored-text',{color: color.hex});
+        toggleInline(this.props.context.getEditor(),this.props.type, {color:color.hex});
         this.setState(()=>({isColorPickerOpen: false}));
     }
     render(){
@@ -88,6 +88,7 @@ export class ColorPickerButton extends React.Component<ComponentProps,ComponentS
                             onChangeComplete={this.onFinishPicking}
                             //@ts-ignore
                             presetColors={defaultColorBookmarks}
+                            
                         />
                     </div>
                     :
