@@ -14,8 +14,11 @@ export const wrapInline = (editor: Editor, type: string, data?: any) => {
 
     
 export const unwrapInline = (editor: Editor, type: string,data?:any) => {
-    editor.unwrapInline({type,data});
+    if(hasInlineType(editor.value,type)){
+        editor.unwrapInline({type,data});
+    }
 }
+
 
 export const toggleInline = (editor:Editor, type:string, data?: any)=>{
     if(hasInlineType(editor.value,type)){
