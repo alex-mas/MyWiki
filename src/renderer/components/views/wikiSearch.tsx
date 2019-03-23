@@ -116,6 +116,7 @@ export default connect(
     {
         fsError
     }
+    //@ts-ignore
 )(ArticleSearchPage);
 
 

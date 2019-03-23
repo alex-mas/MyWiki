@@ -23,6 +23,7 @@ import { generatePluginID } from './utilities/plugin';
 import { getEditorPlugins } from '../../selectors/plugins';
 import { AppState } from '../../store/store';
 import TextColorPlugin from './plugins/textColor';
+import YoutubePlugin from './plugins/youtube';
 
 
 
@@ -79,6 +80,9 @@ const schema: SchemaProperties = {
         image: {
             isVoid: true,
         },
+        youtube_video:{
+            isVoid: true
+        }
     },
 }
 
@@ -168,6 +172,7 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
             RedoPlugin(pluginContext),
             TablePlugin(pluginContext),
             TextColorPlugin(pluginContext),
+            YoutubePlugin(pluginContext),
             ...this.props.plugins.map((pluginConstructor) => {
                 const plugin = pluginConstructor(pluginContext);
                 if (plugin.id) {

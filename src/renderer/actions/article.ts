@@ -131,21 +131,19 @@ export const loadArticle: LoadArticleActionCreator = (name: string) => {
         let filePath: string = getArticlePath(wiki, name);
         try{
             const data = await fsp.readFile(filePath, 'utf8');
+            console.log("article file path: ", filePath);
+            console.log("About to parse loaded article contents: ",data);
             articleData = JSON.parse(data);
-            if (articleData.content) {
-                if (typeof articleData.content === 'string') {
-                    article.content = JSON.parse(articleData.content);
-                } else {
-                    article.content = articleData.content;
-                }
-                article.tags = articleData.tags;
+            if (typeof articleData.content === 'string') {
+                article.content = JSON.parse(articleData.content);
             } else {
-                //in first versions of the app there was no tags so this keeps it backwards compatible with those wikis
-                article.content = JSON.parse(data);
+                article.content = articleData.content;
             }
+            article.tags = articleData.tags;
             dispatch(_loadArticle(getArticleMetaData(article)))
-            return article ;
+            return article;
         }catch(e){
+            console.warn(e);
             dispatch(fsError(`Error trying to fetch article ${name}, please try running the app as administrator. If that doesn't work contact the developer`));
             throw e;
         }
@@ -171,12 +169,13 @@ export const saveArticle: SaveArticleActionCreator = (article: Article) => {
         const selectedWiki = getState().selectedWiki;
         try{
             mlService.generateArticleKeywords(article);
-            await fsp.writeFile(
+            const p = fsp.writeFile(
                 getArticlePath(selectedWiki, article.name),
                 JSON.stringify(article),
                 'utf8'
             );
             dispatch(_saveArticle(getArticleMetaData(article)));
+            await p;
             return article;
         }catch(e){
             dispatch(fsError(`Error trying to edit article ${article.name}, please try running the app as administrator. If that doesn't work contact the developer`));

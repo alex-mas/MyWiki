@@ -8,6 +8,7 @@ import { getSelectedWiki } from '../selectors/wikis';
 import { reduxI18nService, i18n} from '../app';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { MemoryHistory } from 'history';
+import { Article, ArticleMetaData } from '../actions/article';
 
 
 interface OwnProps extends RouteComponentProps{
@@ -17,7 +18,7 @@ interface DispatchProps {
 }
 
 interface ReduxProps {
-    articleNames: string[]
+    articles: ArticleMetaData[]
 }
 
 type ComponentProps = DispatchProps & OwnProps & ReduxProps;
@@ -36,8 +37,11 @@ export class WikiSearchBar extends React.Component<ComponentProps, ComponentStat
             value: ''
         }
     }
-    getSuggestions = (value: string) => {
-        return this.props.articleNames.filter((article) => article.includes(value));
+    getMatchingArticles  = (val:string)=>{
+        const value = this.validateInput(val);
+        return this.props.articles.filter(
+            (article)=>article.name.includes(value) || article.tags.includes(value)
+        ).map((articled)=>articled.name);
     }
     onChange = (value: string) => {
         this.setState(() => ({
@@ -49,7 +53,7 @@ export class WikiSearchBar extends React.Component<ComponentProps, ComponentStat
     }
     visitArticle = (val: string) => {
         const value = this.validateInput(val);
-        const matchingArticles = this.props.articleNames.filter((article) => article.includes(value));
+        const matchingArticles = this.getMatchingArticles(val);
         if (matchingArticles.length === 1 && matchingArticles[0] === value) {
             this.props.history.push(`/wiki/article/${value}`);
         } else {
@@ -61,7 +65,7 @@ export class WikiSearchBar extends React.Component<ComponentProps, ComponentStat
             <AutoComplete
                 value={this.state.value}
                 placeholder={i18n('search article')}
-                getSuggestions={this.getSuggestions}
+                getSuggestions={this.getMatchingArticles}
                 onChange={this.onChange}
                 onSubmit={this.visitArticle}
                 className='wiki-header__search-bar'
@@ -73,7 +77,7 @@ export class WikiSearchBar extends React.Component<ComponentProps, ComponentStat
 export default connect(
     (state: AppState, props) => {
         return {
-            articleNames: getArticleNames(getSelectedWiki(state))
+            articles: getSelectedWiki(state).articles
         }
     },
     undefined

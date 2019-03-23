@@ -9,7 +9,7 @@ import { emptyTable } from '../utilities/table';
 export const TablePlugin = (context: EditorPluginContext) => {
 
 
-    const renderImage = (props: RenderNodeProps, editor: Editor, next: Function) => {
+    const renderTable = (props: RenderNodeProps, editor: Editor, next: Function) => {
         const { attributes, children, node } = props
 
         switch (node.type) {
@@ -67,7 +67,7 @@ export const TablePlugin = (context: EditorPluginContext) => {
     }
     return {
         id: 'tables_plugin',
-        renderNode: renderImage,
+        renderNode: renderTable,
         onKeyDown: (event: React.KeyboardEvent<any>, editor: Editor, next: Function) => {
             if (
                 (event.key !== 'ArrowUp' && event.key !== 'ArrowDown' && event.key !== 'Enter')

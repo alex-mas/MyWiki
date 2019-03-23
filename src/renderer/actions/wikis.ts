@@ -8,10 +8,12 @@ import { ThunkAction } from "redux-thunk";
 import { AppState } from "../store/store";
 import { errorAction, fsError, ErrorAction, ErrorActionCode } from "./errors";
 import { deleteFolderRecursively } from '../../utils/fsutils';
-import { Article, ArticleMetaData, getArticleMetaData } from "./article";
+import { Article, ArticleMetaData, getArticleMetaData, createArticle } from "./article";
 import { ActionWithPayload, AsyncACreator, ACreator } from "../../utils/typeUtils";
 import { store as AppStore } from "../app";
 import { parsePlugins } from "./plugins";
+import { ValueJSON } from "slate";
+
 
 
 export const CREATE_WIKI = 'CREATE_WIKI';
@@ -66,6 +68,14 @@ export const createWiki: CreateWikiActionCreator = (wiki: UserDefinedWikiMetadat
                 JSON.stringify(wikiData),
                 'utf8'
             );
+            /* TODO: implement overload of createArticle to allow to create articles on arbitrary wikis
+            dispatch(createArticle({
+                name: 'home',
+                tags: [],
+                keywords: [],
+                content: "" as ValueJSON,
+                background: undefined
+            }));*/
             return dispatch(_createWiki(wikiData));
 
         } catch (error) {

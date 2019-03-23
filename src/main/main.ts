@@ -28,18 +28,21 @@ app.on("ready", async () => {
         protocol: 'file',
         slashes: true
     }))
-    mainWindow = new BrowserWindow({
+
+    const config: Electron.BrowserWindowConstructorOptions ={
         show: false,
         webPreferences: {
             nodeIntegrationInWorker: true,
-            webSecurity: true
+            webSecurity: true,
+            webviewTag: true
         },
         fullscreenable: true,
         width: windowConfig ? windowConfig.width : undefined,
         height: windowConfig ? windowConfig.height : undefined,
         x: windowConfig ? windowConfig.x : undefined,
         y: windowConfig ? windowConfig.y : undefined
-    });
+    }
+    mainWindow = new BrowserWindow(config);
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
@@ -62,11 +65,27 @@ app.on("ready", async () => {
             console.log(e);
         })
 
-    })
+    });
     loadingWindow.on('close', () => {
         //@ts-ignore
         loadingWindow = null;
-    })
+    });
+
+    mainWindow.webContents.on('will-attach-webview',(e,pref: Electron.WebPreferences,params: Electron.WebviewTag)=>{
+        pref.preload = undefined;
+        pref.nodeIntegration = false,
+        pref.nodeIntegrationInWorker = false;
+        pref.allowRunningInsecureContent = false;
+        pref.contextIsolation = true;
+        pref.safeDialogs = true;
+        pref.sandbox = true;
+        //@ts-ignore
+        if(pref.preloadURL){
+            //@ts-ignore
+            pref.preloadURL = undefined;
+        }
+       
+    });
     if (process.env.ENV === "development") {
         mainWindow.webContents.openDevTools();
     }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import EditorButton, { EditorButtonProps } from "./editorButton";
-import { SketchPicker, ColorChangeHandler } from "react-color";
+import { SketchPicker, ColorChangeHandler, ColorResult } from "react-color";
 import { Omit } from "../../../../utils/typeUtils";
 import { EditorPluginContext } from "../wikiEditor";
 import { hasMarkType, onClickMarkButton, toggleMark } from "../utilities/marks";
@@ -20,16 +20,24 @@ type ColorPreset = string | ColorPresetObj;
 interface ComponentState {
     isColorPickerOpen: boolean,
     colorBookmarks: ColorPreset[],
-    color: string
+    color: ColorResult
 }
-
+const black = {
+    hsl: { a: 1, h: 0, l: 0, s: 0 },
+    hex: '#000000',
+    rgb: { r: 0, g: 0, b: 0, a: 1 }
+  }
 type ComponentProps = OwnProps & Omit<EditorButtonProps, "onClick">
+
+const convertToPercentage = (decimal: number)=>{
+    return (decimal*100).toFixed(2);
+}
 
 export class ColorPickerButton extends React.Component<ComponentProps, ComponentState>{
     constructor(props: ComponentProps) {
         super(props);
         this.state = {
-            color: props.data && props.data.color || "#000000",
+            color: props.data && props.data.color || black,
             isColorPickerOpen: false,
             //TODO: Put into the app config so its persistent across sessions and navigation
             colorBookmarks: [
@@ -83,20 +91,21 @@ export class ColorPickerButton extends React.Component<ComponentProps, Component
         }));
     }
     onFinishPicking = () => {
+        const rgb = this.state.color.rgb;
         unwrapInline(this.props.context.getEditor(), this.props.type);
-        toggleInline(this.props.context.getEditor(), this.props.type, { color: this.state.color });
+        toggleInline(this.props.context.getEditor(), this.props.type, { color: `rgba(${rgb.r},${rgb.g},${rgb.b},${rgb.a})`});
         this.setState(()=>({
             isColorPickerOpen: false
         }));
     }
     onChangeColor: ColorChangeHandler = (color) => {
         this.setState(() => ({
-            color: color.hex
+            color: color
         }));
     }
     onSaveColor = ()=>{
         this.setState((prevState)=>({
-            colorBookmarks: [...prevState.colorBookmarks,prevState.color]
+            colorBookmarks: [...prevState.colorBookmarks,prevState.color.hex]
         }));
     }
     render() {
@@ -109,7 +118,7 @@ export class ColorPickerButton extends React.Component<ComponentProps, Component
                 {this.state.isColorPickerOpen ?
                     <div className="wiki-editor__color-picker__wrapper">
                         <SketchPicker
-                            color={this.state.color}
+                            color={this.state.color.rgb}
                             onChangeComplete={this.onChangeColor}
                             onChange={this.onChangeColor}
                             //@ts-ignore

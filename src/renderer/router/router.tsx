@@ -78,7 +78,7 @@ export class AppRouter extends React.PureComponent<RouterProps, any>{
                         component={ArticleSearchPage}
                     />
                     {this.props.views.map((view) => {
-                        debugger;
+                        console.log("re rendering plugin views");
                         return (
                             <Route
                                 key={`/pluginView/${view.path}`}
@@ -102,6 +102,7 @@ export class AppRouter extends React.PureComponent<RouterProps, any>{
 
 export default connect(
     (state: AppState, props: OwnProps) => {
+        //TOODO: Make getPluginViews memoized to prevent re-renderings
         return {
             views: getPluginViews(state)
         }

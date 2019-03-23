@@ -1,9 +1,11 @@
 import { AnyAction, ActionCreator } from "redux";
+import { createNotification } from "./notifications";
+import { AsyncACreator } from "../../utils/typeUtils";
 
 export const ERROR = 'ERROR';
 export type ERROR = 'ERROR';
 
-export type ErrorActionCreator = (message: string, code: number)=>ErrorAction;
+export type ErrorActionCreator =  AsyncACreator<[string,number],ErrorAction>;
 
 export interface ErrorAction {
     type: ERROR,
@@ -25,14 +27,19 @@ export const isErrorAction = (obj: AnyAction): obj is ErrorAction=>{
 }
 
 export const errorAction: ErrorActionCreator = (message: string, code: number)=>{
-    return {
-        type: ERROR,
-        code,
-        message
+    return async(dispatch, getState)=>{
+        dispatch(createNotification(`Error ${code}`,message,'error'));
+        return {
+            type: ERROR,
+            code,
+            message
+        }
     }
+
+
 }
 
-export type FsErrorActionCreator = (message:string)=> ErrorAction;
+export type FsErrorActionCreator = (message:string)=> ReturnType<typeof errorAction>;
 
 export const fsError: FsErrorActionCreator = (message: string)=>{
     return errorAction(message, ErrorActionCode.FS);

@@ -123,7 +123,6 @@ export const loadAppData: LoadAppDataActionCreator = ()=>{
             //when app is build this doesnt exist, so create it.
             const appDataContents = await fsp.readFile('./config/app.config.json', 'utf8');
             const appData: AppData = JSON.parse(appDataContents);
-            //@ts-ignore
             dispatch(setAppData(appData));
         }catch(e){
             dispatch(fsError('error parsing app configuration'));

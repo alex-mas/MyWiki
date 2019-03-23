@@ -73,7 +73,6 @@ export const pluginReducer = createReducer<PluginState>(
             })
         },
         [REGISTER_PLUGIN_VIEW]: (state, action: any)=>{
-            debugger;
             return state.map((plugin)=>{
                 if(action.id === plugin.id){
                     const updatedPlugin = {

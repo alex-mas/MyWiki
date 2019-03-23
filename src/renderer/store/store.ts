@@ -23,8 +23,7 @@ export interface AppState {
     [key: string]: any
 }
 
-//@ts-ignore
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers =  compose;
 
 const defaultReducers = {
     wikis,
@@ -37,16 +36,16 @@ const defaultReducers = {
 
 
 export const configureStore = () => {
-    const store: Store<AppState, AnyAction> = createStore(
+    const store = createStore(
         combineReducers<AppState, AnyAction>(defaultReducers),
-        composeEnhancers(applyMiddleware(thunk, errorHandler))
+        composeEnhancers(applyMiddleware(thunk as ThunkMiddleware<AppState>, errorHandler))
     );
     store.dispatch = store.dispatch as ThunkDispatch<AppState,undefined,AnyAction>;
     return store;
 }
 
 export class AppStore {
-    readonly store: Store<AppState>;
+    readonly store: ReturnType<typeof configureStore>;
     private pluginReducers: ReducerContainer = {};
     private defaultReducers: ReducerContainer = defaultReducers;
     private currentState: AppState;

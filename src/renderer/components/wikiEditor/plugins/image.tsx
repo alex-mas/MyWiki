@@ -57,7 +57,7 @@ export const ImagePlugin = (context: EditorPluginContext) => {
                     },
                         (filePaths: string[]) => {
                             if (filePaths.length === 1) {
-                                const imagePath = path.relative(__dirname, filePaths[0]);
+                                const imagePath = filePaths[0];
                                 console.log('Inserting image: ', imagePath, editor);
                                 const size = imageSize(imagePath);
                                 const imageRatio = size.width / size.height;

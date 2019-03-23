@@ -31,7 +31,7 @@ export const createReducer = <T>(initialState: T, handlers: ReducerHandlers<T>, 
         } else if (handlers.default) {
             nextState = handlers.default(prevState, action);
         } else {
-            nextState = prevState;
+            return prevState;
         }
         if (persistors && persistors[action.type]) {
             persistors[action.type](nextState);

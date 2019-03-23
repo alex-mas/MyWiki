@@ -98,19 +98,21 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
         this.setState(() => ({ editorContent }));
     }
     saveChanges = () => {
-        console.log('Saved changes');
+        console.log('About to save changes');
         return this.props.saveArticle({
             name: this.props.match.params.article,
             tags: this.state.tags,
             content: this.state.editorContent.toJSON(),
             background: this.state.background,
             keywords: []
-        })
+        });
     }
     saveChangesAndRedirect = () => {
         //@ts-ignore
         this.saveChanges().then(() => {
-            this.props.history.push(`/wiki/article/${this.props.match.params.article}`);
+            console.log("finished saving, pushing state");
+            //workarround to prevent loading article to fail immediatly after navigation
+            setTimeout(()=>this.props.history.push(`/wiki/article/${this.props.match.params.article}`),50);  
         }).catch((e: string) => console.warn(e));
     }
     discardChanges = () => {

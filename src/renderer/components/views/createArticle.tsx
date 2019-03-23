@@ -90,7 +90,7 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
             //@ts-ignore
         }).then(() => {
             console.log('created article');
-            this.props.history.push(`/wiki/article/${this.state.name}`);
+            setTimeout(()=>this.props.history.push(`/wiki/article/${this.state.name}`),50);  
         });
     }
     discardChanges = () => {

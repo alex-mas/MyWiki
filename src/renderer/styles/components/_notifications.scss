@@ -44,6 +44,7 @@
 .notification{
     background: var(--theme-primary);
     display: flex;
+    justify-content: space-between;
     flex-direction: row;
     word-break: break-all;
     margin: calc(#{$size-xxs} / 2) 0;
@@ -60,6 +61,18 @@
 }
 .notification__contents{
     flex-wrap: wrap;
+    word-break: break-word;
+    text-align: start;
+    flex-grow: 2;
+}
+
+.notification__title {
+    font-weight: bold;
+    padding: $size-margin-small 0;
+}
+
+.notification__actions {
+    align-self: center;
 }
 
 .notification__action{
@@ -67,6 +80,8 @@
     background-color: transparent;
 
 }
+
+
 
 .notifications-button{
     i{
@@ -94,7 +109,10 @@
 }
 
 
-
+.notification__icon{
+    align-self: center;
+    padding: 0 $size-margin-medium;
+}
 
 .recent-notification{
     animation: bounceInUp 0.62s cubic-bezier(.36,.07,.19,.97) both;

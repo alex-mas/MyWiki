@@ -19,8 +19,7 @@ export const setArticleKeywords: SetArticleKeywordsActionCreator= (article: stri
         const filepath = `./wikis/${wiki}/articles/${article}.json`;
         try{
             console.log('about to store new keywords to disk', keywords, filepath);
-            const rawArticleData = await fsp.readFile(filepath, 'utf8');
-            const articleData: Article = JSON.parse(rawArticleData);
+            const articleData: Article = JSON.parse(await fsp.readFile(filepath, 'utf8'));
             articleData.keywords = keywords;
             console.log('file to be saved is: ', articleData);
             await fsp.writeFile(filepath,JSON.stringify(articleData), {encoding:'utf8'});

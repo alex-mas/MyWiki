@@ -53,7 +53,7 @@ export const selectedWikiReducer = createReducer<WikiMetadata>(
                 background: action.name
             }
         },
-        [ SET_ARTICLE_KEYWORDS]: (state, action)=>{
+        [SET_ARTICLE_KEYWORDS]: (state, action)=>{
             console.log('setting keywords of', action.article, 'to: ', action.keywords);
             return {
                 ...state,

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { AppState } from '../store/store';
+import { Notification } from '../store/reducers/notifications';
 
 
 
@@ -8,7 +9,7 @@ interface OwnProps {
     onClick: React.MouseEventHandler<HTMLButtonElement>
 }
 interface ReduxProps {
-    unreadCount: number
+    notifications: Notification[]
 }
 type Props = OwnProps & ReduxProps;
 
@@ -18,11 +19,14 @@ type Props = OwnProps & ReduxProps;
 class NotificationsButton extends React.PureComponent<Props, any>{
     getClassName = ()=>{
         const baseClass = 'notifications-button';
-        if(this.props.unreadCount > 0){
+        if(this.getUnreadCount() > 0){
             return `${baseClass} button-flat--primary--accent`;
         }else{
             return `${baseClass} button-flat--secondary`;
         }
+    }
+    getUnreadCount = ()=>{
+        return this.props.notifications.filter((notification)=>!notification.isRead).length
     }
     render() {
         return (
@@ -31,7 +35,7 @@ class NotificationsButton extends React.PureComponent<Props, any>{
                 className={this.getClassName()}
             >
                 <i className='material-icons'>notifications</i>
-                <span className="notifications-button__number">{this.props.unreadCount}</span>
+                <span className="notifications-button__number">{this.getUnreadCount()}</span>
             </button>
         )
     }
@@ -40,7 +44,7 @@ class NotificationsButton extends React.PureComponent<Props, any>{
 export default connect(
     (state:AppState,props:OwnProps) => {
         return{
-            unreadCount: state.notifications.filter((notification)=>!notification.isRead).length
+            notifications: state.notifications
         }
     }
 )(NotificationsButton);

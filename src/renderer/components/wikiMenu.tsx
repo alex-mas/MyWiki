@@ -8,17 +8,15 @@ import { WikiMetadata } from '../store/reducers/wikis';
 import { getSelectedWiki } from '../selectors/wikis';
 import { getPluginMenuActions } from '../selectors/plugins';
 import { PluginMenuAction } from '../store/reducers/plugins';
+import  PluginMenuActions  from './pluginMenuActrions';
 
 
 
 interface OwnProps {
     isOpen: boolean
 }
-interface ReduxProps {
-    wiki: WikiMetadata,
-    pluginsActions: PluginMenuAction[][]
-}
-type ComponentProps = OwnProps & ReduxProps;
+
+type ComponentProps = OwnProps;
 
 export class WikiMenu extends React.Component<ComponentProps, any>{
     render() {
@@ -55,7 +53,8 @@ export class WikiMenu extends React.Component<ComponentProps, any>{
                                 </Link>
                             </li>
                         </section>
-                        <section className='wiki-menu__section'>
+                        <PluginMenuActions/>
+                        <section className='wiki-menu__section--last'>
                             <li className='wiki-menu__item'>
                                 <Link
                                     className='wiki-menu__link'
@@ -67,31 +66,7 @@ export class WikiMenu extends React.Component<ComponentProps, any>{
                                     <I18String text='articles' />
                                 </Link>
                             </li>
-
                         </section>
-                        {
-                            this.props.pluginsActions.map((pluginActions) => {
-                                return (
-                                    <section className='wiki-menu__section'>
-                                        {pluginActions.map((action) => {
-                                            return (
-                                                <li className='wiki-menu__item'>
-                                                    <a
-                                                        className='wiki-menu__link'
-                                                        onClick={action.onClick}
-                                                    >
-                                                        <i className='material-icons'>
-                                                            {action.icon}
-                                                        </i>
-                                                        <I18String text={action.text} format='capitalizeFirst' />
-                                                    </a>
-                                                </li>
-                                            )
-                                        })}
-                                    </section>
-                                )
-                            })
-                        }
                     </ul>
                 </div>
 
@@ -103,10 +78,4 @@ export class WikiMenu extends React.Component<ComponentProps, any>{
 }
 
 
-
-export default connect((state: AppState, props) => {
-    return {
-        wiki: getSelectedWiki(state),
-        pluginsActions: getPluginMenuActions(state)
-    }
-})(WikiMenu);
+export default WikiMenu;
