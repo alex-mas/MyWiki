@@ -3,11 +3,17 @@ const url = require('url');
 import * as Electron from 'electron'
 import { saveWindowConfig, getWindowConfig } from './appData';
 const { app, Menu, BrowserWindow, ipcMain, WebContents } = require('electron');
-
+const {
+    REACT_DEVELOPER_TOOLS,
+    REDUX_DEVTOOLS, 
+    REACT_PERF
+} = require('electron-devtools-installer');
+const installExtension = require('electron-devtools-installer').default;
 
 
 let loadingWindow: Electron.BrowserWindow;
 let mainWindow: Electron.BrowserWindow;
+
 
 
 
@@ -19,6 +25,8 @@ app.on("ready", async () => {
     loadingWindow = new BrowserWindow({
         x: screen.getPrimaryDisplay().bounds.width / 2 - 100,
         y: screen.getPrimaryDisplay().bounds.height / 2 - 100,
+        width: 220,
+        height: 220,
         transparent: true,
         frame: false
     });
@@ -86,8 +94,16 @@ app.on("ready", async () => {
         }
        
     });
-    if (process.env.ENV === "development") {
-        mainWindow.webContents.openDevTools();
+    if (process.env.NODE_ENV === "development") {
+        console.log('installing dev tools');
+        installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS, REACT_PERF])
+            .then((v: any)=>{
+                console.log('chrome extensions installed succesfully');
+                mainWindow.webContents.openDevTools();
+            })
+            .catch((e: any)=>{
+                console.warn('error installing chrome extensions',e);
+            });
     }
 });
 

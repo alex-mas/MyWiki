@@ -103,7 +103,7 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
     renderArticleNotFound = () => {
         return (
             <WikiView background={this.getBackground()}>
-                <div className='body--article'>
+                <div className='wiki-article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
                             <h1 className='wiki-article__title'> <I18String text='article not found' format='capitalizeFirst' /></h1>
@@ -130,7 +130,7 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
         if (this.state.fileExists) {
             return (
                 <WikiView background={this.getBackground()}>
-                    <div className='body--article'>
+                    <div className='wiki-article'>
                         <div className='wiki-article__header'>
                             <div className='wiki-article__header__section'>
                                 <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>

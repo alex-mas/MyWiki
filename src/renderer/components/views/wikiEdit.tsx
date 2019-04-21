@@ -151,7 +151,7 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
         const article = this.props.match.params.article;
         return (
             <WikiView background={this.getBackground()}>
-                <div className='body--article'>
+                <div className='wiki-article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
                             <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
@@ -168,7 +168,7 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
                                 <ImageInput
                                     prompt='Choose Background'
                                     onChange={this.onBackgroundChange}
-                                    windowTitle='Choose a background for the article'
+                                    windowTitle='choose a background for the article'
                                     className='wiki-article__image-input'
                                 >
                                     <i className='material-icons'>panorama</i>

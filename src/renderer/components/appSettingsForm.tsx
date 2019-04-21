@@ -120,7 +120,7 @@ export class SettingsForm extends React.Component<ComponentProps, ComponentState
                         <I18String text='background image' format='capitalizeFirst' />
                         <ImageInput
                             className='form-input image-input'
-                            windowTitle='select App background image'
+                            windowTitle='select app background image'
                             value={this.props.appData.background}
                             onChange={this.onBackgroundChange}
                         >

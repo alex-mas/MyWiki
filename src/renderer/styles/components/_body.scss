@@ -10,21 +10,6 @@
     justify-content: center;
 }
 
-.body--article{
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    min-height: 90vh;
-    background-color: rgba(255,255,255,0.95);
-    margin-top: 8vh;
-    margin-left: 10vh;
-    margin-right: 10vh;
-    margin-bottom: 8vh;
-    padding-top: 1px;
-    padding-bottom: 5vh;
-    box-shadow: $elevation-12p;
-}
-
-
 .body--noscroll{
     @extend .body;
     overflow-y: hidden;

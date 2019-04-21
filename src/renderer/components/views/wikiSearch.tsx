@@ -38,6 +38,8 @@ export class ArticleSearchPage extends React.Component<ComponentProps, Component
 
     }
     componentDidMount() {
+        const appTitle = document.getElementById('pageTitle');
+        appTitle.innerText = `${this.props.selectedWiki.name}@search - ${this.props.match.params.articleName}`;
         //TODO: Fetch descriptions for the search results
     }
     renderNotFoundMessage = () => {
@@ -51,7 +53,7 @@ export class ArticleSearchPage extends React.Component<ComponentProps, Component
     render() {
         return (
             <WikiView>
-                <div className='body--article'>
+                <div className='wiki-article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
                             <h1 

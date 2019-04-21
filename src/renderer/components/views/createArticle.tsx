@@ -104,7 +104,7 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
     render() {
         return (
             <WikiView background={this.state.background}>
-                <div className='body--article'>
+                <div className='wiki-article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
                             <h1 className='wiki-article__title'>
@@ -134,9 +134,9 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
                                     <i className='material-icons'>local_offer</i>
                                 </button>
                                 <ImageInput
-                                    prompt='Choose Background'
+                                    prompt='choose background'
                                     onChange={this.onBackgroundChange}
-                                    windowTitle='Choose a background for the article'
+                                    windowTitle='choose a background for the article'
                                     className='wiki-article__image-input'
                                 >
                                     <i className='material-icons'>panorama</i>

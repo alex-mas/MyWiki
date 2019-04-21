@@ -80,8 +80,8 @@ export class WikiForm extends React.Component<OwnProps, ComponentState>{
                     <ImageInput
                         value={this.state.background}
                         onChange={this.onBackgroundChange}
-                        prompt='choose Image'
-                        windowTitle='Choose a background image'
+                        prompt='choose image'
+                        windowTitle='choose a background image'
                         className='form__image-input'
                     />
 

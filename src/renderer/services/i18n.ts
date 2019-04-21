@@ -10,14 +10,15 @@ export class ReduxI18NService extends ReduxService<AppState>{
         super(store.get());
         this.traductions = readOnly(store.get().getState().i18n);
         this.store.subscribe(() => {
-            const state = this.store.getState();
-            if (this.traductions !== state.i18n) {
-                this.traductions = readOnly(state.i18n);
+            const i18n = this.store.getState().i18n;
+            if (this.traductions !== i18n) {
+                this.traductions = readOnly(i18n);
             }
         });
     }
     public traduce = (string: string) => {
         const traduction = this.traductions[string];
+        console.log(`translating ${string} to ${traduction}`);
         if (traduction) {
             return traduction;
         }

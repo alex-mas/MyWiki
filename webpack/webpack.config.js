@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const fse = require('fs-extra');
 const {promisify} = require('util');
 const mainEntryPoint = './src/main/main.ts';
 const rendererEntryPoint = './src/renderer/app.tsx';
@@ -8,15 +9,19 @@ const workerOutputFolder = './dist/app/workers';
 const outputFolder = './dist/app/';
 const readdir = promisify(fs.readdir);
 
+
+
 if(!fs.existsSync('./dist')){
   fs.mkdirSync('./dist');
+}
+if(!fs.existsSync('./dist/app')){
+  fs.mkdirSync('./dist/app');
 }
 if(!fs.existsSync(outputFolder)){
   fs.mkdirSync(outputFolder);
 }
 fs.copyFileSync('./src/static/index.html', outputFolder+'/index.html');
-fs.copyFileSync('./src/static/loader.html', outputFolder+'/loader.html')
-
+fs.copyFileSync('./src/static/loader.html', outputFolder+'/loader.html');
 
 const getWorkerFiles = ()=>{
   const entryPoints = fs.readdirSync(workerEntryFolder);
@@ -27,6 +32,8 @@ const getWorkerFiles = ()=>{
   });
   return entryObj;
 }
+
+fse.copy('./resources', './dist/app/resources');
 
 module.exports = (env)=>{
 
@@ -40,7 +47,7 @@ module.exports = (env)=>{
       filename: 'app.js'
     },
     resolve: {
-      extensions: [".ts", ".tsx", ".js" , ".jsx"]
+      extensions: [".ts", ".tsx", ".js" , ".jsx", '.json']
     },
     externals: [
       /(require\("\w+"\))/
