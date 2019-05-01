@@ -8,4 +8,4 @@ export const readOnly = <T extends object>(obj: T)=>{
     });
 }
 
-export default memoize(readOnly);
+export default memoize(readOnly, 15);
