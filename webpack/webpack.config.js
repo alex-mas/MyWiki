@@ -100,7 +100,7 @@ module.exports = (env)=>{
     //sort of modifications we can apply to files processed by webpack conditionally
     resolve: {
       // Add `.ts` and `.tsx` as a resolvable extension.
-      extensions: [".ts", ".tsx", ".js" , ".jsx"]
+      extensions: [".ts", ".tsx", ".js" , ".jsx", "json"]
     },
     node: {
       __dirname: false
@@ -148,7 +148,7 @@ module.exports = (env)=>{
     target: 'electron-main',
     devtool: env.NODE_ENV === 'production' ? undefined : 'inline-source-map',
     resolve: {
-      extensions: [".ts", ".tsx", ".js"]
+      extensions: [".ts", ".tsx", ".js", ".json"]
     },
     node: {
       __dirname: false
