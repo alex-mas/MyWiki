@@ -53,10 +53,6 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
         }
     }
     componentDidMount() {
-        const appTitle = document.getElementById('pageTitle');
-        if (appTitle.innerText !== this.props.selectedWiki.name) {
-            appTitle.innerText = `${this.props.selectedWiki.name}@${this.props.match.params.article}`;
-        }
         //@ts-ignore
         this.props.loadArticle(this.props.match.params.article).then((article: Article) => {
             this.setState(() => ({
@@ -102,7 +98,10 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
     }
     renderArticleNotFound = () => {
         return (
-            <WikiView background={this.getBackground()}>
+            <WikiView 
+            background={this.getBackground()}
+            title={`${this.props.selectedWiki.name}@${this.props.match.params.article}`}
+            >
                 <div className='wiki-article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
@@ -129,7 +128,10 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
         const article = this.props.match.params.article;
         if (this.state.fileExists) {
             return (
-                <WikiView background={this.getBackground()}>
+                <WikiView 
+                    background={this.getBackground()}
+                    title={`${this.props.selectedWiki.name}@${this.props.match.params.article}`}
+                >
                     <div className='wiki-article'>
                         <div className='wiki-article__header'>
                             <div className='wiki-article__header__section'>

@@ -9,7 +9,8 @@ import Notifications from './notifications';
 
 
 interface OwnProps {
-    background?: string
+    background?: string,
+    title: string
 }
 
 interface ReduxProps {
@@ -27,6 +28,10 @@ export class AppView extends React.Component<ComponentProps, State>{
     constructor(props: ComponentProps) {
         super(props);
 
+    }
+    componentDidMount(){
+        const appTitle = document.getElementById('pageTitle');
+        appTitle.innerText = this.props.title;
     }
     getBackground = () => {
         let background;

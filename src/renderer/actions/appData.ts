@@ -17,7 +17,8 @@ export const SET_LOCALE = 'SET_LOCALE';
 export const SET_APP_BACKGROUND = 'SET_APP_BACKGROUND';
 export const SET_APP_AUTO_SAVE = 'SHOULD_AUTO_SAVE';
 export const SET_APP_AUTO_SAVE_INTERVAL = 'SHOULD_AUTO_SAVE_INTERVAL';
-
+export const LOAD_EXTERNAL_WIKI = 'LOAD_EXTERNAL_WIKI';
+export const REMOVE_EXTERNAL_WIKI = 'REMOVE_EXTERNAL_WIKI';
 
 
 
@@ -123,14 +124,13 @@ export const loadAppData: LoadAppDataActionCreator = ()=>{
             //when app is build this doesnt exist, so create it.
             const appDataContents = await fsp.readFile('./config/app.config.json', 'utf8');
             const appData: AppData = JSON.parse(appDataContents);
-            dispatch(setAppData(appData));
+            return dispatch(setAppData(appData));
         }catch(e){
             dispatch(fsError('error parsing app configuration'));
             throw e;
         }
     }
 }
-
 
 
 export const saveAppData = ()=>{
@@ -147,6 +147,27 @@ export const saveAppData = ()=>{
         });
     }
 }
+
+export type ALoadExternalWiki = ActionWithPayload<{path:string}>;
+
+export type ALoadExternalWikiCreator = ACreator<any,ALoadExternalWiki>
+export const loadExternalWiki: ALoadExternalWikiCreator = (path:string)=>{
+    return{
+        type: LOAD_EXTERNAL_WIKI,
+        path
+    }
+}
+
+export type ARemoveExternalWiki = ActionWithPayload<{path:string}>;
+export type ARemoveExternalWikiCreator = ACreator<any,ARemoveExternalWiki>
+export const removeExternalWiki: ARemoveExternalWikiCreator = (path:string)=>{
+    return{
+        type: REMOVE_EXTERNAL_WIKI,
+        path
+    }
+}
+
+
 
 
 

@@ -60,7 +60,7 @@
 .wiki-list__actions{
     padding-top: $size-sm;
     display: flex;
-    justify-content: space-around
+    justify-content: center;
 }
 
 
@@ -80,6 +80,17 @@
     
     &:active{
         box-shadow: $elevation-2p;
+        border-radius: 5%;
+    }
+}
+
+.wiki-list__action--secondary{
+    width: 5rem;
+    height: $size-ml;
+    i{
+        font-size: $font-size-m;
+    }
+    &:active{
         border-radius: 5%;
     }
 }

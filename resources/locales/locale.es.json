@@ -33,5 +33,6 @@
     "search article": "Buscar artículo",
     "error": "error",
     "requested language isn't available": "el idioma escojido no esta disponible",
-    "sorry": "disculpe las molestias"
+    "sorry": "disculpe las molestias", 
+    "import a wiki": "importar una wiki"
 }

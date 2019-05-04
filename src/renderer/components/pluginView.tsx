@@ -35,7 +35,7 @@ export class PluginView extends React.Component<ComponentProps, ComponentState>{
     }
     render() {
         return (
-            <WikiView>
+            <WikiView title={`@${this.props.selectedWiki.name} - plugins`}>
                 <this.props.component/>
             </WikiView>
         )

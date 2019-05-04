@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { remote, Dialog, OpenDialogOptions } from 'electron';
+import { remote, Dialog } from 'electron';
 import * as path from 'path';
 import I18String from '@axc/react-components/i18string';
 import { Button } from './button';

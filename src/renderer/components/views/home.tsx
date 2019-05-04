@@ -1,19 +1,20 @@
 import * as React from 'react';
-import { RouteProps } from '../../router/router';
+import * as path from 'path';
 import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetadata, UserDefinedWikiMetadata } from '../../store/reducers/wikis';
 import Wiki from '../wikiItem';
 import Modal from '@axc/react-components/modal';
-import AppHeader from '../appHeader';
 import { AppData } from '../../store/reducers/appData';
 import { Button } from '../button';
-import { createWiki } from '../../actions/wikis';
+import { createWiki, loadWiki, LoadWikiActionCreator } from '../../actions/wikis';
 import WikiForm from '../wikiForm';
 import AppView from '../appView';
 import { RouteComponentProps } from 'react-router';
-
-
+import { remote, Dialog } from 'electron';
+import { i18n } from '../../app';
+import { loadExternalWiki } from '../../actions/appData';
+const dialog: Dialog = remote.dialog;
 interface OwnProps extends RouteComponentProps{
 
 }
@@ -22,6 +23,8 @@ interface ReduxProps {
     appData: AppData;
     wikis: WikiMetadata[];
     createWiki: typeof createWiki;
+    loadWiki: typeof loadWiki;
+    loadExternalWiki: typeof loadExternalWiki;
 }
 
 type ComponentProps =  OwnProps & ReduxProps;
@@ -37,10 +40,6 @@ export class HomePage extends React.Component<ComponentProps, ComponentState>{
             shouldRenderWikiForm: false
         }
     }
-    componentDidMount() {
-        const appTitle = document.getElementById('pageTitle');
-        appTitle.innerText = `MyWiki - Home`;
-    }
     toggleWikiForm = () => {
         this.setState((prevState) => ({
             shouldRenderWikiForm: !prevState.shouldRenderWikiForm
@@ -52,9 +51,24 @@ export class HomePage extends React.Component<ComponentProps, ComponentState>{
         this.props.createWiki(metaData);
         this.props.history.push('/');
     }
+    onImportWiki = ()=>{
+        dialog.showOpenDialog(remote.getCurrentWindow(), {
+            title: i18n('import wiki'),
+            properties: ['openDirectory','promptToCreate']
+        },
+            (filePaths: string[]) => {
+                if (filePaths.length === 1) {
+                    const wikiPath = path.relative(__dirname, filePaths[0]);
+                    this.props.loadWiki(undefined, wikiPath);
+                    this.props.loadExternalWiki(wikiPath);
+                }
+            });
+    }
     render() {
         return (
-            <AppView>
+            <AppView
+                title='MyWiki - Home'
+            >
                 <div className='body'>
                     <ul className='wiki-list'>
                         {this.props.wikis.map((wiki) => {
@@ -68,6 +82,14 @@ export class HomePage extends React.Component<ComponentProps, ComponentState>{
                                 onClick={this.toggleWikiForm}
                             >
                                 <i className='material-icons'>add</i>
+                            </Button>
+                            <Button
+                                btnType='flat'
+                                theme='primary'
+                                className='wiki-list__action--secondary'
+                                onClick={this.onImportWiki}
+                            >
+                                <i className='material-icons'>archive</i>
                             </Button>
                         </div>
                     </ul>
@@ -88,16 +110,16 @@ export class HomePage extends React.Component<ComponentProps, ComponentState>{
 }
 
 
-
-
 export default connect(
-    (state: AppState, props) => {
+    (state: AppState, props: OwnProps) => {
         return {
             wikis: state.wikis,
             appData: state.appData
-        }
+        } as ReduxProps
     },
     {
-        createWiki
+        createWiki,
+        loadWiki,
+        loadExternalWiki
     }
 )(HomePage);

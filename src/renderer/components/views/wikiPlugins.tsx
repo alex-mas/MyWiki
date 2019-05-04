@@ -21,7 +21,7 @@ type ComponentProps = OwnProps & ReduxProps & DispatchProps;
 export class WikiPluginsPage extends React.Component<ComponentProps, any>{
     render() {
         return (
-            <WikiView>
+            <WikiView title='@plugins'>
                 <div className='body'>
                     {this.props.plugins.map((plugin) => {
                         return (

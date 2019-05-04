@@ -42,6 +42,9 @@ export type ArticleACreator = ACreator<[ArticleMetaData],ArticleAction>;
 
 
 export const getArticlePath = (wiki: WikiMetadata, articleName: string) => {
+    if(wiki.path){
+        return path.join(wiki.path, 'articles', `${articleName}.json`);
+    }
     return path.join('./wikis', wiki.id, 'articles', `${articleName}.json`);
 }
 

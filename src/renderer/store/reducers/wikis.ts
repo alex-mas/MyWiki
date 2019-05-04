@@ -13,7 +13,8 @@ export interface WikiMetadata {
     id: string,
     articles: ArticleMetaData[],
     selected: boolean,
-    installedPlugins: String[]
+    installedPlugins: String[],
+    path?: string
 }
 
 

@@ -55,10 +55,6 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
             areTagsBeingManaged: false
         }
     }
-    componentDidMount() {
-        const appTitle = document.getElementById('pageTitle');
-        appTitle.innerText = `${this.props.selectedWiki.name} - Create article ${this.state.name ? '(' + this.state.name + ')' : ''}`;
-    }
     onChange = (change: { operations: any, value: Value }) => {
         const editorContent = change.value;
         this.setState(() => ({ editorContent }));
@@ -103,7 +99,10 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
     }
     render() {
         return (
-            <WikiView background={this.state.background}>
+            <WikiView 
+                background={this.state.background}
+                title={`${this.props.selectedWiki.name} - Create article ${this.state.name ? '(' + this.state.name + ')' : ''}`}
+            >
                 <div className='wiki-article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>

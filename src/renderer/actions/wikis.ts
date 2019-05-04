@@ -115,7 +115,7 @@ export const removeWiki: RemoveWikiActionCreator = (wiki: WikiMetadata) => {
 
 
 export type SelectWikiAction = WikiAction;
-export type SelectWikiActionCreator = ActionCreator<ThunkAction<any, AppState, void, SelectWikiAction | ErrorAction>>;
+export type SelectWikiActionCreator =AsyncACreator<[string],SelectWikiAction>;
 
 //TODO: Populate articles array here
 export const selectWiki: SelectWikiActionCreator = (id: string) => {
@@ -123,17 +123,15 @@ export const selectWiki: SelectWikiActionCreator = (id: string) => {
         const state = getState();
         const wiki = state.wikis.find((wiki) => wiki.id === id);
         if (wiki) {
-            dispatch({
+            return dispatch({
                 type: SELECT_WIKI,
                 wiki
             });
             //TODO: Delay parsing plugins until wiki is selected
             //dispatch(parsePlugins());
         } else {
-            dispatch(errorAction(`Wiki id (${id}) provided doesn't mach with any of the wikis tracked by the app`, ErrorActionCode.WRONG_PARAMS));
+            return dispatch(errorAction(`Wiki id (${id}) provided doesn't mach with any of the wikis tracked by the app`, ErrorActionCode.WRONG_PARAMS));
         }
-
-
     }
 }
 
@@ -141,17 +139,24 @@ export const selectWiki: SelectWikiActionCreator = (id: string) => {
 export type LoadWikiAction = ActionWithPayload<{
     wiki: WikiMetadata
 }>;
-export type LoadWikiActionCreator = AsyncACreator<[string], LoadWikiAction>;
+export type LoadWikiActionCreator = AsyncACreator<[string, string?], LoadWikiAction>;
 
 
 //TODO: Delay populating articles array, so that app doesnt load unnecessary metadata -> faster menu interaction
-export const loadWiki: LoadWikiActionCreator = (id: string) => {
+export const loadWiki: LoadWikiActionCreator = (id: string, path?:string) => {
     return async (dispatch, getState) => {
+        let root: string;
+        if(path){
+            root = path;
+        }else{
+            root = `./wikis/${id}`;
+        }
+        
         try {
-            const wiki = JSON.parse(await fsp.readFile(`./wikis/${id}/myWiki.config.json`, 'utf8'));
-            const articleFiles = await fsp.readdir(`./wikis/${id}/articles`);
+            const wiki = JSON.parse(await fsp.readFile(`${root}/myWiki.config.json`, 'utf8'));
+            const articleFiles = await fsp.readdir(`${root}/articles`);
             const articles = await Promise.all(articleFiles.map(async (articleFile) => {
-                const articleContents = await fsp.readFile(`./wikis/${id}/articles/${articleFile}`, 'utf8');
+                const articleContents = await fsp.readFile(`${root}/articles/${articleFile}`, 'utf8');
                 const article: Article = JSON.parse(articleContents);
                 delete article.content;
                 return article as ArticleMetaData;
@@ -165,7 +170,8 @@ export const loadWiki: LoadWikiActionCreator = (id: string) => {
                 wiki: {
                     ...wiki,
                     articles,
-                    selected: false
+                    selected: false,
+                    path
                 }
             });
         } catch (err) {
@@ -237,12 +243,18 @@ export const loadWikis: LoadWikisActionCreator = ()=>{
             const files = await fsp.readdir('./wikis');
             files.forEach(async (file) => {
                 try {
-                    //@ts-ignore
                     dispatch(loadWiki(file));
                 } catch (e) {
                     dispatch(fsError('Error while parsing wiki meta data'));
                 }
             });
+            getState().appData.externalWikis.forEach(async(path)=>{
+                try {
+                    dispatch(loadWiki(undefined, path));
+                } catch (e) {
+                    dispatch(fsError('Error while parsing wiki meta data'));
+                }
+            })
         } catch (e) {
             dispatch(fsError('Error loading wiki meta-data'));
         }
@@ -260,8 +272,12 @@ export const saveWikis = ()=>{
     const wikis = store.getState().wikis;
     wikis.forEach(async (wiki, index) => {
         if (wiki) {
+            let root = wiki.path;
+            if(!root){
+                root = `./wikis/${wiki.id}`;
+            }
             try {
-                fsp.writeFile(`./wikis/${wiki.id}/myWiki.config.json`, JSON.stringify(wiki), 'utf8');
+                fsp.writeFile(`${root}/myWiki.config.json`, JSON.stringify(wiki), 'utf8');
             } catch (e) {
                 store.dispatch(fsError('Error saving wiki configuration files'));
                 throw e;

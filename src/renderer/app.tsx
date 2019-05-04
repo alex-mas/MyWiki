@@ -58,7 +58,7 @@ const App = (
     <Provider store={store.get()}>
         <I18nSystem>
             <PromptSystem>
-                <AppRouter/>
+                <AppRouter />
             </PromptSystem>
         </I18nSystem>
     </Provider>
@@ -69,27 +69,37 @@ ReactDOM.render(App, appRoot);
 
 window.onload = () => {
     store.get().dispatch(load());
-    //TODO: refactor this calls into reducer persistors.
     //@ts-ignore
-    store.get().dispatch(loadWikis());
-    //@ts-ignore
-    store.get().dispatch(loadAppData());
-
-    //@ts-ignore
-    store.get().dispatch(parsePlugins());
-
+    store.get().dispatch(loadAppData()).then(() => {
+        //TODO: refactor this calls into reducer persistors.
+        //@ts-ignore
+        store.get().dispatch(loadWikis());
+        //@ts-ignore
+        store.get().dispatch(parsePlugins());
+        let currentValue: AppState;
+        store.get().subscribe(() => {
+            let previousValue = currentValue;
+            currentValue = store.get().getState();
+            if (previousValue && previousValue.appData && previousValue.appData !== currentValue.appData) {
+                saveAppData();
+            }
+            if (previousValue && previousValue.wikis && previousValue.wikis !== currentValue.wikis) {
+                saveWikis();
+            }
+        })
+    });
 }
 
-
-window.onbeforeunload = () => {
+window.onbeforeunload = (e) => {
     store.get().dispatch(unload());
-    //TODO: refactor this calls into reducer persistors.
-    saveWikis();
-    saveAppData();
 }
+
+
+
 
 
 
 export default {
     store
 }
+

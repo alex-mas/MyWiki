@@ -84,7 +84,7 @@ export class AppRouter extends React.PureComponent<RouterProps, any>{
                                 key={`/pluginView/${view.path}`}
                                 path={`/pluginView/${view.path}`}
                                 exact={view.exact}
-                                component={(props: any)=><WikiView ><view.component {...props}/></WikiView>}
+                                component={(props: any)=><WikiView title='@pluginView'><view.component {...props}/></WikiView>}
                             />
                         );
                     })}

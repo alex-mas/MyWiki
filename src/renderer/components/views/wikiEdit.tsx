@@ -56,10 +56,6 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
 
     }
     componentDidMount() {
-        const appTitle = document.getElementById('pageTitle');
-        if (appTitle.innerText !== this.props.selectedWiki.name) {
-            appTitle.innerText = `${this.props.selectedWiki.name} - editing@${this.props.match.params.article}`;
-        }
         //@ts-ignore
         this.props.loadArticle(this.props.match.params.article ? this.props.match.params.article : 'home').then((article: Article) => {
             console.log('loaded article to edit');
@@ -150,7 +146,10 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
     render() {
         const article = this.props.match.params.article;
         return (
-            <WikiView background={this.getBackground()}>
+            <WikiView 
+            background={this.getBackground()}
+            title={`${this.props.selectedWiki.name} - editing@${this.props.match.params.article}`}
+            >
                 <div className='wiki-article'>
                     <div className='wiki-article__header'>
                         <div className='wiki-article__header__section'>
