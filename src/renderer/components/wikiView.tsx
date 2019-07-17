@@ -51,7 +51,7 @@ export class WikiView extends React.Component<ComponentProps, ComponentState>{
         return (
             <div className='route'>
                 <img className='route__background' src={this.getBackground()} alt="background" />
-                <WikiHeader />
+                <WikiHeader/>
                 {this.props.children}
                 <Notifications />
             </div>

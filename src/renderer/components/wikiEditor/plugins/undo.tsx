@@ -24,6 +24,7 @@ export const UndoPlugin = (context: EditorPluginContext) => {
         },
         onKeyDown: (event: React.KeyboardEvent<any>, editor: Editor, next: Function) => {
             if(event.ctrlKey && event.key === 'z'){
+                editor.undo
                 editor.undo();
             }else{
                 next();

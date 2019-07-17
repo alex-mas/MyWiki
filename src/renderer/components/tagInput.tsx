@@ -22,6 +22,7 @@ export class TagInput extends React.PureComponent<ComponentProps, any>{
         return (
             <div className='tag'>
                 <DynamicTextInput
+                    defaultWidth={50}
                     className='tag-input'
                     placeholder='new tag'
                     value={this.props.tag}

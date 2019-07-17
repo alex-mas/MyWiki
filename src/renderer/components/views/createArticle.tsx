@@ -112,6 +112,7 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
                                         this.state.name
                                         :
                                         <DynamicTextInput
+                                            defaultWidth={50}
                                             className='wiki-article__header-input'
                                             value={this.state.name}
                                             onChange={this.onNameChange}

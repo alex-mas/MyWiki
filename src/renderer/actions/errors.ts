@@ -29,11 +29,11 @@ export const isErrorAction = (obj: AnyAction): obj is ErrorAction=>{
 export const errorAction: ErrorActionCreator = (message: string, code: number)=>{
     return async(dispatch, getState)=>{
         dispatch(createNotification(`Error ${code}`,message,'error'));
-        return {
+        return dispatch({
             type: ERROR,
             code,
             message
-        }
+        });
     }
 
 

@@ -8,13 +8,13 @@ import { withPrompt, PromptComponentProps } from '@axc/react-components/prompt';
 import I18String from '@axc/react-components/i18string';
 import { Button } from './button';
 import { DeletePrompt, DeletePromptFunction } from './deletePrompt';
-import {withRouter, RouteComponentProps} from 'react-router-dom';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { MemoryHistory } from 'history';
 import { removeExternalWiki } from '../actions/appData';
 
 
 
-interface WikiItemOwnProps extends RouteComponentProps{
+interface WikiItemOwnProps extends RouteComponentProps {
     wiki: WikiMetadata
 }
 
@@ -43,15 +43,17 @@ export class WikiItem extends React.Component<WikiItemProps, any>{
 
     }
     removeWiki = () => {
-        this.props.prompt(DeletePrompt, { title: 'do you really wish to remove this wiki?' }).then((response: boolean) => {
-            if (response) {
-                if(this.props.wiki.path){
-                    this.props.removeExternalWiki(this.props.wiki.path);
-                }else{
-                    this.props.removeWiki(this.props.wiki);
+        this.props.prompt(DeletePrompt, { title: 'do you really wish to remove this wiki?' })
+            .then((response: boolean) => {
+                if (response) {
+                    if (this.props.wiki.path) {
+                        console.log('removing wiki');
+                        this.props.removeExternalWiki(this.props.wiki.path);
+                    } else {
+                        this.props.removeWiki(this.props.wiki);
+                    }
                 }
-            }
-        });
+            });
     }
     render() {
         return (
@@ -91,5 +93,5 @@ export default withPrompt<any>(withRouter(connect(
         loadWiki,
         removeExternalWiki
     }
-     //@ts-ignore
+    //@ts-ignore
 )(WikiItem)));

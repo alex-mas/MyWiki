@@ -162,8 +162,7 @@ export const loadWiki: LoadWikiActionCreator = (id: string, path?:string) => {
                 return article as ArticleMetaData;
             }))
             .catch((e)=>{
-                dispatch(fsError('error while reading articles'));
-                throw e;
+                return dispatch(fsError('error while reading articles'));
             });
             return dispatch({
                 type: LOAD_WIKI,
@@ -175,8 +174,7 @@ export const loadWiki: LoadWikiActionCreator = (id: string, path?:string) => {
                 }
             });
         } catch (err) {
-            dispatch(fsError('error while reading articles folder'));
-            throw err;
+            return dispatch(fsError('error while reading articles folder'));
         }
     }
 }
@@ -276,11 +274,24 @@ export const saveWikis = ()=>{
             if(!root){
                 root = `./wikis/${wiki.id}`;
             }
+            let fileContents;
+            try{
+                fileContents = fsp.readFile(`${root}/myWiki.config.json`,'utf8');
+
+            }catch(e){
+                store.dispatch(fsError('Error loading wiki configuration files'));
+            }
             try {
                 fsp.writeFile(`${root}/myWiki.config.json`, JSON.stringify(wiki), 'utf8');
             } catch (e) {
                 store.dispatch(fsError('Error saving wiki configuration files'));
-                throw e;
+                try{
+                    fsp.writeFile(`${root}/myWiki.config.json`,fileContents, 'utf8');
+                }catch(e){
+                    store.dispatch(fsError('Error saving previous wiki config after saving failure'));
+                    return e;
+                }
+                return e;
             }
         }
     });

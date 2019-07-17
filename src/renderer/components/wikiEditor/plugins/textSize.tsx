@@ -10,30 +10,30 @@ import { hasInlineType } from '../utilities/inlines';
 
 
 
-export const TextColorPlugin = (context: EditorPluginContext) => {
+export const TextSizePlugin = (context: EditorPluginContext) => {
 
-    const renderColoredText = (props: RenderNodeProps) => {
+    const renderSizedText = (props: RenderNodeProps) => {
         const { children, node, attributes } = props;
         return (
             <span
                 {...attributes}
-                style={{ color: node.data.get("color") }}
-                className='wiki-colored-text'
+                style={{ fontSize: node.data.get("size") }}
+                className='wiki-sized-text'
             >
                 {children}
             </span>
         );
     }
     return {
-        id: 'colored-text_plugin',
-        renderNode: RenderBlock('colored-text', renderColoredText),
+        id: 'sized-text_plugin',
+        renderNode: RenderBlock('sized-text', renderSizedText),
         Button() {
-            const isActive = hasInlineType(context.getContent(), 'colored-text');
+            const isActive = hasInlineType(context.getContent(), 'sized-text');
             return (
                 <ColorPickerButton
                     active={isActive}
                     icon='border_color'
-                    type='colored-text'
+                    type='sized-text'
                     context={context}
                 />
             )
@@ -41,4 +41,4 @@ export const TextColorPlugin = (context: EditorPluginContext) => {
     }
 }
 
-export default TextColorPlugin;
+export default TextSizePlugin;
