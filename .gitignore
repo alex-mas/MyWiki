@@ -5,3 +5,4 @@ wikis/*
 config/*
 .vscode/*
 plugins/testPlugin/node_modules/*
+logs.txt
