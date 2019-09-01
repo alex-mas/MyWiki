@@ -55,7 +55,7 @@ class AppHeader extends React.Component<ComponentProps, ComponentState>{
                         onClick={this.toggleSettings}
                         className='wiki-header__action--secondary'
                     >
-                        <i className='material-icons'>settings</i>
+                        <i className='icon-btn--secondary material-icons'>settings</i>
                     </button>
                     <SettingsForm
                         isOpen={this.state.isSettingsFormOpen}

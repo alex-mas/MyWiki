@@ -22,7 +22,6 @@
     border: none;
     i{
         font-size: $font-size-xxl;
-        color: black;
     }
 }
 
@@ -30,7 +29,6 @@
     @extend .wiki-header__action;
     i{
         font-size: $font-size-xl;
-        color: black;
     }
 }
 

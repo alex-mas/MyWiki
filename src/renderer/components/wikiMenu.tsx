@@ -30,7 +30,7 @@ export class WikiMenu extends React.Component<ComponentProps, any>{
                                     className='wiki-menu__link'
                                     to='/wiki/article/home'
                                 >
-                                    <i className='material-icons'>
+                                    <i className='icon-btn--secondary material-icons'>
                                         home
                                     </i>
                                     <I18String text='home' />
@@ -46,7 +46,7 @@ export class WikiMenu extends React.Component<ComponentProps, any>{
                                     className='wiki-menu__link'
                                     to='/wiki/plugins'
                                 >
-                                    <i className='material-icons'>
+                                    <i className='icon-btn--secondary material-icons'>
                                         extension
                                     </i>
                                     <I18String text='plugins' />
@@ -60,7 +60,7 @@ export class WikiMenu extends React.Component<ComponentProps, any>{
                                     className='wiki-menu__link'
                                     to='/wiki/search/'
                                 >
-                                    <i className='material-icons'>
+                                    <i className='icon-btn--secondary material-icons'>
                                         subject
                                     </i>
                                     <I18String text='articles' />

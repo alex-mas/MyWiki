@@ -37,7 +37,7 @@ class WikiHeader extends React.Component<WikiHeaderProps, WikiHeaderState>{
                         className='wiki-header__action'
                         to='/wiki/create/'
                     >
-                        <i className='material-icons'>
+                        <i className='icon-btn--secondary material-icons'>
                             add
                         </i>
                     </Link>
@@ -46,7 +46,7 @@ class WikiHeader extends React.Component<WikiHeaderProps, WikiHeaderState>{
                         className='wiki-header__action'
                         onClick={this.onToggleHeaderMenu}
                     >
-                        <i className='material-icons'>
+                        <i className='icon-btn--secondary material-icons'>
                             menu
                         </i>
                     </button>

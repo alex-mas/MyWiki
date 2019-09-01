@@ -1,0 +1,24 @@
+
+
+.icon-btn{
+    text-decoration: none;
+    border: none;
+    &:hover{
+        cursor: pointer;
+    }
+}
+
+.icon-btn--secondary{
+    color: var(--theme-secondary);
+    &:hover{
+        color: var(--theme-secondary-lightened);
+    }
+}
+
+.icon-btn--primary{
+    color: var(--theme-primary);
+    &:hover{
+        color: var(--theme-primary-darkened);
+    }
+}
+

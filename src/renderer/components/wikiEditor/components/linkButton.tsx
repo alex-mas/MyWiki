@@ -96,34 +96,42 @@ export class LinkButton extends React.Component<ComponentProps, ComponentState>{
     Form = () => {
         return (
             <div className='wiki-link__form'>
-                <input
-                    className='wiki-link__input'
-                    type="text"
-                    value={this.state.linkDest}
-                    onChange={this.onChangeLinkDest}
-                />
-                <div>
+                <div className='form__field'>
+                    Link destination
+                    <input
+                        className='form-input'
+                        type='text'
+                        value={this.state.linkDest}
+                        onChange={this.onChangeLinkDest}
+                    />
+                </div>
+
+                <div className='form__field'>
                     Is out link?
                     <input
-                        type="checkbox"
+                        className='form-input'
+                        type='checkbox'
                         checked={this.state.isOutLink}
                         onChange={this.onChangeLinkType}
                     />
                 </div>
 
                 {this.state.promptForText ?
-                    <input
-                        className='wiki-link__text__input'
-                        type="text"
-                        value={this.state.linkText}
-                        onChange={this.onChangeLinkText}
-                    />
+                    <div className='form__field'>
+                        Link Text
+                        <input
+                            className='form-input'
+                            type='text'
+                            value={this.state.linkText}
+                            onChange={this.onChangeLinkText}
+                        />
+                    </div>
                     :
                     null
                 }
                 <button
                     type='button'
-                    className='wiki-link__form__action'
+                    className='button-solid--primary'
                     onClick={this.addLink}
                 >
                     Accept
@@ -138,10 +146,11 @@ export class LinkButton extends React.Component<ComponentProps, ComponentState>{
                 <EditorButton
                     onClick={this.toggleLink}
                     active={isActive}
-                    icon={'link'}
-                    type={'link'}
+                    icon='link'
+                    type='link'
                 />
                 <Modal
+                    className='modal'
                     isOpen={this.state.isModalOpen}
                     onClose={this.closeModal}
                 >

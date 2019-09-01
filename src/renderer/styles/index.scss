@@ -6,8 +6,10 @@
 @import './base';
 
 //base components
+@import './components/text';
 @import './components/transitions';
 @import './components/button';
+@import './components/iconbtn';
 @import './components/action';
 @import './components/materialIcons';
 @import './components/body';
@@ -19,6 +21,7 @@
 @import './components/form';
 
 //specific styles
+@import './components/wikiLinkForm';
 @import './components/notifications';
 @import './components/deletePrompt';
 @import './components/editor';

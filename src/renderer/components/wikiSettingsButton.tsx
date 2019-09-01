@@ -43,7 +43,7 @@ export class WikiSettingsButton extends React.Component<ComponentProps, { isForm
                     className={this.props.className}
                     onClick={this.toggleForm}
                 >
-                    <i className='material-icons'>
+                    <i className='icon-btn--secondary material-icons'>
                         settings
                     </i>
                     <I18String text='settings' />

@@ -112,23 +112,23 @@ export class YoutubeButton extends React.Component<ComponentProps, ComponentStat
 
     parseVideoId = (link: string) => {
         if (!link) {
-            throw new Error(i18n('empty urls are not valid'));
+            throw new Error(i18n(' empty urls are not valid'));
         }
         if (!link.includes('https://www.youtube.com/watch?v=')) {
-            throw new Error(i18n('erovided link is not a yotube video, please enter a valid youtube link'));
+            throw new Error(i18n(' video link is not a yotube video, please enter a valid youtube link'));
         }
         return link.split('https://www.youtube.com/watch?v=')[1];
 
     }
     onChangeVideoLink = (e: React.ChangeEvent<HTMLInputElement>) => {
         const videoLink = e.target.value;
-        try{
+        try {
             const videoId = this.parseVideoId(videoLink);
             this.setState(() => ({
                 videoId,
                 videoLink
             }));
-        }catch(e){
+        } catch (e) {
             this.setState(() => ({
                 error: e.message
             }));
@@ -137,36 +137,41 @@ export class YoutubeButton extends React.Component<ComponentProps, ComponentStat
     }
     Form = () => {
         return (
-            <div className='wiki-ytb__form'>
+            <div className='wiki-ytb__form form'>
                 {this.state.error ?
                     <div
-                        className='wiki-ytb__input-error'
+                        className='text--error'
                     >
                         <I18String
                             text='input error'
                             format='capitalizeFirst'
                         />
-                        
+
                         {this.state.error}
                     </div>
                     :
                     undefined
                 }
+                <div className='form__field'>
+                    Youtube Link
+                    <input
+                        className='form__text-input'
+                        placeholder='youtube url'
+                        type="text"
+                        value={this.state.videoLink}
+                        onChange={this.onChangeVideoLink}
+                    />
+                </div>
+                <div className='form__actions'>
+                    <button
+                        type='button'
+                        className='button-solid--primary form__action'
+                        onClick={this.addVideo}
+                    >
+                        Accept
+                    </button>
+                </div>
 
-                <input
-                    className='wiki-ytb__input'
-                    placeholder='youtube url'
-                    type="text"
-                    value={this.state.videoLink}
-                    onChange={this.onChangeVideoLink}
-                />
-                <button
-                    type='button'
-                    className='wiki-ytb__form__action'
-                    onClick={this.addVideo}
-                >
-                    Accept
-                </button>
             </div>
         );
     }
@@ -177,10 +182,11 @@ export class YoutubeButton extends React.Component<ComponentProps, ComponentStat
                 <EditorButton
                     onClick={this.onClickYoutubeBtn}
                     active={isActive}
-                    icon={'videocam'}
-                    type={'youtube_video'}
+                    icon='subscriptions'
+                    type='youtube_video'
                 />
                 <Modal
+                    className='modal'
                     isOpen={this.state.isModalOpen}
                     onClose={this.closeModal}
                 >
