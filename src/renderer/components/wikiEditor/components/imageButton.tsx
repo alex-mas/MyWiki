@@ -1,21 +1,104 @@
 import * as React from 'react';
-import { EditorPluginContext } from "../wikiEditor";
+import { EditorPluginContext, DEFAULT_NODE } from "../wikiEditor";
 import EditorButton from './editorButton';
 import { Value } from 'slate';
 import { hasInlineType, wrapInline, unwrapInline } from '../utilities/inlines';
 import Modal from '@axc/react-components/modal';
 import { hasBlockType } from '../utilities/blocks';
+import { remote, Dialog } from 'electron';
+import * as imageSize from 'image-size';
+import * as url from 'url';
+import {urlImageSize} from '../../../../utils/image';
 
+const dialog: Dialog = remote.dialog;
+const defaultImageData = {
+    height: '150',
+    width: '150',
+    src: '../../../../../../../../Media/public domain images/knight-armor-helmet-weapons-161936.jpeg'
+};
 
 type ComponentProps = EditorPluginContext
 
-export class LinkButton extends React.Component<ComponentProps, any>{
+
+type FormProps = any;
+
+class ImageButtonForm extends React.Component<FormProps, any> {
+    constructor(props: FormProps) {
+        super(props);
+        this.state = {
+            isFromUrl: false,
+            url: ''
+        };
+    }
+    triggerFromUrl = () => {
+        this.setState(() => ({
+            isFromUrl: true
+        }));
+    }
+    onChangeUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const url = e.target.value;
+        this.setState(() => ({
+            url
+        }));
+    }
+    addImage = () => {
+        this.props.addImageToDocument(this.state.url);
+    }
+    render() {
+        return (
+            <div className='wiki-link__form form'>
+                {this.state.isFromUrl ?
+                    <>
+                        <div className='form__field'>
+                            Insert a valid url
+                            <input
+                                className='form__text-input'
+                                placeholder='image url'
+                                type="text"
+                                value={this.state.url}
+                                onChange={this.onChangeUrl}
+                            />
+                        </div>
+                        <div className='form__actions'>
+                            <button
+                                type='button'
+                                className='button-solid--primary'
+                                onClick={this.addImage}
+                            >
+                                Add
+                            </button>
+                        </div>
+
+                    </>
+                    :
+                    <div className='form__actions'>
+                        <button
+                            type='button'
+                            className='button-solid--primary'
+                            onClick={this.props.addImage}
+                        >
+                            From file
+                        </button>
+
+                        <button
+                            type='button'
+                            className='button-solid--primary'
+                            onClick={this.triggerFromUrl}
+                        >
+                            From url
+                        </button>
+                    </div>
+                }
+            </div>
+        )
+    }
+}
+
+export class ImageButton extends React.Component<ComponentProps, any>{
     constructor(props: any) {
         super(props);
         this.state = {
-            isModalOpen: false,
-            linkDest: undefined,
-            isOutLink: undefined
+            isModalOpen: false
         }
     }
 
@@ -24,74 +107,99 @@ export class LinkButton extends React.Component<ComponentProps, any>{
             isModalOpen: false
         }));
     }
+    openForm = () => {
+        const value = this.props.getContent();
+        this.setState(() => ({
+            isModalOpen: true
+        }));
+    }
 
-    addLink = (event: React.MouseEvent<HTMLSpanElement>) => {
+    toggleIamgeForm = () => {
         event.preventDefault();
         const value = this.props.getContent();
-        const hasLinks = hasInlineType(value, 'link');
         const editor = this.props.getEditor();
-        if (hasLinks) {
-            unwrapInline(editor, 'link');
-        } else if (value.selection.isExpanded) {
-            if (this.state.isModalOpen) {
-                this.closeModal();
-                const dest = this.state.linkDest;
-                const isOutLink = this.state.isOutLink;
-
-                if (dest === null) {
-                    return;
-                }
-
-                wrapInline(editor, 'link', {
-                    href: dest,
-                    isOutLink
-                });
-
-            } else {
-                this.setState(() => ({
-                    isModalOpen: true,
-                    promptForText: false
-                }));
-            }
-
+        const isImage = hasBlockType(this.props.getContent(), 'image');
+        if (isImage) {
+            this.addImage(undefined);
         } else {
-            if (this.state.isModalOpen) {
-                this.closeModal();
-
-                const dest = this.state.linkDest;
-                const text = this.state.linkText;
-                const isOutLink = this.state.isOutLink;
-
-                if (dest === null || text === null) {
-                    return;
-                }
-
-                editor
-                    .insertText(text)
-                    .moveFocusBackward(text.length);
-                wrapInline(editor, 'link', {
-                    href: dest,
-                    isOutLink
-                });
-
-            } else {
-                this.setState(() => ({
-                    isModalOpen: true,
-                    promptForText: true
-                }));
-            }
+            this.openForm();
         }
     }
-    Button = () => {
-        const isActive = hasBlockType(this.props.getContent(), 'link');
-        return (
-            <EditorButton
-                onClick={this.addLink}
-                active={isActive}
-                icon={'link'}
-                type={'link'}
-            />
-        );
+
+    addImage = (event?: any) => {
+        if (event) {
+            event.preventDefault();
+        }
+
+        const value = this.props.getContent();
+        const editor = this.props.getEditor();
+        const { document } = value;
+
+
+        const isType = value.blocks.some(block => {
+            //@ts-ignore
+            return !!document.getClosest(block.key, parent => parent.type == type)
+        });
+        const isList = hasBlockType(value, 'list-item');
+
+        const isActive = hasBlockType(value, 'image');
+
+        if (isList) {
+            editor
+                .setBlocks(isActive ? DEFAULT_NODE : 'image')
+                .unwrapBlock('bulleted-list')
+                .unwrapBlock('numbered-list')
+        } else {
+            if (!isActive) {
+                dialog.showOpenDialog(remote.getCurrentWindow(), {
+                    title: 'choose image source',
+                    filters: [{
+                        name: 'images',
+                        extensions: ['jpg', 'jpeg', 'gif', 'png', 'apng', 'svg', 'bmp', '.webp']
+                    }],
+                    properties: ['openFile']
+                },
+                    (filePaths: string[]) => {
+                        if (filePaths.length === 1) {
+                            const imagePath = filePaths[0];
+                            this.addImageToDocument(imagePath);
+                        }
+                    });
+            } else {
+                const key = value.blocks.find(block => block.type === 'image').key;
+                if (key) {
+                    editor.removeNodeByKey(key);
+                }
+            }
+
+        }
+    }
+    addImageToDocument = async (imagePath: string) => {
+        const editor = this.props.getEditor();
+        console.log('Inserting image: ', imagePath, editor);
+        let size: any;
+        try{
+            size = imageSize(imagePath);
+        }
+        catch(e){
+            size = urlImageSize(imagePath);
+        }
+        await size;
+        const imageRatio = size.width / size.height;
+
+        editor.insertBlock({
+            type: 'image',
+            data: {
+                ...defaultImageData,
+                src: imagePath,
+                height: '500',
+                width: String(imageRatio * 500)
+            }
+        });
+        editor.insertBlock({
+            type: 'paragraph'
+        });
+        this.closeModal();
     }
     onChangeLinkDest = (e: React.ChangeEvent<HTMLInputElement>) => {
         const linkDest = e.target.value;
@@ -112,36 +220,34 @@ export class LinkButton extends React.Component<ComponentProps, any>{
             isOutLink
         }));
     }
-    Form = () => {
-        return (
-            <div className='wiki-link__form'>
-                <input className='wiki-link__input' type="text" value={this.state.linkDest} onChange={this.onChangeLinkDest} />
-                <div>
-                    Is out link? <input type="checkbox" checked={this.state.isOutLink} onChange={this.onChangeLinkType} />
-                </div>
-
-                {this.state.promptForText ?
-                    <input className='wiki-link__text__input' type="text" value={this.state.linkText} onChange={this.onChangeLinkText} />
-                    :
-                    null
-                }
-                <button className='wiki-link__form__action' onClick={this.addLink}>Accept</button>
-            </div>
-        );
-    }
     render() {
+        const isActive = hasBlockType(this.props.getContent(), 'image');
         return (
             <React.Fragment>
-                <this.Button />
+                <EditorButton
+                    onClick={this.toggleIamgeForm}
+                    active={isActive}
+                    icon={'insert_photo'}
+                    type={'image'}
+                    data={{
+                        height: '150',
+                        width: '150',
+                        src: '../../../../../../../../Media/public domain images/knight-armor-helmet-weapons-161936.jpeg'
+                    }}
+                />
                 <Modal
+                    className='modal'
                     isOpen={this.state.isModalOpen}
                     onClose={this.closeModal}
                 >
-                    <this.Form />
+                    <ImageButtonForm
+                        addImage={this.addImage}
+                        addImageToDocument={this.addImageToDocument}
+                    />
                 </Modal>
             </React.Fragment>
         )
     }
 }
 
-export default LinkButton;
+export default ImageButton;

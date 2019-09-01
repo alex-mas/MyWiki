@@ -8,6 +8,7 @@ import { remote, Dialog } from 'electron';
 import * as path from 'path';
 import Image from '../components/image';
 import * as imageSize from 'image-size';
+import ImageButton from '../components/imageButton';
 
 
 
@@ -108,18 +109,9 @@ export const ImagePlugin = (context: EditorPluginContext) => {
         id: 'image_plugin',
         renderNode: RenderBlock('image', renderImage),
         Button() {
-            const isActive = hasBlockType(context.getContent(), 'image');
             return (
-                <EditorButton
-                    onClick={onClickImageButton}
-                    active={isActive}
-                    icon={'insert_photo'}
-                    type={'image'}
-                    data={{
-                        height: '150',
-                        width: '150',
-                        src: '../../../../../../../../Media/public domain images/knight-armor-helmet-weapons-161936.jpeg'
-                    }}
+                <ImageButton
+                    {...context}
                 />
             )
         }
