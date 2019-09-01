@@ -70,12 +70,13 @@ ReactDOM.render(App, appRoot);
 window.onload = () => {
     store.get().dispatch(load());
     //@ts-ignore
-    store.get().dispatch(loadAppData()).then(() => {
+    store.get().dispatch(loadAppData()).then(async () => {
         //TODO: refactor this calls into reducer persistors.
         //@ts-ignore
-        store.get().dispatch(loadWikis());
+        let loadedWikis = store.get().dispatch(loadWikis());
         //@ts-ignore
-        store.get().dispatch(parsePlugins());
+        let loadedPlugins =  store.get().dispatch(parsePlugins());
+        await loadedPlugins,loadedPlugins;
         let currentValue: AppState;
         store.get().subscribe(() => {
             let previousValue = currentValue;
