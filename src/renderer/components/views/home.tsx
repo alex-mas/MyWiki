@@ -58,7 +58,7 @@ export class HomePage extends React.Component<ComponentProps, ComponentState>{
         },
             (filePaths: string[]) => {
                 if (filePaths.length === 1) {
-                    const wikiPath = path.relative(__dirname, filePaths[0]);
+                    const wikiPath = path.resolve(__dirname, filePaths[0]);
                     this.props.loadWiki(undefined, wikiPath);
                     this.props.loadExternalWiki(wikiPath);
                 }
