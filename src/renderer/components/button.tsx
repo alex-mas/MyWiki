@@ -49,7 +49,7 @@ export class Button extends React.PureComponent<ComponentProps, any>{
         return (
             <button
                 {...this.getDomProps()}
-                type={this.props.type ? this.props.type : 'button'}
+                type={this.props.type ? this.props.type as any : 'button'}
                 className={this.getClassName()}
             >
                 {this.props.children}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import EditorButton, { EditorButtonProps } from "./editorButton";
-import { SketchPicker, ColorChangeHandler, ColorResult } from "react-color";
+import { SketchPicker, ColorChangeHandler, ColorState } from "react-color";
 import { Omit } from "../../../../utils/typeUtils";
 import { EditorPluginContext } from "../wikiEditor";
 import { hasMarkType, onClickMarkButton, toggleMark } from "../utilities/marks";
@@ -20,7 +20,7 @@ type ColorPreset = string | ColorPresetObj;
 interface ComponentState {
     isColorPickerOpen: boolean,
     colorBookmarks: ColorPreset[],
-    color: ColorResult
+    color: ColorState
 }
 const black = {
     hsl: { a: 1, h: 0, l: 0, s: 0 },

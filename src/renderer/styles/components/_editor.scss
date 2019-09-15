@@ -23,6 +23,20 @@
     width: 2%;
 }
 
+.wiki-editor__block-quote{
+    border-left: 8px solid var(--theme-primary-darkened);
+    background-color: var(--theme-primary-less-darkened);
+    color: var(--theme-disabled-text-on-primary);
+    padding-left: 1rem;
+}
+.wiki-editor__block-quote--first{
+    @extend .wiki-editor__block-quote;
+    padding-top: 1rem;
+}
+.wiki-editor__block-quote--last1{
+    @extend .wiki-editor__block-quote;
+    padding-bottom: 1rem;
+}
 .wiki-editor__color-picker__wrapper{
     position: absolute;
 }

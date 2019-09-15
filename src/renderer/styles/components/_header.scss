@@ -51,9 +51,23 @@
         background-size: 100%;
         transition: background 0s;
     }
+    .axc-auto-complete__suggestions{
+
+        box-shadow: $elevation-4p;
+        border: none;
+    }
+    .axc-auto-complete__suggestion{
+        border-top: none!important;
+        border-left: none!important;
+        border-right: none!important;
+        border-bottom: 0.25px solid grey;
+    }
     .axc-auto-complete__suggestion--selected{
-        color: lighten(black, 15%);
-        background: darken(white, 3%);
+        border-top: none!important;
+        border-left: none!important;
+        border-right: none!important;
+        font-weight: normal !important;
+        background: darken(white, 5%);
     }
     div{
         width: 15rem;

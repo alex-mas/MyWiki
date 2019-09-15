@@ -21,8 +21,9 @@ export class MLService extends ReduxService<AppState> {
         );
         this.serviceRunner.use(this.onReceiveArticleKeywords);
     }
-    private onReceiveArticleKeywords = (message: MessageEvent, next: Function)=>{
+    private onReceiveArticleKeywords = (message: MessageEvent | ErrorEvent, next: Function)=>{
         console.log('Recieved event from the main thread', message);
+        //@ts-ignore
         if (message.data && message.data.type === 'GENERATED_KEYWORDS') {
             console.log('Store inside the callback: ', this.store);
             //@ts-ignore

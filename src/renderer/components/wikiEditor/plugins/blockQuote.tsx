@@ -12,7 +12,7 @@ export const BlockQuotePlugin = (context: EditorPluginContext) => {
     const renderBlockQuote = (props: RenderNodeProps) => {
         const { children, node, attributes } = props;
         return (
-            <blockquote {...attributes} className='wiki-block-quote'>
+            <blockquote {...attributes} className='wiki-editor__block-quote'>
                 {children}
             </blockquote>
         );

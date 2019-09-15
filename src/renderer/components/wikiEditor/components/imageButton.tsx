@@ -138,7 +138,7 @@ export class ImageButton extends React.Component<ComponentProps, any>{
 
         const isType = value.blocks.some(block => {
             //@ts-ignore
-            return !!document.getClosest(block.key, parent => parent.type == type)
+            return !!document.getClosest(block.key, parent => parent.type == 'image')
         });
         const isList = hasBlockType(value, 'list-item');
 

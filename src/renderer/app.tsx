@@ -91,7 +91,7 @@ window.onload = () => {
     });
 }
 
-window.onbeforeunload = (e) => {
+window.onbeforeunload = () => {
     store.get().dispatch(unload());
 }
 

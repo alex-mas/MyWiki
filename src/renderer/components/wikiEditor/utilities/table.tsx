@@ -1,4 +1,4 @@
-import { BlockJSON } from "slate";
+import { BlockJSON, LeafJSON } from "slate";
 
 export const emptyTable: BlockJSON = {
     "object": "block",
@@ -189,6 +189,6 @@ export const emptyTable: BlockJSON = {
                     ]
                 }
             ]
-        }
+        } as any
     ]
 }

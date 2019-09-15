@@ -4,6 +4,7 @@
     --theme-primary: rgb(var(--theme-primary-rgb));
     --theme-primary-faded: rgba(var(--theme-primary-rgb),0.95);
     --theme-primary-x-faded: rgba(var(--theme-primary-rgb),0.9);
+    --theme-primary-less-darkened: #{darken(white,5%)};
     --theme-primary-darkened: #{darken(white,15%)};
     --theme-primary-x-darkened: #{darken(white,35%)};
     --theme-primary-ligthened: #{lighten(white, 15%)};

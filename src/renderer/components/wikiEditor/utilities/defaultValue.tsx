@@ -5,7 +5,8 @@ export const defaultEditorContents = Value.fromJSON({
     document: {
         nodes: [
             {
-                object: 'block',
+                //@ts-ignore
+                object: "block",
                 type: 'paragraph',
                 nodes: [
                     {
