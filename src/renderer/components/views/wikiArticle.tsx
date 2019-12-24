@@ -33,7 +33,7 @@ interface DispatchProps {
 interface PromptProps {
     prompt: DeletePromptFunction;
 }
-interface OwnProps extends RouteComponentProps<{article:string}> {
+interface OwnProps extends RouteComponentProps<{ article: string }> {
 }
 
 interface ReduxProps {
@@ -98,9 +98,9 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
     }
     renderArticleNotFound = () => {
         return (
-            <WikiView 
-            background={this.getBackground()}
-            title={`${this.props.selectedWiki.name}@${this.props.match.params.article}`}
+            <WikiView
+                background={this.getBackground()}
+                title={`${this.props.selectedWiki.name}@${this.props.match.params.article}`}
             >
                 <div className='wiki-article'>
                     <div className='wiki-article__header'>
@@ -128,12 +128,17 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
         const article = this.props.match.params.article;
         if (this.state.fileExists) {
             return (
-                <WikiView 
+                <WikiView
                     background={this.getBackground()}
                     title={`${this.props.selectedWiki.name}@${this.props.match.params.article}`}
                 >
                     <div className='wiki-article'>
+
+
                         <div className='wiki-article__header'>
+                            <div className='wiki-article__searchbar'>
+                                <WikiSearchBar />
+                            </div>
                             <div className='wiki-article__header__section'>
                                 <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
                                 <div className='wiki-article__actions'>
@@ -164,11 +169,11 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
 
 
 export default withPrompt<PageProps>(connect(
-    (state:AppState, props:OwnProps) => {
+    (state: AppState, props: OwnProps) => {
         const selectedWiki = getSelectedWiki(state);
         return {
             selectedWiki,
-            article: getArticle(props.match.params.article,selectedWiki)
+            article: getArticle(props.match.params.article, selectedWiki)
         };
     },
     {
@@ -176,5 +181,5 @@ export default withPrompt<PageProps>(connect(
         loadArticle,
         deleteArticle
     }
-     //@ts-ignore
+    //@ts-ignore
 )(WikiArticlePage));

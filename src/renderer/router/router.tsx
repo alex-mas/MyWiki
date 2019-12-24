@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMemoryHistory } from 'history';
-import { Router, RouteProps, Route, Switch } from 'react-router';
+import { Router, RouteProps as R, Route, Switch } from 'react-router';
 import { MemoryHistory } from '@axc/react-components/memoryHistory';
 
 import HomePage from '../components/views/home';
@@ -16,7 +16,7 @@ import { getPluginViews } from '../selectors/plugins';
 import { PluginView } from '../store/reducers/plugins';
 import WikiView  from '../components/wikiView';
 
-export type RouteProps = Exclude<RouteProps, 'history'>;
+export type RouteProps = Exclude<R, 'history'>;
 
 
 export const history = createMemoryHistory();

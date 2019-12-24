@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { AppState } from '../store/store';
 import { connect} from 'react-redux';
-import AppHeader from './appHeader';
 import { AppData } from '../store/reducers/appData';
-import Notifications from './notifications';
+import PageActions from './pageActions';
 
 
 
@@ -49,9 +48,14 @@ export class AppView extends React.Component<ComponentProps, State>{
         return (
             <div className='route'>
                 <img className='route__background' src={this.getBackground()} alt="background" />
-                <AppHeader />
                 {this.props.children}
-                <Notifications />
+                <PageActions>
+                    <button
+                        className='page-action button-flat--secondary'
+                    >
+                        <i className='material-icons'>settings</i>
+                    </button>
+                </PageActions>
             </div>
         )
     }

@@ -30,7 +30,6 @@ class WikiHeader extends React.Component<WikiHeaderProps, WikiHeaderState>{
     render() {
         return (
             <Header>
-                <HomeButton />
                 <WikiSearchBar />
                 <div className='wiki-header__actions'>
                     <Link

@@ -1,20 +1,27 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { withRouter, RouteComponentProps } from 'react-router';
 
-
-export class HomeButton extends React.Component<any, any>{
+class _HomeButton extends React.Component<any, any>{
+    navigateToHome = ()=>{
+        this.props.history.push('/');
+    }
     render() {
+        let className = 'button-flat--secondary';
+        if(this.props.className){
+            className += ' '+ this.props.className;
+        }
         return (
-            <Link
-                to='/'
-                className='wiki-header__home-btn'
+            <button
+                onClick={this.navigateToHome}
+                className={className}
             >
-                <img className='wiki-header__home-btn__image' src='resources/images/appIcon.png'/>
-            </Link>
+                  <i className='material-icons'>home</i>
+            </button>
         )
 
     }
 }
 
-
+export const HomeButton = withRouter(_HomeButton);
 export default HomeButton;

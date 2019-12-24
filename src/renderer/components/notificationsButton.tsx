@@ -18,7 +18,7 @@ type Props = OwnProps & ReduxProps;
 
 class NotificationsButton extends React.PureComponent<Props, any>{
     getClassName = ()=>{
-        const baseClass = 'notifications-button';
+        const baseClass = 'page-action notifications-button';
         if(this.getUnreadCount() > 0){
             return `${baseClass} button-flat--primary--accent`;
         }else{

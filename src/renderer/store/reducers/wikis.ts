@@ -30,7 +30,6 @@ export const WikisMetadataReducer = createReducer<WikisMetadataState>(
     {
         [UPDATE_SELECTED_WIKI_METADATA]:(state,action)=>{
             return state.map((wikiMetaData) => {
-                debugger;
                 if (wikiMetaData.selected) {
                     return {
                         ...wikiMetaData,
@@ -113,21 +112,22 @@ export const WikisMetadataReducer = createReducer<WikisMetadataState>(
                 }
             });
         },
+
+        //actions on wiki collection as a whole
         [CREATE_WIKI]:(state,action)=>{
             return [...state, action.wiki];
         },
         [REMOVE_WIKI]:(state,action)=>{
             return state.filter((wikiMetaData) => wikiMetaData.id !== action.wiki.id);
         },
-        [RESET_WIKI]:(state,action)=>{
-            return defaultState;
-        },
         [LOAD_WIKI]:(state,action)=>{
             return [...state, action.wiki];
         },
         [LOAD_WIKIS]:(state,action)=>{
-            return action.wikis;
+            return [...state, ...action.wikis];
         },
+
+        //actions on a specific wiki -> should be handled by nested reducer
         [SELECT_WIKI]:(state,action)=>{
             return state.map((wiki)=>{
                 if(wiki.id === action.wiki.id){
@@ -143,6 +143,7 @@ export const WikisMetadataReducer = createReducer<WikisMetadataState>(
                 }
             })
         }
+        
     }
 )
 

@@ -1,13 +1,4 @@
 
-.notification-container{
-    position: fixed;
-    bottom: $size-ml;
-    display: inline;
-    right: 0.5rem;
-}
-
-
-
 .notification-list{
     position: absolute;
     display: flex;
@@ -90,7 +81,7 @@
     &.button-flat--secondary{
         .notifications-button__number {
             position: absolute;
-            top: calc(50% - 7.5px);
+            bottom: 15px;
             left: calc(50% - 3.7px);
             /* align-content: center; */
             text-align: center;
@@ -100,7 +91,7 @@
     &.button-flat--primary--accent{
         .notifications-button__number {
             position: absolute;
-            top: calc(50% - 7.5px);
+            bottom: 15px;
             left: calc(50% - 3.7px);
             text-align: center;
             color: white;

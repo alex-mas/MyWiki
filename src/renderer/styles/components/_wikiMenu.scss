@@ -2,10 +2,9 @@
 
 .wiki-menu__container{
     position: absolute;
-    top: 3rem;
+    bottom: 58px;
     width: calc(10rem + 9px);
-    left: -4rem;
-    height: 20vh;
+    left: -9rem;
     overflow-y: scroll;
     &::-webkit-scrollbar{
         width: 0.5em;

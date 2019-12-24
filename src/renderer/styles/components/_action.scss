@@ -32,3 +32,13 @@
         border-radius: 5%;
     }
 }
+
+
+
+.action-container{
+    position: fixed;
+    bottom: 2rem;
+    right: 0.5rem;
+    display: flex;
+    flex-direction: column;
+}
