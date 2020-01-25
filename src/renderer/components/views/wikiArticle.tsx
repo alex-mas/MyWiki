@@ -49,7 +49,8 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
     constructor(props: PageProps) {
         super(props);
         this.state = {
-            content: Value.fromJSON(JSON.parse('{}'))
+            content: Value.fromJSON(JSON.parse('{}')),
+            fileExists: true
         }
     }
     componentDidMount() {
