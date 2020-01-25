@@ -17,21 +17,6 @@ Electron application that allows you to create local wikis with ease.
     * Editor plugins
     * Wiki plugins
 
-### Planned Features
-##### General Features
-* More plugin features
-* Export/import wikis
-* Support for more languages
-
-##### Editor/Article Features
-* Customizable text color
-* Costumizable text size
-* Embeded youtube & local videos
-* Link to articles in other local wikis
-* Save text style presets and apply them to selection
-* Absolutely positioned elements that make text wrap
-* Embed images with anotations
-
 ### Tech Stack
 
 * React
@@ -49,14 +34,7 @@ $ npm install
 $ npm run build
 ```
 
-
-### Current issues
-
-When a wiki is created the home article doesn't exist yet so it displays as not found.
-
-
 License
 ----
-
 MIT
 

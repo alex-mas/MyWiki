@@ -5,7 +5,7 @@ const path = require("path");
 var electronPath = path.join(__dirname, '..', 'node_modules', '.bin', 'electron')
 if (process.platform === 'win32') electronPath += '.cmd';
 
-var appPath = path.join(__dirname, '..','dist', 'app');
+var appPath = path.join(__dirname, '..','dist', 'app', 'main.js');
 
 console.log(electronPath);
 console.log(appPath);
@@ -29,12 +29,10 @@ describe('Application launch', () => {
 
    test('window should be visible', async () => {
       expect.assertions(1);
-      console.log(app.browserWindow);
-      console.log(app.client);
-      expect(app.browserWindow.isVisible()).toBe(true);
-   },30000);
+      expect(await app.browserWindow.isVisible()).toBe(true);
+   },2500);
    test('title should be MyWiki',async ()=>{
       expect.assertions(1);
-      expect(app.client.getTitle()).toEqual("MyWiki");
-   },30000);
+      expect(await app.client.getTitle()).toContain("MyWiki");
+   },2500);
 })
