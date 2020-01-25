@@ -3,6 +3,7 @@ import { AppState } from '../store/store';
 import { connect} from 'react-redux';
 import { AppData } from '../store/reducers/appData';
 import PageActions from './pageActions';
+import AppSettingsForm from './appSettingsForm';
 
 
 
@@ -20,12 +21,16 @@ interface ReduxProps {
 type ComponentProps = OwnProps & ReduxProps;
 
 interface State {
+    isSettingsModalOpen: boolean
 }
 
 
 export class AppView extends React.Component<ComponentProps, State>{
     constructor(props: ComponentProps) {
         super(props);
+        this.state = {
+            isSettingsModalOpen: false
+        }
 
     }
     componentDidMount(){
@@ -44,6 +49,16 @@ export class AppView extends React.Component<ComponentProps, State>{
         }
         return background;
     }
+    openAppSettings = ()=>{
+        this.setState((s)=>({
+            isSettingsModalOpen: true
+        }));
+    }
+    closeAppSettings = ()=>{
+        this.setState((s)=>({
+            isSettingsModalOpen: false
+        }));
+    }
     render() {
         return (
             <div className='route'>
@@ -51,11 +66,16 @@ export class AppView extends React.Component<ComponentProps, State>{
                 {this.props.children}
                 <PageActions>
                     <button
+                        onClick={this.openAppSettings}
                         className='page-action button-flat--secondary'
                     >
                         <i className='material-icons'>settings</i>
                     </button>
                 </PageActions>
+                <AppSettingsForm
+                    isOpen={this.state.isSettingsModalOpen}
+                    onClose={this.closeAppSettings}
+                />
             </div>
         )
     }
