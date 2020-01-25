@@ -112,7 +112,7 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
         }).catch((e: string) => console.warn(e));
     }
     discardChanges = () => {
-        this.props.history.push('/wiki/article/home');
+        this.props.history.push(`/wiki/article/${this.props.match.params.article}`);
     }
     onChangeTags = (newTags: string[]) => {
         this.setState(() => ({
