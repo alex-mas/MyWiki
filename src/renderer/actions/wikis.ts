@@ -13,6 +13,7 @@ import { ActionWithPayload, AsyncACreator, ACreator } from "../../utils/typeUtil
 import { store as AppStore } from "../app";
 import { parsePlugins } from "./plugins";
 import { ValueJSON } from "slate";
+import { WikiMetadataState } from "../store/reducers/wiki";
 
 
 
@@ -151,30 +152,40 @@ export const loadWiki: LoadWikiActionCreator = (id: string, path?:string) => {
         }else{
             root = `./wikis/${id}`;
         }
-        
         try {
-            const wiki = JSON.parse(await fsp.readFile(`${root}/myWiki.config.json`, 'utf8'));
+            let wiki: WikiMetadata;
+            try{
+                wiki = JSON.parse(await fsp.readFile(`${root}/myWiki.config.json`, 'utf8'));
+            }catch(e){
+                return dispatch(fsError('the folder '+root+' is not a valid wiki. Please remove it or add a myWiki.config.json file'));
+            }
+
             const articleFiles = await fsp.readdir(`${root}/articles`);
             const articles = await Promise.all(articleFiles.map(async (articleFile) => {
-                const articleContents = await fsp.readFile(`${root}/articles/${articleFile}`, 'utf8');
-                const article: Article = JSON.parse(articleContents);
-                delete article.content;
-                return article as ArticleMetaData;
-            }))
+                try{
+                    const articleContents = await fsp.readFile(`${root}/articles/${articleFile}`, 'utf8');
+                    const article: Article = JSON.parse(articleContents);
+                    delete article.content;
+                    return article as ArticleMetaData;
+                }catch(e){
+                    throw new Error('Invalid file '+articleFile+'in articles folder of '+wiki.name);
+                }
+           
+            })) 
             .catch((e)=>{
-                return dispatch(fsError('error while reading articles'));
+                return dispatch(fsError(e.message));
             });
             return dispatch({
-                type: LOAD_WIKI,
+                type: LOAD_WIKI, 
                 wiki: {
                     ...wiki,
-                    articles,
+                    articles: articles ? articles : [],
                     selected: false,
                     path
                 }
             });
         } catch (err) {
-            return dispatch(fsError('error while reading articles folder'));
+            return dispatch(fsError('error while loading wiki '+id ? id : path ? path : ''));
         }
     }
 }
