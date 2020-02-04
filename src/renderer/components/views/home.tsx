@@ -53,7 +53,7 @@ export class HomePage extends React.Component<ComponentProps, ComponentState>{
     }
     onImportWiki = ()=>{
         dialog.showOpenDialog(remote.getCurrentWindow(), {
-            title: i18n('import wiki'),
+            title: i18n('import a wiki'),
             properties: ['openDirectory','promptToCreate']
         },
             (filePaths: string[]) => {

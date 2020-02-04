@@ -25,19 +25,17 @@ import { AppData } from './store/reducers/appData';
 import { setAppData, saveAppData, loadAppData, setLocale } from './actions/appData';
 import { PluginManager } from './plugins/plugins';
 import { createNotification, removeNotification } from './actions/notifications';
-import MLService from './services/ml';
-import ReduxI18NService from './services/i18n';
 import { load, unload } from './actions/appLifecycle';
 import { MemoryHistory } from '@axc/react-components/memoryHistory';
 import { createMemoryHistory } from 'history';
+import { createTranslator } from './selectors/translator';
 
 
 
 export const store = new AppStore();
+export const i18n = createTranslator(store);
 export const pluginManager = new PluginManager(store);
-export const mlService = new MLService(store);
-export const reduxI18nService = new ReduxI18NService(store);
-export const i18n = reduxI18nService.traduce;
+
 
 
 const appRoot = document.getElementById('app');

@@ -1,14 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getArticleNames } from '../selectors/articles';
 import { AppState } from '../store/store';
 import AutoComplete from '@axc/react-components/autoComplete';
-import { withHistory, History } from '@axc/react-components/historyRouter';
 import { getSelectedWiki } from '../selectors/wikis';
-import { reduxI18nService, i18n} from '../app';
+import { i18n} from '../app';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { MemoryHistory } from 'history';
-import { Article, ArticleMetaData } from '../actions/article';
+import { ArticleMetaData } from '../actions/article';
 
 
 interface OwnProps extends RouteComponentProps{

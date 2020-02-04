@@ -6,7 +6,8 @@ import * as path from 'path';
 import { errorAction, fsError, ErrorAction, ErrorActionCode } from "./errors";
 import { ValueJSON, Value } from "slate";
 import { ActionWithPayload, AsyncACreator, ACreator } from "../../utils/typeUtils";
-import { mlService } from "../app";
+import { mlThreads } from "../services/ml";
+import Plain from "slate-plain-serializer";
 
 
 export const LOAD_ARTICLE = 'LOAD_ARTICLE';
@@ -84,7 +85,7 @@ export const createArticle: CreateArticleActionCreator = (article) => {
         const wiki = state.selectedWiki;
         console.log('Article about to be created: ',article);
         try {
-            mlService.generateArticleKeywords(article);
+            generateArticleKeywords(article);
             await fsp.writeFile(
                 getArticlePath(wiki, article.name),
                 JSON.stringify(article),
@@ -103,8 +104,6 @@ export const createArticle: CreateArticleActionCreator = (article) => {
         }
     }
 }
-
-
 
 
 export type LoadArticleActionCreator = AsyncACreator<[string], ArticleAction, Article>;
@@ -171,7 +170,7 @@ export const saveArticle: SaveArticleActionCreator = (article: Article) => {
     return async(dispatch, getState) => {
         const selectedWiki = getState().selectedWiki;
         try{
-            mlService.generateArticleKeywords(article);
+            generateArticleKeywords(article);
             const p = fsp.writeFile(
                 getArticlePath(selectedWiki, article.name),
                 JSON.stringify(article),
@@ -210,4 +209,16 @@ export const deleteArticle: DeleteArticleActionCreator = (name: string) => {
             throw e;
         }
     }
+}
+
+
+
+export const generateArticleKeywords = (article: Article)=>{
+    mlThreads.sendMessage(
+        {
+            type: 'GET_KEYWORDS',
+            name: article.name,
+            contents: Plain.serialize(Value.fromJSON(article.content) as any)
+        }
+    );
 }
