@@ -1,27 +1,17 @@
 # MyWiki
 
-Electron application that allows you to create local wikis with ease.
+Electron application that allows you to create wikis with ease and store them locally.
 
 ![](showcase.gif)
 
 ### Features
-* Create as many wikis as you want
-* Create/edit/remove articles
-* Customize background
+* WYSIWYG editor that supports most common text editing formats and allows linking videos and images.
 * Support for multiple languages
     * English
     * Spanish
     * Catalan
-* ML powered search bar
-* Plugin system
-    * Editor plugins
-    * Wiki plugins
-
-### Tech Stack
-
-* React
-* Typescript
-* Electron
+* ML powered search bar.
+* The app is customizable via the Plugin system
 
 ### Install from source
 
@@ -33,6 +23,13 @@ $ git pull https://github.com/alex-mas/MyWiki.git
 $ npm install
 $ npm run build
 ```
+
+
+### Tech Stack
+* React
+* Typescript
+* Electron
+
 
 License
 ----
