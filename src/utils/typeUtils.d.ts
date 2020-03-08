@@ -6,15 +6,11 @@ import { ACreateNotification } from "../renderer/actions/notifications";
 
 export type ReactInstanciable<T = any> = React.ComponentClass<T> | React.SFCFactory<T>;
 
-
-
 //https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html
 type Filter<T, U> = T extends U ? T : never; 
 
-
 //https://stackoverflow.com/questions/48215950/exclude-property-from-type
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
-
 
 /**
  * TODO: Make casting a wrong action throw error at compile time by itself, right now it will just make compiler fail once returning the action in a creator
@@ -23,9 +19,6 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
  * 
  */ 
 export type ActionWithPayload<P> = Action<string> & P; 
-
-
-
 
 /**
  * 

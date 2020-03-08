@@ -1,6 +1,5 @@
 import { Action, AnyAction, Reducer, combineReducers } from "redux";
 
-
 export type ReducerContainer<T = { [key: string]: Reducer }> = T;
 
 type ReducerHandler<T, A extends AnyAction = any> = (state: T, action: A) => T;
@@ -39,7 +38,6 @@ export const createReducer = <T>(initialState: T, handlers: ReducerHandlers<T>, 
         return nextState;
     }
 }
-
 
 /**
  * Assumes that container keys dont clash with each-other, else the last container to be assigned

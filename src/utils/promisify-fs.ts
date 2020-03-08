@@ -1,9 +1,5 @@
 import * as fs from 'fs';
-
 import { promisify } from 'util';
-
-
-
 
 export const writeFile = promisify(fs.writeFile);
 export const readFile = promisify(fs.readFile);
@@ -15,7 +11,6 @@ export const mkdir = promisify(fs.mkdir);
 export const write = promisify(fs.write);
 export const close = promisify(fs.close);
 export const open = promisify(fs.open);
-
 
 export default {
     writeFile,
