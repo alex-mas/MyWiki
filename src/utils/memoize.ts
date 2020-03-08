@@ -6,11 +6,10 @@ export const memoize = <A,R>(fnc:(arg:A)=>R, n: number)=>{
             return cached as RV;
         }else{
             const retVal = fnc(arg) as RV;
-            if(fncCache.size < n){
-                fncCache.set(arg, retVal);
-            }else{
+            if(fncCache.size >= n){
                 fncCache.delete(fncCache.keys().next().value);
             }
+            fncCache.set(arg, retVal);
             return retVal;
         }
     } 
