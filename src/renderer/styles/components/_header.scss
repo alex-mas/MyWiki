@@ -1,15 +1,25 @@
 
 
 .wiki-header{
-    position: sticky;
-    top: 0;
+    flex-direction: column;
+    position: fixed;
     display: flex;
     justify-content: space-between;
-    height: 3rem;
+    height: 100vh;
+    display: flex;
     background: white;
     z-index: 2;
-    padding: 0 1rem;
     box-shadow: $elevation-12p;
+}
+
+.wiki-header__bottom-actions{
+    display: flex;
+    flex-direction: column;
+}
+
+.wiki-header__top-actions{
+    display: flex;
+    flex-direction: column;
 }
 
 .wiki-header__actions{

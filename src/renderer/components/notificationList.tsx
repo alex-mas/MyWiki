@@ -4,6 +4,8 @@ import { Notification } from '../store/reducers/notifications';
 import { AppState } from '../store/store';
 import { removeNotification, removeAllNotifications, markNotificationAsRead, markAllNotificationsAsRead } from '../actions/notifications';
 import NotificationComponent from './notification';
+import {useRef, useCallback} from 'react';
+import { useOnClickOutside } from '../hooks/useClickOutside';
 
 interface ReduxProps {
     notifications: Notification[]
@@ -17,27 +19,28 @@ interface DispatchProps {
 }
 interface OwnProps {
     isActive: boolean,
+    onClose: ()=>void
 }
 type Props = DispatchProps & ReduxProps & OwnProps;
 
 
-class NotificationList extends React.PureComponent<Props, any>{
-    render() {
-        if (!this.props.isActive || this.props.notifications.length === 0) {
-            return null;
-        }
-        return (
-            <ul className='notification-list'>
-                {this.props.notifications.map((notification) => (
-                    <NotificationComponent
-                        key={notification.id}
-                        notification={notification}
-                        onRemove={this.props.removeNotification}
-                    />
-                ))}
-            </ul>
-        );
+export const NotificationList = (props: Props)=>{
+    const listRoot = useRef(null);
+    useOnClickOutside(listRoot,props.onClose);
+    if (!props.isActive || props.notifications.length === 0) {
+        return null;
     }
+    return (
+        <ul className='notification-list' ref={listRoot}>
+            {props.notifications.map((notification) => (
+                <NotificationComponent
+                    key={notification.id}
+                    notification={notification}
+                    onRemove={props.removeNotification}
+                />
+            ))}
+        </ul>
+    );
 }
 
 

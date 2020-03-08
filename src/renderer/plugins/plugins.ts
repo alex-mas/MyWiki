@@ -9,7 +9,7 @@ import readOnly from '../../utils/readonly';
 import { PluginContext, LoadPluginContext, InstallPluginContext } from './pluginContext';
 import { registerPluginView, registerMenuAction, registerEditorPlugin } from '../actions/pluginData';
 import { WikiEditorPluginCreator } from '../components/wikiEditor/wikiEditor';
-import { history } from '../router/router';
+import { history } from '../router';
 
 
 
@@ -36,10 +36,6 @@ class PluginHooks {
         this.events.emit(event, ...args);
     }
 }
-
-
-
-
 
 
 export class PluginManager {

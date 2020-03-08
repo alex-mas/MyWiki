@@ -4,9 +4,11 @@ import { Modal } from '@axc/react-components/modal';
 import { connect } from 'react-redux';
 import { AppState } from '../store/store';
 import { WikiMetadata, UserDefinedWikiMetadata } from '../store/reducers/wikis';
-import { updateSelectedWikiMetadata } from '../actions/selectedWiki';
+import { updateWikiMetadata } from '../actions/wikis';
 import { WikiForm } from './wikiForm';
-import { getSelectedWiki } from '../selectors/wikis';
+import { getSelectedWiki, getWikiById } from '../selectors/wikis';
+import { withRouter, RouteComponentProps } from 'react-router';
+import { RouteProps } from '../router';
 
 const root = document.getElementById('app');
 
@@ -16,8 +18,9 @@ interface OwnProps {
 }
 interface ReduxProps {
     currentWiki: WikiMetadata
-    updateSelectedWikiMetadata: typeof updateSelectedWikiMetadata;
+    updateWikiMetadata: typeof updateWikiMetadata;
 }
+
 type ComponentProps = OwnProps & ReduxProps;
 
 export class WikiSettingsButton extends React.Component<ComponentProps, { isFormOpen: boolean }>{
@@ -33,7 +36,7 @@ export class WikiSettingsButton extends React.Component<ComponentProps, { isForm
         }));
     }
     onSubmitForm = (metadata: UserDefinedWikiMetadata) => {
-        this.props.updateSelectedWikiMetadata(metadata);
+        this.props.updateWikiMetadata('',metadata);
         this.toggleForm();
     }
     render() {
@@ -73,6 +76,6 @@ export default connect(
         }
     },
     {
-        updateSelectedWikiMetadata
+        updateWikiMetadata
     }
 )(WikiSettingsButton);

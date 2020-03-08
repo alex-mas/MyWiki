@@ -7,16 +7,12 @@ class _HomeButton extends React.Component<any, any>{
         this.props.history.push('/');
     }
     render() {
-        let className = 'button-flat--secondary';
-        if(this.props.className){
-            className += ' '+ this.props.className;
-        }
         return (
             <button
                 onClick={this.navigateToHome}
-                className={className}
+                className='wiki-header__action--secondary'
             >
-                  <i className='material-icons'>home</i>
+                  <i className='icon-btn--secondary material-icons'>home</i>
             </button>
         )
 
@@ -24,4 +20,4 @@ class _HomeButton extends React.Component<any, any>{
 }
 
 export const HomeButton = withRouter(_HomeButton);
-export default HomeButton;
+export default HomeButton;    

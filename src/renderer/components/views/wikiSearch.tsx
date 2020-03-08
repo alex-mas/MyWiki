@@ -8,7 +8,7 @@ import { getRelevantArticles } from '../../selectors/articles';
 import I18String from '@axc/react-components/i18string';
 import { Button } from '../button';
 import WikiView from '../wikiView';
-import { getSelectedWiki } from '../../selectors/wikis';
+import { getSelectedWiki, getWikiById } from '../../selectors/wikis';
 import { RouteComponentProps } from 'react-router';
 
 
@@ -23,7 +23,7 @@ interface ReduxProps {
     selectedWiki: WikiMetadata
 }
 
-interface OwnProps extends RouteComponentProps<{articleName: string}> {
+interface OwnProps extends RouteComponentProps<{articleName: string, id:string}> {
 }
 
 type ComponentProps = OwnProps & DispatchProps & ReduxProps;
@@ -45,7 +45,7 @@ export class ArticleSearchPage extends React.Component<ComponentProps, Component
         return (
             <div className='search-results'>
                 <h2 className='wiki-article__subtitle'><I18String text='there are no results relevant to the search' format='capitalizeFirst' /></h2>
-                <Link to='/wiki/article/home'><I18String text='go home' format='capitalizeFirst' /></Link>
+                <Link to={`/wiki${this.props.match.params.id}/article/home`}><I18String text='go home' format='capitalizeFirst' /></Link>
             </div>
         )
     }
@@ -86,7 +86,7 @@ export class ArticleSearchPage extends React.Component<ComponentProps, Component
                                             className='search-result__action'
                                         >
                                             <Link
-                                                to={`/wiki/article/${result}`}
+                                                to={`/wiki/${this.props.match.params.id}/article/${result}`}
                                             >
                                                 <I18String text='open' format='capitalizeFirst' />
                                             </Link>
@@ -108,9 +108,9 @@ export class ArticleSearchPage extends React.Component<ComponentProps, Component
 
 export default connect(
     (state: AppState, props: OwnProps) => {
-        const selectedWiki = getSelectedWiki(state);
+        const selectedWiki = getWikiById(state, props.match.params.id);
         return {
-            searchResults: getRelevantArticles(props.match.params.articleName, selectedWiki),
+            searchResults: getRelevantArticles(selectedWiki,props.match.params.articleName),
             selectedWiki
         }
     },

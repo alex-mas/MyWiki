@@ -9,3 +9,7 @@ export const getSelectedWiki = (appState: AppState)=>{
         return appState.wikis.find((wiki)=>wiki.selected);
     }
 }
+
+export const getWikiById = (appState: AppState,id: string)=>{
+    return appState.wikis.find((w)=>w.id === id);
+}

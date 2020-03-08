@@ -7,7 +7,7 @@ import Wiki from '../wikiItem';
 import Modal from '@axc/react-components/modal';
 import { AppData } from '../../store/reducers/appData';
 import { Button } from '../button';
-import { createWiki, loadWiki, LoadWikiActionCreator } from '../../actions/wikis';
+import { createWiki, loadWiki, LoadWikiActionCreator, selectWiki } from '../../actions/wikis';
 import WikiForm from '../wikiForm';
 import AppView from '../appView';
 import { RouteComponentProps } from 'react-router';
@@ -25,6 +25,7 @@ interface ReduxProps {
     createWiki: typeof createWiki;
     loadWiki: typeof loadWiki;
     loadExternalWiki: typeof loadExternalWiki;
+    selectWiki: typeof selectWiki;
 }
 
 type ComponentProps =  OwnProps & ReduxProps;
@@ -48,8 +49,14 @@ export class HomePage extends React.Component<ComponentProps, ComponentState>{
     createWiki = (metaData: UserDefinedWikiMetadata) => {
         event.preventDefault();
         this.toggleWikiForm();
-        this.props.createWiki(metaData);
-        this.props.history.push('/');
+        //@ts-ignore
+        const created = this.props.createWiki(metaData).then((created: WikiMetadata)=>{
+            setTimeout(()=>{
+                this.props.selectWiki(created.id);
+                this.props.history.push(`/wiki/${created.id}`);
+            },200);
+        });
+    
     }
     onImportWiki = ()=>{
         dialog.showOpenDialog(remote.getCurrentWindow(), {
@@ -120,6 +127,7 @@ export default connect(
     {
         createWiki,
         loadWiki,
-        loadExternalWiki
+        loadExternalWiki,
+        selectWiki
     }
 )(HomePage);

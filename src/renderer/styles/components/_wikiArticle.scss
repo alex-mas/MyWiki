@@ -1,10 +1,23 @@
 
+.wiki-article{
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    height: 90vh;
+    background-color: rgba(255,255,255,0.95);
+    margin-top: 5vh;
+    width: 100%;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    margin-bottom: 5vh;
+    box-shadow: $elevation-12p;
+}
+
 .wiki-article__header{
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     display: flex;
     position: sticky;
-    top:0rem;
+    top: 0rem;
     z-index: 1;
     background-color: var(--theme-primary);
     flex-direction: column;
@@ -42,7 +55,38 @@
 .wiki-article__body{
     padding-left: 1rem;
     padding-right: 1rem;
+    padding-bottom: 3rem;
+    height: calc(90vh - 9.2rem);
+    overflow-y: scroll;
+    
+/* width */
+&::-webkit-scrollbar {
+    width: 8px;
+
+  }
+  
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background:var(--theme-primary-less-darkened);
+    border-radius: 5px;
+  }
+   
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: var(--theme-secondary-x-lightened); 
+  }
+  
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-secondary-lightened); 
+  }
+
+
 }
+
+
+
 .wiki-article__body--editor{
     @extend .wiki-article__body;
 }

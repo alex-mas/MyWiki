@@ -4,7 +4,7 @@ import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { RouteProps } from '@axc/react-components/historyRouter';
 import WikiEditor from '../wikiEditor/wikiEditor';
 import { Value } from 'slate';
-import { loadArticle, LoadArticleActionCreator, Article, saveArticle, SaveArticleActionCreator, ArticleMetaData } from '../../actions/article';
+import { loadArticle, LoadArticleActionCreator, Article, saveArticle, SaveArticleActionCreator, ArticleMetaData, ArticleCategory } from '../../actions/article';
 import TagForm from '../tagForm';
 import { getArticle } from '../../selectors/articles';
 import { ImageInput } from '../imageInput';
@@ -12,7 +12,7 @@ import WikiHeader from '../wikiHeader';
 import { WikiMetadata } from '../../store/reducers/wikis';
 import { AppData } from '../../store/reducers/appData';
 import WikiView from '../wikiView';
-import { getSelectedWiki } from '../../selectors/wikis';
+import { getSelectedWiki, getWikiById } from '../../selectors/wikis';
 import { RouteComponentProps } from 'react-router';
 
 
@@ -22,7 +22,7 @@ interface DispatchProps {
     saveArticle: SaveArticleActionCreator
 }
 
-interface OwnProps extends RouteComponentProps<{article:string}>{
+interface OwnProps extends RouteComponentProps<{ article: string, id: string }> {
 }
 
 interface ReduxProps {
@@ -57,7 +57,7 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
     }
     componentDidMount() {
         //@ts-ignore
-        this.props.loadArticle(this.props.match.params.article ? this.props.match.params.article : 'home').then((article: Article) => {
+        this.props.loadArticle(this.props.selectedWiki, this.props.match.params.article ? this.props.match.params.article : 'home',this.props.article.category).then((article: Article) => {
             console.log('loaded article to edit');
             console.log(article);
             console.log(article.content);
@@ -100,19 +100,22 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
             tags: this.state.tags,
             content: this.state.editorContent.toJSON(),
             background: this.state.background,
-            keywords: []
-        });
+            keywords: [],
+            lastEdited: Date.now(),
+            lastRead: this.props.article.lastRead,
+            category: this.props.article.category
+        }, this.props.selectedWiki);
     }
     saveChangesAndRedirect = () => {
         //@ts-ignore
         this.saveChanges().then(() => {
             console.log("finished saving, pushing state");
             //workarround to prevent loading article to fail immediatly after navigation
-            setTimeout(()=>this.props.history.push(`/wiki/article/${this.props.match.params.article}`),50);  
+            setTimeout(() => this.props.history.push(`/wiki/${this.props.match.params.id}`), 50);
         }).catch((e: string) => console.warn(e));
     }
     discardChanges = () => {
-        this.props.history.push(`/wiki/article/${this.props.match.params.article}`);
+        this.props.history.push(`/wiki/${this.props.match.params.id}`);
     }
     onChangeTags = (newTags: string[]) => {
         this.setState(() => ({
@@ -146,9 +149,9 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
     render() {
         const article = this.props.match.params.article;
         return (
-            <WikiView 
-            background={this.getBackground()}
-            title={`${this.props.selectedWiki.name} - editing@${this.props.match.params.article}`}
+            <WikiView
+                background={this.getBackground()}
+                title={`${this.props.selectedWiki.name} - editing@${this.props.match.params.article}`}
             >
                 <div className='wiki-article'>
                     <div className='wiki-article__header'>
@@ -207,20 +210,16 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
 
 export default connect(
     (state: AppState, props: OwnProps) => {
-        const selectedWiki = getSelectedWiki(state);
+        const selectedWiki = getWikiById(state, props.match.params.id);
         return {
             selectedWiki,
             article: getArticle(props.match.params.article, selectedWiki),
             appData: state.appData
         }
     },
-    (dispatch, props) => {
-        return {
-            //@ts-ignore
-            loadArticle: (name: string) => dispatch(loadArticle(name)),
-            //@ts-ignore
-            saveArticle: (article: Article) => dispatch(saveArticle(article))
-        }
-
-    }
+    {
+        loadArticle,
+        saveArticle
+    } as DispatchProps
+//@ts-ignore    
 )(WikiEditPage);

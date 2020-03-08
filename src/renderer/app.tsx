@@ -12,7 +12,7 @@ require('./styles/index.scss');
 import { Provider, connect } from 'react-redux';
 import AppStore, { AppState } from './store/store';
 
-import AppRouter from './router/router';
+import AppRouter from './router';
 import { loadWikis, loadWiki, saveWikis } from './actions/wikis';
 import { WikiMetadata } from './store/reducers/wikis';
 import { fsError } from './actions/errors';

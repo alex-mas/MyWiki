@@ -8,7 +8,7 @@ import * as ReactMarkdown from 'react-markdown';
 import { Value } from 'slate';
 import { fsError, FsErrorActionCreator } from '../../actions/errors';
 import Header from '../header';
-import { loadArticle, LoadArticleActionCreator, Article, DeleteArticleActionCreator, deleteArticle, ArticleMetaData } from '../../actions/article';
+import { loadArticle, LoadArticleActionCreator, Article, DeleteArticleActionCreator, deleteArticle, ArticleMetaData, SaveArticleActionCreator, saveArticle } from '../../actions/article';
 import WikiSearchBar from '../wikiSearchBar';
 import { getArticle } from '../../selectors/articles';
 import { WikiMetadata } from '../../store/reducers/wikis';
@@ -18,7 +18,7 @@ import I18String from '@axc/react-components/i18string';
 import WikiView from '../wikiView';
 import { withPrompt, PromptFunction } from '@axc/react-components/prompt';
 import { DeletePromptFunction, DeletePrompt } from '../deletePrompt';
-import { getSelectedWiki } from '../../selectors/wikis';
+import { getSelectedWiki, getWikiById } from '../../selectors/wikis';
 import { RouteComponentProps } from 'react-router';
 const { dialog } = require('electron').remote
 
@@ -27,13 +27,14 @@ const { dialog } = require('electron').remote
 interface DispatchProps {
     fsError: FsErrorActionCreator,
     loadArticle: LoadArticleActionCreator,
+    saveArticle: SaveArticleActionCreator,
     deleteArticle: DeleteArticleActionCreator
 }
 
 interface PromptProps {
     prompt: DeletePromptFunction;
 }
-interface OwnProps extends RouteComponentProps<{ article: string }> {
+interface OwnProps extends RouteComponentProps<{ article: string,id:string}> {
 }
 
 interface ReduxProps {
@@ -55,11 +56,16 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
     }
     componentDidMount() {
         //@ts-ignore
-        this.props.loadArticle(this.props.match.params.article).then((article: Article) => {
+        this.props.loadArticle(this.props.selectedWiki,this.props.match.params.article, this.props.article.category).then((article: Article) => {
             this.setState(() => ({
                 content: article.content ? Value.fromJSON(article.content) : defaultEditorContents,
                 fileExists: article.content ? true : false
             }));
+            console.log('saving article with updated read time');
+            this.props.saveArticle({
+                ...article,
+                lastRead: Date.now()
+            },this.props.selectedWiki);
         }).catch((e: string) => {
             console.log(e);
             this.setState(() => ({
@@ -70,11 +76,16 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
     componentDidUpdate(prevProps: PageProps, prevState: any) {
         if (this.props.match.params.article !== prevProps.match.params.article) {
             //@ts-ignore
-            this.props.loadArticle(this.props.match.params.article).then((article: Article) => {
+            this.props.loadArticle(this.props.selectedWiki,this.props.match.params.article).then((article: Article) => {
                 this.setState(() => ({
                     content: article.content ? Value.fromJSON(article.content) : defaultEditorContents,
                     fileExists: article.content ? true : false
                 }));
+                console.log('saving article with updated read time');
+                this.props.saveArticle({
+                    ...article,
+                    lastRead: Date.now()
+                }, this.props.selectedWiki);
             }).catch(() => {
                 this.setState(() => ({
                     fileExists: false
@@ -87,8 +98,8 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
         this.props.prompt(DeletePrompt, { title: 'are you sure you want to delete this article?' }).then((response) => {
             if (response) {
                 //@ts-ignore
-                this.props.deleteArticle(this.props.match.params.article).then(() => {
-                    this.props.history.push('/wiki/article/home');
+                this.props.deleteArticle(this.props.match.params.article, this.props.selectedWiki).then(() => {
+                    this.props.history.push(`/wiki/${this.props.match.params.id}`);
                 });
             }
         });
@@ -108,7 +119,7 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
                         <div className='wiki-article__header__section'>
                             <h1 className='wiki-article__title'> <I18String text='article not found' format='capitalizeFirst' /></h1>
                             <div className='wiki-article__actions'>
-                                <Link to={`/wiki/create/${this.props.match.params.article}`}><i className="material-icons">add</i></Link>
+                                <Link to={`/wiki/${this.props.match.params.id}/create/${this.props.match.params.article}`}><i className="material-icons">add</i></Link>
                             </div>
                         </div>
                     </div>
@@ -144,7 +155,7 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
                                 <h1 className='wiki-article__title'>{article === 'home' ? this.props.selectedWiki.name : article}</h1>
                                 <div className='wiki-article__actions'>
                                     {article !== 'home' ? <button onClick={this.deleteArticle}><i className='material-icons'>delete_forever</i></button> : null}
-                                    <Link to={`/wiki/edit/${article}`}><i className='material-icons'>create</i></Link>
+                                    <Link to={`/wiki/${this.props.match.params.id}/edit/${article}`}><i className='material-icons'>create</i></Link>
                                 </div>
                             </div>
                         </div>
@@ -171,7 +182,7 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
 
 export default withPrompt<PageProps>(connect(
     (state: AppState, props: OwnProps) => {
-        const selectedWiki = getSelectedWiki(state);
+        const selectedWiki = getWikiById(state, props.match.params.id);
         return {
             selectedWiki,
             article: getArticle(props.match.params.article, selectedWiki)
@@ -180,7 +191,8 @@ export default withPrompt<PageProps>(connect(
     {
         fsError,
         loadArticle,
-        deleteArticle
+        deleteArticle,
+        saveArticle
     }
     //@ts-ignore
 )(WikiArticlePage));

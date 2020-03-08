@@ -13,6 +13,7 @@ export const defaultEditorContents = Value.fromJSON({
                         object: 'text',
                         leaves: [
                             {
+                                object: 'leaf',
                                 text: 'Insert your content here',
                             },
                         ],

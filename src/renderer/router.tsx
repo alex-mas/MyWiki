@@ -3,18 +3,19 @@ import { createMemoryHistory } from 'history';
 import { Router, RouteProps as R, Route, Switch } from 'react-router';
 import { MemoryHistory } from '@axc/react-components/memoryHistory';
 
-import HomePage from '../components/views/home';
-import WikiArticlePage from '../components/views/wikiArticle';
-import WikiEditPage from '../components/views/wikiEdit';
-import NotFoundPage from '../components/views/notFound';
-import CreateArticlePage from '../components/views/createArticle';
-import ArticleSearchPage from '../components/views/wikiSearch';
-import WikiPluginsPage from '../components/views/wikiPlugins';
+import HomePage from './components/views/home';
+import WikiArticlePage from './components/views/wikiArticle';
+import WikiEditPage from './components/views/wikiEdit';
+import NotFoundPage from './components/views/notFound';
+import CreateArticlePage from './components/views/createArticle';
+import ArticleSearchPage from './components/views/wikiSearch';
+import WikiPluginsPage from './components/views/wikiPlugins';
 import { connect } from 'react-redux';
-import { AppState } from '../store/store';
-import { getPluginViews } from '../selectors/plugins';
-import { PluginView } from '../store/reducers/plugins';
-import WikiView  from '../components/wikiView';
+import { AppState } from './store/store';
+import { getPluginViews } from './selectors/plugins';
+import { PluginView } from './store/reducers/plugins';
+import WikiView  from './components/wikiView';
+import WikiHomePage from './components/views/wikiHomePage';
 
 export type RouteProps = Exclude<R, 'history'>;
 
@@ -48,32 +49,38 @@ export class AppRouter extends React.PureComponent<RouterProps, any>{
                         render={() => 'not implementedYet'}
                     />
                     <Route
-                        key='/wiki/plugins'
-                        path='/wiki/plugins'
+                        key='/wiki/:id'
+                        path='/wiki/:id'
+                        exact
+                        component={WikiHomePage}
+                    />
+                    <Route
+                        key='/wiki/:id/plugins'
+                        path='/wiki/:id/plugins'
                         exact
                         component={WikiPluginsPage}
                     />
                     <Route
-                        key='/wiki/edit/:article'
-                        path='/wiki/edit/:article'
+                        key='/wiki/:id/edit/:article'
+                        path='/wiki/:id/edit/:article'
                         exact
                         component={WikiEditPage}
                     />
                     <Route
-                        key='/wiki/create/:article?'
-                        path='/wiki/create/:article?'
+                        key='/wiki/:id/create/:article?'
+                        path='/wiki/:id/create/:article?'
                         exact
                         component={CreateArticlePage}
                     />
                     <Route
-                        key='/wiki/article/:article'
-                        path='/wiki/article/:article'
+                        key='/wiki/:id/article/:article'
+                        path='/wiki/:id/article/:article'
                         exact
                         component={WikiArticlePage}
                     />
                     <Route
-                        key='/wiki/search/:articleName?'
-                        path='/wiki/search/:articleName?'
+                        key='/wiki/:id/search/:articleName?'
+                        path='/wiki/:id/search/:articleName?'
                         exact
                         component={ArticleSearchPage}
                     />

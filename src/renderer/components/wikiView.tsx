@@ -5,7 +5,7 @@ import { AppState } from '../store/store';
 import { connect } from 'react-redux';
 import WikiHeader from '../components/wikiHeader';
 import { WikiMetadata } from '../store/reducers/wikis';
-import { getSelectedWiki } from '../selectors/wikis';
+import { getSelectedWiki, getWikiById } from '../selectors/wikis';
 import Notifications from './notifications';
 import { HomeButton } from './homeButton';
 import PageActions from './pageActions';
@@ -16,17 +16,17 @@ import { RouterProps, withRouter, RouteComponentProps } from 'react-router';
 
 
 
-interface OwnProps {
+type OwnProps = {
     background?: string,
     title: string
-}
+} & RouteComponentProps<{ id: string }>;
 
 interface ReduxProps {
     selectedWiki: WikiMetadata
 }
 
 
-export type ComponentProps = OwnProps & ReduxProps & RouteComponentProps;
+export type ComponentProps = OwnProps & ReduxProps;
 
 interface ComponentState {
     isMenuOpen: boolean,
@@ -40,8 +40,8 @@ export class WikiView extends React.Component<ComponentProps, ComponentState>{
             isMenuOpen: false
         }
     }
-    createWiki = ()=>{
-        this.props.history.push('/wiki/create/');
+    createWiki = () => {
+        this.props.history.push(`/wiki/${this.props.match.params.id}/create/`);
     }
     componentDidMount() {
         const appTitle = document.getElementById('pageTitle');
@@ -63,35 +63,43 @@ export class WikiView extends React.Component<ComponentProps, ComponentState>{
             isMenuOpen: !prevState.isMenuOpen
         }));
     }
+    closeMenu = () => {
+        this.setState((prevState) => ({
+            isMenuOpen: false
+        }));
+    }
     render() {
         return (
-            <div className='route'>
-                <img className='route__background' src={this.getBackground()} alt="background" />
-                {this.props.children}
-                <PageActions>
-                    <button
-                        type='button'
-                        onClick={this.createWiki}
-                        className='page-action button-flat--secondary'
-                    >
-                        <i className='material-icons'>
-                            add
-                        </i>
-                    </button>
-                    <button
-                        type='button'
-                        className='page-action button-flat--secondary'
-                        onClick={this.onToggleHeaderMenu}
-                    >
-                        <i className='material-icons'>
-                            menu
-                        </i>
-                    </button>
-                    <WikiMenu
-                        isOpen={this.state.isMenuOpen}
-                    />
-                </PageActions>
-            </div>
+            <>
+                <div className='route'>
+                    <WikiHeader>
+                        <button
+                            type='button'
+                            onClick={this.createWiki}
+                            className='page-action button-flat--primary'
+                        >
+                            <i className='btn--secondary material-icons'>
+                                add
+                                </i>
+                        </button>
+                        <button
+                            type='button'
+                            className='page-action button-flat--primary'
+                            onClick={this.onToggleHeaderMenu}
+                        >
+                            <i className='btn--secondary material-icons'>
+                                menu
+                                </i>
+                        </button>
+                        <WikiMenu
+                            isOpen={this.state.isMenuOpen}
+                            onClose={this.closeMenu}
+                        />
+                    </WikiHeader>
+                    <img className='route__background' src={this.getBackground()} alt="background" />
+                    {this.props.children}
+                </div>
+            </>
         )
     }
 }
@@ -99,8 +107,8 @@ export class WikiView extends React.Component<ComponentProps, ComponentState>{
 
 
 
-export default connect((state: AppState, props) => {
+export default withRouter(connect((state: AppState, props: OwnProps) => {
     return {
-        selectedWiki: getSelectedWiki(state)
+        selectedWiki: getWikiById(state, props.match.params.id)
     };
-})(withRouter(WikiView));
+})(WikiView));

@@ -20,7 +20,7 @@ const mlThreadMiddleware = (message: MessageEvent | ErrorEvent, next: Function)=
     //@ts-ignore
     if (message.data && message.data.type === 'GENERATED_KEYWORDS') {
         //@ts-ignore
-        store.dispatch(setArticleKeywords(message.data.name, message.data.keywords));
+        store.dispatch(setArticleKeywords(message.data.name,message.data.wikiId, message.data.keywords));
         next();
     }
 };

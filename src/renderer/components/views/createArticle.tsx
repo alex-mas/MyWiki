@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as React from 'react';
-import { RouteProps } from '../../router/router';
+import { RouteProps } from '../../router';
 import { AppState } from '../../store/store';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetadata } from '../../store/reducers/wikis';
@@ -17,7 +17,7 @@ import { ImageInput } from '../imageInput';
 import WikiHeader from '../wikiHeader';
 import I18String from '@axc/react-components/i18string';
 import WikiView from '../wikiView';
-import { getSelectedWiki } from '../../selectors/wikis';
+import { getSelectedWiki, getWikiById } from '../../selectors/wikis';
 import DynamicTextInput from '../dynamicTextInput';
 
 
@@ -30,7 +30,7 @@ interface ReduxProps {
     selectedWiki: WikiMetadata
 }
 
-interface OwnProps extends RouteComponentProps<{article:string}>{
+interface OwnProps extends RouteComponentProps<{article:string, id:string}>{
 }
 
 type ComponentProps = OwnProps & DispatchProps & ReduxProps;
@@ -82,11 +82,14 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
             content: this.state.editorContent.toJSON(),
             tags: this.state.tags,
             background: this.state.background,
-            keywords: []
+            keywords: [],
+            lastEdited: Date.now(),
+            lastRead: Date.now(),
+            category: ''
             //@ts-ignore
-        }).then(() => {
+        }, this.props.selectedWiki).then(() => {
             console.log('created article');
-            setTimeout(()=>this.props.history.push(`/wiki/article/${this.state.name}`),50);  
+            setTimeout(()=>this.props.history.push(`/wiki/${this.props.match.params.id}/article/${this.state.name}`),50);  
         });
     }
     discardChanges = () => {
@@ -173,7 +176,7 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
 export default connect(
     (state: AppState, props: OwnProps) => {
         return {
-            selectedWiki: getSelectedWiki(state) 
+            selectedWiki: getWikiById(state, props.match.params.id) 
         }
     },
     {

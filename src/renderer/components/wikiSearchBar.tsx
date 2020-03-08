@@ -2,13 +2,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { AppState } from '../store/store';
 import AutoComplete from '@axc/react-components/autoComplete';
-import { getSelectedWiki } from '../selectors/wikis';
+import { getSelectedWiki, getWikiById } from '../selectors/wikis';
 import { i18n} from '../app';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { ArticleMetaData } from '../actions/article';
 
 
-interface OwnProps extends RouteComponentProps{
+interface OwnProps extends RouteComponentProps<{id: string}>{
 }
 interface DispatchProps {
 
@@ -52,9 +52,9 @@ export class WikiSearchBar extends React.Component<ComponentProps, ComponentStat
         const value = this.validateInput(val);
         const matchingArticles = this.getMatchingArticles(val);
         if (matchingArticles.length === 1 && matchingArticles[0] === value) {
-            this.props.history.push(`/wiki/article/${value}`);
+            this.props.history.push(`/wiki/${this.props.match.params.id}/article/${value}`);
         } else {
-            this.props.history.push(`/wiki/search/${value}`);
+            this.props.history.push(`/wiki/${this.props.match.params.id}/search/${value}`);
         }
     }
     render() {
@@ -71,11 +71,11 @@ export class WikiSearchBar extends React.Component<ComponentProps, ComponentStat
     }
 }
 
-export default connect(
-    (state: AppState, props) => {
+export default withRouter(connect(
+    (state: AppState, props: OwnProps) => {
         return {
-            articles: getSelectedWiki(state).articles
+            articles: getWikiById(state, props.match.params.id).articles
         }
     },
     undefined
-)(withRouter(WikiSearchBar));
+)(WikiSearchBar));

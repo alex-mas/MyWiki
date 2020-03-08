@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Header from './header';
 import Modal from '@axc/react-components/modal';
-import {Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import HomeButton from './homeButton';
 import WikiSearchBar from './wikiSearchBar';
 import WikiMenu from './wikiMenu';
@@ -27,31 +27,18 @@ class WikiHeader extends React.Component<WikiHeaderProps, WikiHeaderState>{
             isMenuOpen: !prevState.isMenuOpen
         }));
     }
+    onCreateArticle = () => {
+
+    }
     render() {
         return (
             <Header>
-                <WikiSearchBar />
-                <div className='wiki-header__actions'>
-                    <Link
-                        className='wiki-header__action'
-                        to='/wiki/create/'
-                    >
-                        <i className='icon-btn--secondary material-icons'>
-                            add
-                        </i>
-                    </Link>
-                    <button
-                        type='button'
-                        className='wiki-header__action'
-                        onClick={this.onToggleHeaderMenu}
-                    >
-                        <i className='icon-btn--secondary material-icons'>
-                            menu
-                        </i>
-                    </button>
-                    <WikiMenu
-                        isOpen={this.state.isMenuOpen}
-                    />
+                <div className='wiki-header__top-actions'>
+                    <HomeButton className='page-action' />
+                </div>
+                <div className='wiki-header__bottom-actions'>
+                    {this.props.children}
+                    <Notifications />
                 </div>
             </Header>
         )

@@ -1,13 +1,15 @@
 
 import { WikiMetadata } from "../store/reducers/wikis";
+import { memo } from "react";
+import memoize from "../../utils/memoize";
 
 
 /**
  * reduces the array of articles to an array of article names
  * 
  */
-export const getArticleNames = (selectedWiki: WikiMetadata): string[]=>{
-    return selectedWiki.articles.map((article)=>{
+export const getArticleNames = (wiki: WikiMetadata): string[]=>{
+    return wiki.articles.map((article)=>{
         return article.name;
     });
 };
@@ -23,9 +25,9 @@ const parseSearch = (rawSerach: string)=>{
  * 
  * 
  */
-export const getRelevantArticles= (search:string = "", selectedWiki: WikiMetadata): string[]=>{
+export const getRelevantArticles= (wiki: WikiMetadata, search:string = ""): string[]=>{
     const parsedSearch = parseSearch(search);
-    const regularMatches = selectedWiki.articles.filter((article)=>{
+    const regularMatches = wiki.articles.filter((article)=>{
         if(
             article.name.toLocaleLowerCase().includes(search) ||
             (article.tags && article.tags.indexOf(search) > -1) ||
@@ -41,11 +43,28 @@ export const getRelevantArticles= (search:string = "", selectedWiki: WikiMetadat
 }
 
 
-export const getArticle = (name:string, selectedWiki: WikiMetadata)=>{
-    return selectedWiki.articles.find((article)=>article.name === name);
+export const getArticle = (name:string, wiki: WikiMetadata)=>{
+    return wiki.articles.find((article)=>article.name === name);
 }
 
-export const doesArticleExist = (name:string, selectedWiki: WikiMetadata)=>{
+export const doesArticleExist = (name:string, wiki: WikiMetadata)=>{
     //cast results to a boolean
-    return !!getArticle(name, selectedWiki);
+    return !!getArticle(name, wiki);
+}
+
+
+export const getLastEditedArticles = (wiki: WikiMetadata, count: number = 5)=>{
+    if(!wiki){
+        return [];
+    }
+    const sorted = wiki.articles.sort((a,b)=>a.lastEdited-b.lastEdited);
+    return sorted.slice(0,count);
+}
+
+export const getLastViewedArticles = (wiki: WikiMetadata, count: number = 5)=>{
+    if(!wiki){
+        return [];
+    }
+    const sorted = wiki.articles.sort((a,b)=>a.lastRead-b.lastRead);
+    return sorted.slice(0,count);
 }

@@ -22,7 +22,7 @@ class NotificationsButton extends React.PureComponent<Props, any>{
         if(this.getUnreadCount() > 0){
             return `${baseClass} button-flat--primary--accent`;
         }else{
-            return `${baseClass} button-flat--secondary`;
+            return `${baseClass} button-flat--primary`;
         }
     }
     getUnreadCount = ()=>{
@@ -34,7 +34,7 @@ class NotificationsButton extends React.PureComponent<Props, any>{
                 onClick={this.props.onClick}
                 className={this.getClassName()}
             >
-                <i className='material-icons'>notifications</i>
+                <i className='btn--secondary material-icons'>notifications</i>
                 <span className="notifications-button__number">{this.getUnreadCount()}</span>
             </button>
         )

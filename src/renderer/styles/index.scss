@@ -5,6 +5,7 @@
 @import './defs';
 @import './base';
 
+@import './components/row';
 //base components
 @import './components/text';
 @import './components/transitions';
@@ -13,7 +14,6 @@
 @import './components/action';
 @import './components/materialIcons';
 @import './components/body';
-@import './components/article';
 @import './components/header';
 @import './components/route';
 @import './components/modal';

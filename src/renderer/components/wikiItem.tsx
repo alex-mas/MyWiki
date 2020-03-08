@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteProps } from '../router/router';
+import { RouteProps } from '../router';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { WikiMetadata } from '../store/reducers/wikis';
 import { selectWiki, SelectWikiActionCreator, removeWiki, loadWiki, LoadWikiActionCreator } from '../actions/wikis';
@@ -38,7 +38,7 @@ export class WikiItem extends React.Component<WikiItemProps, any>{
     }
     onOpen = () => {
         (this.props.selectWiki(this.props.wiki.id) as unknown as Promise<any>).then(() => {
-            this.props.history.push('/wiki/article/home');
+            this.props.history.push(`/wiki/${this.props.wiki.id}`);
         }).catch((e: NodeJS.ErrnoException) => console.warn('Error while loading wiki: ', e));
 
     }

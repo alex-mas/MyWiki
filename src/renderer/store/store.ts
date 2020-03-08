@@ -5,18 +5,17 @@ import thunk from 'redux-thunk';
 import errorHandler from './middleware/errorHandler';
 import wikis, { WikiMetadata } from './reducers/wikis';
 import appData, { AppData } from './reducers/appData';
-import selectedWiki from './reducers/selectedWiki';
 import plugins, { PluginState } from './reducers/plugins';
 import i18n, { I18N } from './reducers/i18n';
 import { ReducerContainer, dynamicCombine } from '../../utils/reducer';
 import notifications, { Notification } from './reducers/notifications';
 import readOnly from '../../utils/readonly';
+import { App } from 'electron';
 export type StoreAction = AnyAction | ThunkAction<AnyAction, AppState, any, AnyAction>;
 
 export interface AppState {
     wikis: WikiMetadata[],
     appData: AppData,
-    selectedWiki: WikiMetadata,
     plugins: PluginState,
     notifications: Notification[],
     i18n: I18N,
@@ -28,7 +27,6 @@ const composeEnhancers =  compose;
 const defaultReducers = {
     wikis,
     appData,
-    selectedWiki,
     plugins,
     i18n,
     notifications
@@ -53,6 +51,7 @@ export class AppStore {
         this.store = readOnly(configureStore());
     }
     onReducerChange = () => {
+        //@ts-ignore
         this.store.replaceReducer(dynamicCombine(this.defaultReducers, this.pluginReducers));
     }
     isReducerKeyValid = (key: string) => {
@@ -78,9 +77,9 @@ export class AppStore {
      * dispatching actions that would mess up with app state. 
      * 
      */
-    dispatch = <A extends Action<any> = AnyAction>(action: A)=>{
+    dispatch=<T extends AnyAction>(action: T)=>{
         //TODO: validate the action first
-        return this.store.dispatch(action);
+        return (this.store.dispatch as ThunkDispatch<AppState, any, any>)(action);
     }
 }
 

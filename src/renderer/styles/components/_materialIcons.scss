@@ -37,3 +37,8 @@
     /* Support for IE. */
     font-feature-settings: 'liga';
   }
+
+.material-icons--big{
+  @extend .material-icons;
+  font-size: 33px;
+}

@@ -17,11 +17,12 @@ const extractKeywords = (document: string) => {
 }
 
 
-const generatedKeywords = (name: string, keywords: string[])=>{
+const generatedKeywords = (name: string, wikiId: string,keywords: string[])=>{
     return{
         type: 'GENERATED_KEYWORDS',
         name,
-        keywords
+        keywords,
+        wikiId
     }
 }
 
@@ -31,7 +32,7 @@ onmessage = (event) => {
         case 'GET_KEYWORDS':
             return extractKeywords(action.contents)
                 .then((keywords) => {
-                    postMessage(generatedKeywords(action.name, keywords));
+                    postMessage(generatedKeywords(action.name,action.wikiId, keywords));
                 })
                 .catch((err) => {
                     console.warn(err);

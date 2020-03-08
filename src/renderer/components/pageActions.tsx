@@ -3,8 +3,6 @@ import {HomeButton} from "./homeButton"
 import  Notifications from "./notifications"
 
 
-
-
 export const PageActions: React.FunctionComponent<any> = (props: any) => {
     return (
         <div className="action-container">

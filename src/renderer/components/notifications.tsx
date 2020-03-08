@@ -37,6 +37,11 @@ export class Notifications extends React.Component<Props, State>{
             };
         });
     }
+    closeNotifications = ()=>{
+        if(this.state.shouldDisplayNotifications){
+            this.toggleNotifications();
+        }
+    }
     render() {
         return (
             <div className='notification-container'>
@@ -45,6 +50,7 @@ export class Notifications extends React.Component<Props, State>{
                 />
                 <NotificationList
                     isActive={this.state.shouldDisplayNotifications}
+                    onClose={this.closeNotifications}
                 />
                 <RecentNotifications
                     isActive={!this.state.shouldDisplayNotifications}

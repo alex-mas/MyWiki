@@ -23,30 +23,39 @@ export interface ArticleMetaData {
     name: string,
     tags: string[],
     keywords: string[],
-    background: string
-}
-export interface Article {
-    name: string,
-    tags: string[],
-    content: ValueJSON,
     background: string,
-    keywords: string[]
+    lastEdited: number,
+    lastRead: number,
+    category: ArticleCategory | string
+}
+
+export enum ArticleCategory {
+    ARTICLE = 'article'
+}
+export type Article  = ArticleMetaData &{
+    content: ValueJSON,
 }
 
 
 export type ArticleAction = ActionWithPayload<{
-    article: ArticleMetaData
+    article: ArticleMetaData,
+    wiki: WikiMetadata
 }>
 
-export type ArticleACreator = ACreator<[ArticleMetaData],ArticleAction>;
+export type ArticleACreator = ACreator<[ArticleMetaData, WikiMetadata],ArticleAction>;
 
 
 
-export const getArticlePath = (wiki: WikiMetadata, articleName: string) => {
+export const getArticlePath = (wiki: WikiMetadata, articleName: string, category?: string) => {
+    let basePath = path.join('./wikis', wiki.id);
     if(wiki.path){
-        return path.join(wiki.path, 'articles', `${articleName}.json`);
+        basePath = path.join(wiki.path);
     }
-    return path.join('./wikis', wiki.id, 'articles', `${articleName}.json`);
+    basePath = path.join(basePath, 'articles');
+    if(category && category !== ArticleCategory.ARTICLE){
+        basePath = path.join(basePath,category);
+    }
+    return path.join(basePath, `${articleName}.json`);
 }
 
 
@@ -57,7 +66,10 @@ export const getArticleMetaData = (article: Article): ArticleMetaData => {
         name: article.name,
         tags: article.tags,
         background: article.background,
-        keywords: article.keywords
+        keywords: article.keywords,
+        lastEdited: article.lastEdited,
+        lastRead: article.lastRead,
+        category: article.category
     }
 }
 
@@ -70,29 +82,29 @@ export const setArticleMetaData = (metaData: ArticleMetaData)=>{
 }
 
 
-export type CreateArticleActionCreator = AsyncACreator<[Article],ArticleAction, ArticleAction>;
+export type CreateArticleActionCreator = AsyncACreator<[Article, WikiMetadata],ArticleAction, ArticleAction>;
 
-const _createArticle: ArticleACreator = (article: ArticleMetaData) => {
+const _createArticle: ArticleACreator = (article: ArticleMetaData, wiki: WikiMetadata) => {
     return {
         type: CREATE_ARTICLE,
-        article
+        article,
+        wiki
     }
 }
 
-export const createArticle: CreateArticleActionCreator = (article) => {
+export const createArticle: CreateArticleActionCreator = (article, wiki) => {
     return async (dispatch, getState) => {
         const state = getState();
-        const wiki = state.selectedWiki;
         console.log('Article about to be created: ',article);
         try {
-            generateArticleKeywords(article);
+            generateArticleKeywords(article, wiki);
             await fsp.writeFile(
                 getArticlePath(wiki, article.name),
                 JSON.stringify(article),
                 //fails if it exists
                 {flag:'wx', encoding: 'utf8'}
             );
-            return dispatch(_createArticle(getArticleMetaData(article)));
+            return dispatch(_createArticle(getArticleMetaData(article),wiki));
 
         } catch (e) {
             const errMsg = `Error trying to create article ${article.name}, 
@@ -106,28 +118,31 @@ export const createArticle: CreateArticleActionCreator = (article) => {
 }
 
 
-export type LoadArticleActionCreator = AsyncACreator<[string], ArticleAction, Article>;
+export type LoadArticleActionCreator = AsyncACreator<[WikiMetadata,string,string,], ArticleAction, Article>;
 
 
 
-const _loadArticle: ArticleACreator = (article: ArticleMetaData) => {
+const _loadArticle: ArticleACreator = (article: ArticleMetaData, wiki: WikiMetadata) => {
     return {
         type: LOAD_ARTICLE,
-        article
+        article,
+        wiki
     };
 }
 
 
 
-export const loadArticle: LoadArticleActionCreator = (name: string) => {
+export const loadArticle: LoadArticleActionCreator = (wiki: WikiMetadata,name: string, category: string,) => {
     return async (dispatch, getState) => {
-        const wiki = getState().selectedWiki;
         const article: Article = {
             content: {},
             tags: [],
             name,
             background: '',
-            keywords: []
+            keywords: [],
+            lastEdited: 0,
+            lastRead: 0,
+            category
         }
         let articleData;
         let filePath: string = getArticlePath(wiki, name);
@@ -142,7 +157,10 @@ export const loadArticle: LoadArticleActionCreator = (name: string) => {
                 article.content = articleData.content;
             }
             article.tags = articleData.tags;
-            dispatch(_loadArticle(getArticleMetaData(article)))
+            article.keywords = articleData.keywords;
+            article.lastEdited = articleData.lastEdited ? articleData.lastEdited : Date.now();
+            article.lastRead = articleData.lastRead ? articleData.lastRead : Date.now();
+            dispatch(_loadArticle(getArticleMetaData(article),wiki))
             return article;
         }catch(e){
             console.warn(e);
@@ -155,28 +173,28 @@ export const loadArticle: LoadArticleActionCreator = (name: string) => {
 
 
 
-export type SaveArticleActionCreator = AsyncACreator<[Article],ArticleAction>;
+export type SaveArticleActionCreator = AsyncACreator<[Article,WikiMetadata],ArticleAction>;
 
 
-const _saveArticle: ArticleACreator = (article: ArticleMetaData) => {
+const _saveArticle: ArticleACreator = (article: ArticleMetaData,wiki: WikiMetadata) => {
     return {
         type: SAVE_ARTICLE,
-        article
+        article,
+        wiki
     };
 }
 
 
-export const saveArticle: SaveArticleActionCreator = (article: Article) => {
+export const saveArticle: SaveArticleActionCreator = (article: Article, wiki:WikiMetadata) => {
     return async(dispatch, getState) => {
-        const selectedWiki = getState().selectedWiki;
         try{
-            generateArticleKeywords(article);
+            generateArticleKeywords(article,wiki);
             const p = fsp.writeFile(
-                getArticlePath(selectedWiki, article.name),
+                getArticlePath(wiki, article.name, article.category),
                 JSON.stringify(article),
                 'utf8'
             );
-            dispatch(_saveArticle(getArticleMetaData(article)));
+            dispatch(_saveArticle(getArticleMetaData(article),wiki));
             await p;
             return article;
         }catch(e){
@@ -192,17 +210,17 @@ export const saveArticle: SaveArticleActionCreator = (article: Article) => {
 
 export type DeleteArticleAction = ActionWithPayload<{name: string}>;
 
-export type DeleteArticleActionCreator = AsyncACreator<[string],DeleteArticleAction>;
+export type DeleteArticleActionCreator = AsyncACreator<[string, WikiMetadata],DeleteArticleAction>;
 
-export const deleteArticle: DeleteArticleActionCreator = (name: string) => {
+export const deleteArticle: DeleteArticleActionCreator = (name: string, wiki: WikiMetadata) => {
     return async (dispatch, getState) => {
-        const selectedWiki = getState().selectedWiki;
-        let filePath = getArticlePath(selectedWiki, name);
+        let filePath = getArticlePath(wiki, name);
         try{
             await fsp.unlink(filePath);
             return dispatch({
                 type: DELETE_ARTICLE,
-                name
+                name,
+                wiki
             });
         }catch(e){
             dispatch(fsError(`Error trying to delete article ${name}, please try running the app as administrator. If that doesn't work contact the developer`));
@@ -213,11 +231,12 @@ export const deleteArticle: DeleteArticleActionCreator = (name: string) => {
 
 
 
-export const generateArticleKeywords = (article: Article)=>{
+export const generateArticleKeywords = (article: Article, wiki: WikiMetadata)=>{
     mlThreads.sendMessage(
         {
             type: 'GET_KEYWORDS',
             name: article.name,
+            wikiId: wiki.id,
             contents: Plain.serialize(Value.fromJSON(article.content) as any)
         }
     );

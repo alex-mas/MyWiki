@@ -49,8 +49,10 @@ class AppHeader extends React.Component<ComponentProps, ComponentState>{
     render() {
         return (
             <Header>
-                <HomeButton />
-                <div ref={this.actionsRef} className='wiki-header__actions'>
+                <div className='wiki-header__top-actions'>
+                    <HomeButton />
+                </div>
+                <div ref={this.actionsRef} className='wiki-header__bottom-actions'>
                     <button
                         onClick={this.toggleSettings}
                         className='wiki-header__action--secondary'
