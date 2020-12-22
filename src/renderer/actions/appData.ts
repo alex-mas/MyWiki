@@ -122,9 +122,12 @@ export const loadAppData: LoadAppDataActionCreator = ()=>{
     return async (dispatch,getState)=>{
         try{
             //when app is build this doesnt exist, so create it.
-            const appDataContents = await fsp.readFile('./config/app.config.json', 'utf8');
-            const appData: AppData = JSON.parse(appDataContents);
-            return dispatch(setAppData(appData));
+            const doesConfigExist = await fsp.exists('./config/app.config.json');
+            if(doesConfigExist){
+                const appDataContents = await fsp.readFile('./config/app.config.json', 'utf8');
+                const appData: AppData = JSON.parse(appDataContents);
+                return dispatch(setAppData(appData));
+            }
         }catch(e){
             dispatch(fsError('error parsing app configuration'));
             throw e;

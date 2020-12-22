@@ -14,7 +14,7 @@ export interface AppData {
 
 
 export const defaultAppData: AppData = {
-    background: 'resources/images/landscape.jpg',
+    background: '',
     locale: ISO639Locale.en,
     shouldAutoSave: false,
     autoSaveInterval: 1,
