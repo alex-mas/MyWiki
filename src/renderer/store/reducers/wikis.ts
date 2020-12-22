@@ -4,6 +4,7 @@ import { CREATE_WIKI, LOAD_WIKI, LOAD_WIKIS, REMOVE_WIKI, RESET_WIKI, SET_WIKI_B
 import { Omit } from "../../../utils/typeUtils";
 import { createReducer } from "../../../utils/reducer";
 import {wikiReducer} from './wiki';
+import { Group } from "../../actions/group";
 
 export interface WikiMetadata {
     name: string,
@@ -11,6 +12,7 @@ export interface WikiMetadata {
     description: string
     id: string,
     articles: ArticleMetaData[],
+    group: Group[],
     selected: boolean,
     installedPlugins: String[],
     path?: string

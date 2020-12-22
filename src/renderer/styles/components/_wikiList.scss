@@ -1,24 +1,18 @@
 
 
 .wiki-list{
-    margin: 20vh 0;
     transition-property: border-bottom-right-radius;
     transition-duration: 0.4s;
-    background-color: rgba(255,255,255,0.95);
+    background-color: rgba(255, 255, 255, 0.95);
     color: black;
-    padding: $size-l $size-m;
-    width: 25vw;
+    padding: 0rem 1.7rem;
     min-width: 10rem;
-    height: fit-content;
-    box-shadow: $elevation-8p;
+    height: 100vh;
+    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
     animation-name: slideUp;
     animation-duration: 0.7s;
     animation-timing-function: ease-out;
-    border-bottom-right-radius: 15px;
-    border-top-left-radius: 15px;
-    &:hover{
-        border-bottom-right-radius: 25px;
-    }
+    overflow: hidden;
 }
 
 

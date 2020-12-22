@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import { AppState } from '../store/store';
 import AutoComplete from '@axc/react-components/autoComplete';
 import { getSelectedWiki, getWikiById } from '../selectors/wikis';
-import { i18n} from '../app';
+import { i18n } from '../app';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { ArticleMetaData } from '../actions/article';
+import { Link } from 'react-router-dom';
 
 
-interface OwnProps extends RouteComponentProps<{id: string}>{
+interface OwnProps extends RouteComponentProps<{ id: string }> {
 }
 interface DispatchProps {
 
@@ -34,11 +35,11 @@ export class WikiSearchBar extends React.Component<ComponentProps, ComponentStat
             value: ''
         }
     }
-    getMatchingArticles  = (val:string)=>{
+    getMatchingArticles = (val: string) => {
         const value = this.validateInput(val);
         return this.props.articles.filter(
-            (article)=>article.name.includes(value) || article.tags.includes(value)
-        ).map((articled)=>articled.name);
+            (article) => article.name.includes(value) || article.tags.includes(value)
+        ).map((articled) => articled.name);
     }
     onChange = (value: string) => {
         this.setState(() => ({
@@ -59,14 +60,19 @@ export class WikiSearchBar extends React.Component<ComponentProps, ComponentStat
     }
     render() {
         return (
-            <AutoComplete
-                value={this.state.value}
-                placeholder={i18n('search article')}
-                getSuggestions={this.getMatchingArticles}
-                onChange={this.onChange}
-                onSubmit={this.visitArticle}
-                className='wiki-header__search-bar'
-            />
+            <>
+                <Link to={`/wiki/${this.props.match.params.id}`}>
+                    <img src='resources/images/appIcon.png' className='wiki-header__search-bar__home-icon'/>
+                </Link>
+                <AutoComplete
+                    value={this.state.value}
+                    placeholder={i18n('search article')}
+                    getSuggestions={this.getMatchingArticles}
+                    onChange={this.onChange}
+                    onSubmit={this.visitArticle}
+                    className='wiki-header__search-bar'
+                />
+            </>
         )
     }
 }

@@ -23,10 +23,10 @@ export interface ArticleMetaData {
     name: string,
     tags: string[],
     keywords: string[],
-    background: string,
     lastEdited: number,
     lastRead: number,
     category: ArticleCategory | string
+    groups: string[]
 }
 
 export enum ArticleCategory {
@@ -65,11 +65,11 @@ export const getArticleMetaData = (article: Article): ArticleMetaData => {
     return {
         name: article.name,
         tags: article.tags,
-        background: article.background,
         keywords: article.keywords,
         lastEdited: article.lastEdited,
         lastRead: article.lastRead,
-        category: article.category
+        category: article.category,
+        groups: article.groups
     }
 }
 
@@ -95,7 +95,6 @@ const _createArticle: ArticleACreator = (article: ArticleMetaData, wiki: WikiMet
 export const createArticle: CreateArticleActionCreator = (article, wiki) => {
     return async (dispatch, getState) => {
         const state = getState();
-        console.log('Article about to be created: ',article);
         try {
             generateArticleKeywords(article, wiki);
             await fsp.writeFile(
@@ -138,8 +137,8 @@ export const loadArticle: LoadArticleActionCreator = (wiki: WikiMetadata,name: s
             content: {},
             tags: [],
             name,
-            background: '',
             keywords: [],
+            groups: [],
             lastEdited: 0,
             lastRead: 0,
             category
@@ -148,8 +147,6 @@ export const loadArticle: LoadArticleActionCreator = (wiki: WikiMetadata,name: s
         let filePath: string = getArticlePath(wiki, name);
         try{
             const data = await fsp.readFile(filePath, 'utf8');
-            console.log("article file path: ", filePath);
-            console.log("About to parse loaded article contents: ",data);
             articleData = JSON.parse(data);
             if (typeof articleData.content === 'string') {
                 article.content = JSON.parse(articleData.content);

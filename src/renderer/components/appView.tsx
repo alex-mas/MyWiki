@@ -72,9 +72,8 @@ export class AppView extends React.Component<ComponentProps, State>{
                     </button>
                 </AppHeader>
                 <div className='route__content'>
-                    <img className='route__background' src={this.getBackground()} alt="background" />
                     {this.props.children}
-
+                    <img className='route__background' src={this.getBackground()} alt="background" />
                     <AppSettingsForm
                         isOpen={this.state.isSettingsModalOpen}
                         onClose={this.closeAppSettings}

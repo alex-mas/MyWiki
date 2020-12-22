@@ -1,5 +1,9 @@
 .search-results {
-    padding: 2rem;
+    height: 80vh;
+    overflow-y: scroll;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    overflow-x: hidden;
 }
 
 .search-result {

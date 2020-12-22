@@ -29,14 +29,16 @@ export class WikiForm extends React.Component<OwnProps, ComponentState>{
             this.state = {
                 name: props.initialValues.name,
                 description: props.initialValues.description,
-                background: props.initialValues.background
+                background: props.initialValues.background,
+                group: props.initialValues.group
             }
 
         } else {
             this.state = {
                 name: undefined,
                 description: undefined,
-                background: undefined
+                background: undefined,
+                group: []
             }
         }
 

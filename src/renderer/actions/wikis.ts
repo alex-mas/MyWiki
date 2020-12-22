@@ -55,7 +55,8 @@ export const createWiki: CreateWikiActionCreator = (wiki: UserDefinedWikiMetadat
                 description: wiki.description,
                 articles: [],
                 selected: false,
-                installedPlugins: []
+                installedPlugins: [],
+                group: []
             }
             await fsp.mkdir(wikiPath);
             await fsp.mkdir(path.join(wikiPath, 'articles'));

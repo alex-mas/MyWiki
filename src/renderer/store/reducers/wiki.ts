@@ -15,7 +15,8 @@ const defaultState: WikiMetadata = {
     background: '../../../resources/images/radiant.png',
     description: '',
     selected: true,
-    installedPlugins:[]
+    installedPlugins:[],
+    group: []
 };
 
 

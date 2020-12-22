@@ -38,7 +38,6 @@ interface ComponentState {
     editorContent: Value,
     tags: string[],
     areTagsBeingManaged: boolean,
-    background: string,
     autoSaveInterval: NodeJS.Timer
 }
 
@@ -50,7 +49,6 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
             editorContent: Value.fromJSON(JSON.parse('{}')),
             tags: this.props.article.tags,
             areTagsBeingManaged: false,
-            background: this.props.article.background,
             autoSaveInterval: undefined
         }
 
@@ -99,11 +97,11 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
             name: this.props.match.params.article,
             tags: this.state.tags,
             content: this.state.editorContent.toJSON(),
-            background: this.state.background,
             keywords: [],
             lastEdited: Date.now(),
             lastRead: this.props.article.lastRead,
-            category: this.props.article.category
+            category: this.props.article.category,
+            groups: []
         }, this.props.selectedWiki);
     }
     saveChangesAndRedirect = () => {
@@ -128,29 +126,11 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
             areTagsBeingManaged: !prevState.areTagsBeingManaged
         }));
     }
-    getBackground = () => {
-        let background = this.props.selectedWiki.background;
-        if (this.props.article &&
-            this.props.article.background ||
-            this.state.background
-        ) {
-            background = this.state.background;
-        }
-        if (!background) {
-            //set background to the default here;
-        }
-        return background;
-    }
-    onBackgroundChange = (newBackground: string) => {
-        this.setState(() => ({
-            background: newBackground
-        }));
-    }
+
     render() {
         const article = this.props.match.params.article;
         return (
             <WikiView
-                background={this.getBackground()}
                 title={`${this.props.selectedWiki.name} - editing@${this.props.match.params.article}`}
             >
                 <div className='wiki-article'>
@@ -167,14 +147,6 @@ export class WikiEditPage extends React.Component<ComponentProps, ComponentState
                                 <button onClick={this.toggleTagManagement}>
                                     <i className='material-icons'>local_offer</i>
                                 </button>
-                                <ImageInput
-                                    prompt='Choose Background'
-                                    onChange={this.onBackgroundChange}
-                                    windowTitle='choose a background for the article'
-                                    className='wiki-article__image-input'
-                                >
-                                    <i className='material-icons'>panorama</i>
-                                </ImageInput>
                             </div>
                         </div>
                         <div className='wiki-article__header__section'>

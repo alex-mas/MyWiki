@@ -17,7 +17,6 @@ import { RouterProps, withRouter, RouteComponentProps } from 'react-router';
 
 
 type OwnProps = {
-    background?: string,
     title: string
 } & RouteComponentProps<{ id: string }>;
 
@@ -47,17 +46,6 @@ export class WikiView extends React.Component<ComponentProps, ComponentState>{
         const appTitle = document.getElementById('pageTitle');
         appTitle.innerText = this.props.title;
     }
-    getBackground = () => {
-        let background;
-        if (this.props.background) {
-            background = this.props.background;
-        } else if (this.props.selectedWiki.background) {
-            background = this.props.selectedWiki.background;
-        } else {
-            //fallback
-        }
-        return background;
-    }
     onToggleHeaderMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
         this.setState((prevState) => ({
             isMenuOpen: !prevState.isMenuOpen
@@ -72,8 +60,9 @@ export class WikiView extends React.Component<ComponentProps, ComponentState>{
         return (
             <>
                 <div className='route'>
-                    <WikiHeader>
+                    <WikiHeader key='header'>
                         <button
+                            key='create'
                             type='button'
                             onClick={this.createWiki}
                             className='page-action button-flat--primary'
@@ -83,6 +72,7 @@ export class WikiView extends React.Component<ComponentProps, ComponentState>{
                                 </i>
                         </button>
                         <button
+                            key='menubtn'
                             type='button'
                             className='page-action button-flat--primary'
                             onClick={this.onToggleHeaderMenu}
@@ -92,11 +82,11 @@ export class WikiView extends React.Component<ComponentProps, ComponentState>{
                                 </i>
                         </button>
                         <WikiMenu
+                            key='menu'
                             isOpen={this.state.isMenuOpen}
                             onClose={this.closeMenu}
                         />
                     </WikiHeader>
-                    <img className='route__background' src={this.getBackground()} alt="background" />
                     {this.props.children}
                 </div>
             </>

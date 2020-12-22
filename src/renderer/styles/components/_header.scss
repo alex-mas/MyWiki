@@ -2,9 +2,7 @@
 
 .wiki-header{
     flex-direction: column;
-    position: fixed;
     display: flex;
-    justify-content: space-between;
     height: 100vh;
     display: flex;
     background: white;
@@ -84,6 +82,11 @@
         line-height: 1.5;
         border-bottom: 0.5px solid grey;
     }
+}
+.wiki-header__search-bar__home-icon{
+    height: 32px;
+    width: 32px;
+    padding-right: 0.5rem;
 }
 
 

@@ -15,7 +15,7 @@ import { remote, Dialog } from 'electron';
 import { i18n } from '../../app';
 import { loadExternalWiki } from '../../actions/appData';
 const dialog: Dialog = remote.dialog;
-interface OwnProps extends RouteComponentProps{
+interface OwnProps extends RouteComponentProps {
 
 }
 
@@ -28,7 +28,7 @@ interface ReduxProps {
     selectWiki: typeof selectWiki;
 }
 
-type ComponentProps =  OwnProps & ReduxProps;
+type ComponentProps = OwnProps & ReduxProps;
 
 interface ComponentState {
     shouldRenderWikiForm: boolean;
@@ -50,18 +50,18 @@ export class HomePage extends React.Component<ComponentProps, ComponentState>{
         event.preventDefault();
         this.toggleWikiForm();
         //@ts-ignore
-        const created = this.props.createWiki(metaData).then((created: WikiMetadata)=>{
-            setTimeout(()=>{
+        const created = this.props.createWiki(metaData).then((created: WikiMetadata) => {
+            setTimeout(() => {
                 this.props.selectWiki(created.id);
                 this.props.history.push(`/wiki/${created.id}`);
-            },200);
+            }, 200);
         });
-    
+
     }
-    onImportWiki = ()=>{
+    onImportWiki = () => {
         dialog.showOpenDialog(remote.getCurrentWindow(), {
             title: i18n('import a wiki'),
-            properties: ['openDirectory','promptToCreate']
+            properties: ['openDirectory', 'promptToCreate']
         },
             (filePaths: string[]) => {
                 if (filePaths.length === 1) {
@@ -76,30 +76,30 @@ export class HomePage extends React.Component<ComponentProps, ComponentState>{
             <AppView
                 title='MyWiki - Home'
             >
-                <div className='body'>
-                    <ul className='wiki-list'>
-                        {this.props.wikis.map((wiki) => {
-                            return <Wiki key={wiki.id} wiki={wiki} />
-                        })}
-                        <div key='wiki-list__actions' className='wiki-list__actions'>
-                            <Button
-                                btnType='solid'
-                                theme='primary'
-                                className='wiki-list__action--primary'
-                                onClick={this.toggleWikiForm}
-                            >
-                                <i className='material-icons'>add</i>
-                            </Button>
-                            <Button
-                                btnType='flat'
-                                theme='primary'
-                                className='wiki-list__action--secondary'
-                                onClick={this.onImportWiki}
-                            >
-                                <i className='material-icons'>archive</i>
-                            </Button>
-                        </div>
-                    </ul>
+                <ul className='wiki-list'>
+                    {this.props.wikis.map((wiki) => {
+                        return <Wiki key={wiki.id} wiki={wiki} />
+                    })}
+                    <div key='wiki-list__actions' className='wiki-list__actions'>
+                        <Button
+                            btnType='solid'
+                            theme='primary'
+                            className='wiki-list__action--primary'
+                            onClick={this.toggleWikiForm}
+                        >
+                            <i className='material-icons'>add</i>
+                        </Button>
+                        <Button
+                            btnType='flat'
+                            theme='primary'
+                            className='wiki-list__action--secondary'
+                            onClick={this.onImportWiki}
+                        >
+                            <i className='material-icons'>archive</i>
+                        </Button>
+                    </div>
+                </ul>
+                <div>
                     <Modal
                         isOpen={this.state.shouldRenderWikiForm}
                         onClose={this.toggleWikiForm}

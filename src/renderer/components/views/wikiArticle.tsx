@@ -111,7 +111,6 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
     renderArticleNotFound = () => {
         return (
             <WikiView
-                background={this.getBackground()}
                 title={`${this.props.selectedWiki.name}@${this.props.match.params.article}`}
             >
                 <div className='wiki-article'>
@@ -127,26 +126,15 @@ export class WikiArticlePage extends React.Component<PageProps, any>{
             </WikiView>
         )
     }
-    getBackground = () => {
-        let background = this.props.selectedWiki.background;
-        if (this.props.article && this.props.article.background) {
-            background = this.props.article.background;
-        } else if (!background) {
-            //set background to the default here;
-        }
-        return background;
-    }
+
     render() {
         const article = this.props.match.params.article;
         if (this.state.fileExists) {
             return (
                 <WikiView
-                    background={this.getBackground()}
                     title={`${this.props.selectedWiki.name}@${this.props.match.params.article}`}
                 >
                     <div className='wiki-article'>
-
-
                         <div className='wiki-article__header'>
                             <div className='wiki-article__searchbar'>
                                 <WikiSearchBar />

@@ -70,7 +70,7 @@ export class ArticleSearchPage extends React.Component<ComponentProps, Component
                     <ul className='search-results'>
                         {this.props.searchResults.map((result) => {
                             return (
-                                <li className='search-result'>
+                                <li className='search-result' key={result}>
                                     <div className='search-result__labels'>
                                         <div className='search-result__name'>
                                             {result}

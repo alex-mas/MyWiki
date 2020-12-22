@@ -9,7 +9,7 @@ import WikiEditor from '../wikiEditor/wikiEditor';
 import defaultEditorContents from '../wikiEditor/utilities/defaultValue';
 import { RouteComponentProps } from 'react-router-dom';
 import { Value } from 'slate';
-import { CreateArticleActionCreator, createArticle } from '../../actions/article';
+import { CreateArticleActionCreator, createArticle, Article } from '../../actions/article';
 import { fsError, FsErrorActionCreator } from '../../actions/errors';
 import Header from '../header';
 import TagForm from '../tagForm';
@@ -38,7 +38,6 @@ type ComponentProps = OwnProps & DispatchProps & ReduxProps;
 
 interface CreateArticlePageState {
     editorContent: Value,
-    background: string,
     name: string,
     tags: string[],
     areTagsBeingManaged: boolean
@@ -50,7 +49,6 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
         this.state = {
             editorContent: defaultEditorContents,
             name: this.props.match.params.article,
-            background: undefined,
             tags: [],
             areTagsBeingManaged: false
         }
@@ -81,11 +79,11 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
             name: this.state.name || "defaultArticleName",
             content: this.state.editorContent.toJSON(),
             tags: this.state.tags,
-            background: this.state.background,
             keywords: [],
             lastEdited: Date.now(),
             lastRead: Date.now(),
-            category: ''
+            category: '',
+            groups: []
             //@ts-ignore
         }, this.props.selectedWiki).then(() => {
             console.log('created article');
@@ -95,15 +93,9 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
     discardChanges = () => {
         this.props.history.goBack();
     }
-    onBackgroundChange = (newBackground: string) => {
-        this.setState(() => ({
-            background: newBackground
-        }));
-    }
     render() {
         return (
             <WikiView 
-                background={this.state.background}
                 title={`${this.props.selectedWiki.name} - Create article ${this.state.name ? '(' + this.state.name + ')' : ''}`}
             >
                 <div className='wiki-article'>
@@ -136,14 +128,6 @@ export class CreateArticlePage extends React.Component<ComponentProps, CreateArt
                                 >
                                     <i className='material-icons'>local_offer</i>
                                 </button>
-                                <ImageInput
-                                    prompt='choose background'
-                                    onChange={this.onBackgroundChange}
-                                    windowTitle='choose a background for the article'
-                                    className='wiki-article__image-input'
-                                >
-                                    <i className='material-icons'>panorama</i>
-                                </ImageInput>
                             </div>
                         </div>
                         <div className='wiki-article__header__section'>
