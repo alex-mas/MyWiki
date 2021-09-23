@@ -65,6 +65,12 @@ export const getLastViewedArticles = (wiki: WikiMetadata, count: number = 5)=>{
     if(!wiki){
         return [];
     }
-    const sorted = wiki.articles.sort((a,b)=>b.lastRead-a.lastRead);
+    const sorted = wiki.articles.sort((a,b)=>{
+        if(b.lastRead && a.lastRead){
+            return b.lastRead-a.lastRead;
+        }else{
+            return -1;
+        }
+    });
     return sorted.slice(0,count);
 }
