@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Editor as SlateEditor, RenderNodeProps, RenderMarkProps, Plugin } from 'slate-react';
-import { Value, Data, Block, Editor, BlockJSON, SchemaProperties } from 'slate';
+import { Value, Data, Block, Editor, BlockJSON, SchemaProperties, Operation } from 'slate';
 import { connect } from 'react-redux';
 import { remote, Dialog } from 'electron';
 
@@ -24,6 +24,7 @@ import { getEditorPlugins } from '../../selectors/plugins';
 import { AppState } from '../../store/store';
 import TextColorPlugin from './plugins/textColor';
 import YoutubePlugin from './plugins/youtube';
+import { List } from 'immutable';
 
 
 
@@ -57,7 +58,7 @@ export const DEFAULT_NODE = 'paragraph';
 
 
 const schema: SchemaProperties = {
-
+    //@ts-ignore
     nodes: {
         paragraph: function (props: RenderNodeProps) {
             const { node, attributes, children } = props
@@ -103,7 +104,7 @@ export interface WikiEditorStateProps {
 
 export interface WikiEditorOwnProps {
     content: Value,
-    onChange: (change: { operations: any, value: Value }) => any,
+    onChange: (change: { operations: List<Operation>, value: Value }) => any,
     readOnly: boolean
 }
 export type WikiEditorProps = WikiEditorOwnProps & WikiEditorStateProps;
@@ -188,8 +189,8 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
         console.log("re-rendering editor");
         if (this.props.readOnly) {
             return (
+                //@ts-ignore
                 <SlateEditor
-                    //@ts-ignore
                     ref={this.editor}
                     plugins={this.state.plugins}
                     readOnly={this.props.readOnly}
@@ -214,13 +215,13 @@ class WikiEditor extends React.Component<WikiEditorProps, WikiEditorState> {
                     <SlateEditor
                         key='wiki-editor'
                         //@ts-ignore
-                        ref={this.editor}
+                        ref={this.editor as any}
                         plugins={this.state.plugins}
                         readOnly={this.props.readOnly}
-                        value={this.props.content}
-                        onChange={this.props.onChange}
+                        value={this.props.content as any}
+                        onChange={this.props.onChange as any}
                         className='wiki-editor'
-                        schema={schema}
+                        schema={schema as any}
                     />
                 </div>
 
