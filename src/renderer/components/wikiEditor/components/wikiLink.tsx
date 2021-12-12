@@ -54,7 +54,7 @@ export class WikiLink extends React.Component<ComponentProps, any>{
                 );
             } else {
                 const exists = doesArticleExist(this.props.to, this.props.selectedWiki);
-                let to = `/wiki/${exists ? 'article' : 'create'}/${this.props.to}`
+                let to = `/wiki/${this.props.selectedWiki.id}/${exists ? 'article' : 'create'}/${this.props.to}`;
                 return (
                     <span
                         className={exists ? 'wiki-link' : 'wiki-link--undone'}

@@ -57,7 +57,7 @@ export const DEFAULT_NODE = 'paragraph';
 
 
 const schema: SchemaProperties = {
-    //@ts-ignore
+
     nodes: {
         paragraph: function (props: RenderNodeProps) {
             const { node, attributes, children } = props

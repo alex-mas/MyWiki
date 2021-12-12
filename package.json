@@ -62,7 +62,6 @@
     "jest": "^25.1.0",
     "mini-css-extract-plugin": "^0.4.4",
     "mocha": "^5.2.0",
-    "node-sass": "^4.14.1",
     "nodemon": "^1.19.4",
     "sass-loader": "^7.1.0",
     "spectron": "^5.0.0",
@@ -72,7 +71,8 @@
     "typescript": "^3.8.3",
     "typings-for-css-modules-loader": "^1.7.0",
     "webpack": "^4.41.6",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+    "sass": "^1.45.0"  
   },
   "dependencies": {
     "@axc/react-components": "^0.2.5",
@@ -100,7 +100,7 @@
     "retext": "^6.0.0",
     "retext-keywords": "^4.0.2",
     "showdown": "^1.9.1",
-    "slate": "^0.44.4",
+    "slate": "^0.46.1",
     "slate-plain-serializer": "^0.6.28",
     "slate-react": "^0.21.12",
     "uuid": "^3.4.0"

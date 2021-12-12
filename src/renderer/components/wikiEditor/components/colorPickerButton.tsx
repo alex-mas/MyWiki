@@ -6,6 +6,7 @@ import { EditorPluginContext } from "../wikiEditor";
 import { hasMarkType, onClickMarkButton, toggleMark } from "../utilities/marks";
 import { unwrapInline, toggleInline } from '../utilities/inlines';
 import I18String from '@axc/react-components/i18string';
+import { OnChangeHandler } from 'react-color/lib/components/common/ColorWrap';
 
 interface OwnProps {
     context: EditorPluginContext
@@ -98,10 +99,10 @@ export class ColorPickerButton extends React.Component<ComponentProps, Component
             isColorPickerOpen: false
         }));
     }
-    onChangeColor: ColorChangeHandler = (color) => {
+    onChangeColor: OnChangeHandler = (color) => {
         this.setState(() => ({
             color: color
-        }));
+        }) as any);
     }
     onSaveColor = ()=>{
         this.setState((prevState)=>({

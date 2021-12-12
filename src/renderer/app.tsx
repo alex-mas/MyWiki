@@ -52,6 +52,7 @@ const I18nSystem = connect((state: AppState, props) => {
 })(_I18nSystem);
 
 
+
 const App = (
     <Provider store={store.get()}>
         <I18nSystem>
