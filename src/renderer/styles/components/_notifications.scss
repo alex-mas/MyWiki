@@ -2,19 +2,17 @@
 .notification-list{
     position: absolute;
     display: flex;
-    background: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.0);
     flex-direction: column-reverse;
     width: 15vw;
-    bottom: 55px;
-    left: 4rem;
+    bottom: 2rem;
+    right: 2rem;
     width: max-content;
     max-width: 20vw;
     animation: fadeIn;
     animation-duration: 0.4s;
     padding: 0.4rem;
     border-radius: 10px;
-    box-shadow: $elevation-3p;
-
 }
 
 .notification{
@@ -58,11 +56,11 @@
 }
 
 .notification-container{
-    position: relative;
 }
 
 
 .notifications-button{
+  position: relative;
     i{
         font-size: $size-l;
     }
