@@ -49,12 +49,16 @@ module.exports = (env)=>{
     resolve: {
       extensions: [".ts", ".tsx", ".js" , ".jsx", '.json']
     },
-    externals: [
+    /*externals: [
       /(require\("\w+"\))/
-    ],
-    node: {
-      __dirname: false
+    ],*/
+    externalsPresets:{
+      electronRenderer: true,
+      node: true
     },
+    /*ode: {
+      __dirname: false
+    },*/
     target: 'electron-renderer',
     module: {
       rules: [
@@ -123,15 +127,7 @@ module.exports = (env)=>{
                 url: false
               }
             },
-            'sass-loader',
-            /*{
-              loader: 'typings-for-css-modules-loader',
-              options: {
-                //modules: true,
-                namedExport: true,
-                camelCase: true,
-              }
-            },*/
+            'sass-loader'
           ]
         }],
     },

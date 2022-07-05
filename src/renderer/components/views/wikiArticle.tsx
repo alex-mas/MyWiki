@@ -16,7 +16,6 @@ import defaultEditorContents from '../wikiEditor/utilities/defaultValue';
 import WikiEditor from '../wikiEditor/wikiEditor';
 import WikiSearchBar from '../wikiSearchBar';
 import WikiView from '../wikiView';
-const { dialog } = require('electron').remote
 
 
 
