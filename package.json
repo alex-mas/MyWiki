@@ -55,7 +55,7 @@
     "chai": "^4.2.0",
     "concurrently": "^4.0.1",
     "css-loader": "^1.0.1",
-    "electron": "^18.2.4",
+    "electron": "^18.3.7",
     "electron-builder": "^23.0.3",
     "fs-extra": "^7.0.1",
     "jest": "^25.1.0",
